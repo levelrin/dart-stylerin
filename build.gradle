@@ -1,19 +1,44 @@
 plugins {
     id 'java'
+    id 'antlr'
 }
 
 group = 'com.levelrin'
 version = '0.1.0'
+
+sourceSets {
+    main {
+        java {
+            // We will generate the parser in this directory using Antlr.
+            // We need to add this directory to the main source set to use the generated classes in our code.
+            srcDirs("$buildDir/generated-src/antlr/main")
+        }
+    }
+}
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
+    antlr 'org.antlr:antlr4:4.13.1'
+    implementation 'com.jayway.jsonpath:json-path:2.9.0'
+    implementation 'org.slf4j:slf4j-simple:2.0.13'
     testImplementation platform('org.junit:junit-bom:5.10.3')
     testImplementation 'org.junit.jupiter:junit-jupiter'
+    testImplementation 'org.hamcrest:hamcrest:3.0'
 }
 
 test {
     useJUnitPlatform()
+}
+
+generateGrammarSource {
+    maxHeapSize = '64m'
+    arguments += [
+        '-visitor',
+        '-long-messages'
+    ]
+    // Since we will add the package declaration, we must put generated classes in the package folder.
+    outputDirectory = file("$buildDir/generated-src/antlr/main/com/levelrin/antlr/generated")
 }
