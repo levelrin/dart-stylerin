@@ -289,9 +289,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<DocumentContext> {
         if (constTerminal != null) {
             throw new UnsupportedOperationException("The following parsing path is not supported yet: visitDeclaration -> constTerminal");
         }
-        if (typeContext != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitDeclaration -> typeContext");
-        }
         if (staticFinalDeclarationListContext != null) {
             throw new UnsupportedOperationException("The following parsing path is not supported yet: visitDeclaration -> staticFinalDeclarationList");
         }
@@ -328,6 +325,11 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<DocumentContext> {
         }
         if (finalTerminal != null) {
             text.append(finalTerminal.getText());
+            text.append(" ");
+        }
+        if (typeContext != null) {
+            // todo: visit typeContext instead of getText().
+            text.append(typeContext.getText());
             text.append(" ");
         }
         if (initializedIdentifierListContext != null) {
@@ -809,9 +811,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<DocumentContext> {
         if (functionExpressionContext != null) {
             throw new UnsupportedOperationException("The following parsing path is not supported yet: visitPrimary -> functionExpression");
         }
-        if (literalContext != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitPrimary -> literal");
-        }
         if (identifierContext != null) {
             throw new UnsupportedOperationException("The following parsing path is not supported yet: visitPrimary -> identifier");
         }
@@ -832,8 +831,14 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<DocumentContext> {
         }
         final DocumentContext json = JsonPath.parse("{}");
         final StringBuilder text = new StringBuilder();
-        final String newExpressionText = this.visit(newExpressionContext).read("$.text");
-        text.append(newExpressionText);
+        if (newExpressionContext != null) {
+            final String newExpressionText = this.visit(newExpressionContext).read("$.text");
+            text.append(newExpressionText);
+        }
+        if (literalContext != null) {
+            // todo: visit literalContext instead of getText().
+            text.append(literalContext.getText());
+        }
         json.put("$", "text", text.toString());
         return json;
     }
