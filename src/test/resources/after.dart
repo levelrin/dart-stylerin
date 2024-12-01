@@ -4,4 +4,8 @@ class MyClass {
 
   final String _name = 'Rin';
 
+  String greet() {
+    return 'Yoi Yoi';
+  }
+
 }

@@ -220,16 +220,290 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<DocumentContext> {
         final TerminalNode scTerminal = context.SC();
         final Dart2Parser.MethodSignatureContext methodSignatureContext = context.methodSignature();
         final Dart2Parser.FunctionBodyContext functionBodyContext = context.functionBody();
-        if (methodSignatureContext != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitClassMemberDeclaration -> methodSignature");
-        }
-        if (functionBodyContext != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitClassMemberDeclaration -> functionBody");
-        }
         final StringBuilder text = new StringBuilder();
-        final String declarationText = this.visit(declarationContext).read("$.text");
+        if (declarationContext != null) {
+            final String declarationText = this.visit(declarationContext).read("$.text");
+            text.append(this.indentUnit.repeat(this.currentIndentLevel));
+            text.append(declarationText);
+            text.append(scTerminal.getText());
+        }
+        if (methodSignatureContext != null) {
+            final String methodSignatureText = this.visit(methodSignatureContext).read("$.text");
+            text.append(this.indentUnit.repeat(this.currentIndentLevel));
+            text.append(methodSignatureText);
+            text.append(" ");
+            final String functionBodyText = this.visit(functionBodyContext).read("$.text");
+            text.append(functionBodyText);
+        }
+        json.put("$", "text", text.toString());
+        return json;
+    }
+
+    @Override
+    public DocumentContext visitMethodSignature(final Dart2Parser.MethodSignatureContext context) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Enter `visitMethodSignature` text: {}", context.getText());
+        }
+        final Dart2Parser.ConstructorSignatureContext constructorSignatureContext = context.constructorSignature();
+        final Dart2Parser.InitializersContext initializersContext = context.initializers();
+        final Dart2Parser.FactoryConstructorSignatureContext factoryConstructorSignatureContext = context.factoryConstructorSignature();
+        final TerminalNode staticTerminal = context.STATIC_();
+        final Dart2Parser.FunctionSignatureContext functionSignatureContext = context.functionSignature();
+        final Dart2Parser.GetterSignatureContext getterSignatureContext = context.getterSignature();
+        final Dart2Parser.SetterSignatureContext setterSignatureContext = context.setterSignature();
+        final Dart2Parser.OperatorSignatureContext operatorSignatureContext = context.operatorSignature();
+        if (constructorSignatureContext != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitMethodSignature -> constructorSignature");
+        }
+        if (initializersContext != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitMethodSignature -> initializers");
+        }
+        if (factoryConstructorSignatureContext != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitMethodSignature -> factoryConstructorSignature");
+        }
+        if (staticTerminal != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitMethodSignature -> staticTerminal");
+        }
+        if (getterSignatureContext != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitMethodSignature -> getterSignature");
+        }
+        if (setterSignatureContext != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitMethodSignature -> setterSignature");
+        }
+        if (operatorSignatureContext != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitMethodSignature -> operatorSignature");
+        }
+        final DocumentContext json = JsonPath.parse("{}");
+        final StringBuilder text = new StringBuilder();
+        if (functionSignatureContext != null) {
+            final String functionSignatureText = this.visit(functionSignatureContext).read("$.text");
+            text.append(functionSignatureText);
+        }
+        json.put("$", "text", text.toString());
+        return json;
+    }
+
+    @Override
+    public DocumentContext visitFunctionSignature(final Dart2Parser.FunctionSignatureContext context) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Enter `visitFunctionSignature` text: {}", context.getText());
+        }
+        final Dart2Parser.TypeContext typeContext = context.type();
+        final Dart2Parser.IdentifierContext identifierContext = context.identifier();
+        final Dart2Parser.FormalParameterPartContext formalParameterPartContext = context.formalParameterPart();
+        final DocumentContext json = JsonPath.parse("{}");
+        final StringBuilder text = new StringBuilder();
+        if (typeContext != null) {
+            // todo: visit typeContext instead of getText().
+            text.append(typeContext.getText());
+            text.append(" ");
+        }
+        // todo: visit identifierContext instead of getText().
+        text.append(identifierContext.getText());
+        // todo: visit formalParameterPartContext instead of getText().
+        text.append(formalParameterPartContext.getText());
+        json.put("$", "text", text.toString());
+        return json;
+    }
+
+    @Override
+    public DocumentContext visitFunctionBody(final Dart2Parser.FunctionBodyContext context) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Enter `visitFunctionBody` text: {}", context.getText());
+        }
+        final TerminalNode nativeTerminal = context.NATIVE_();
+        final Dart2Parser.StringLiteralContext stringLiteralContext = context.stringLiteral();
+        final TerminalNode scTerminal = context.SC();
+        final TerminalNode asyncTerminal = context.ASYNC_();
+        final TerminalNode egTerminal = context.EG();
+        final Dart2Parser.ExprContext exprContext = context.expr();
+        final TerminalNode stTerminal = context.ST();
+        final Dart2Parser.BlockContext blockContext = context.block();
+        if (nativeTerminal != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitFunctionBody -> native");
+        }
+        if (stringLiteralContext != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitFunctionBody -> stringLiteral");
+        }
+        if (scTerminal != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitFunctionBody -> sc");
+        }
+        if (asyncTerminal != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitFunctionBody -> async");
+        }
+        if (egTerminal != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitFunctionBody -> eg");
+        }
+        if (exprContext != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitFunctionBody -> expr");
+        }
+        if (stTerminal != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitFunctionBody -> st");
+        }
+        final DocumentContext json = JsonPath.parse("{}");
+        final StringBuilder text = new StringBuilder();
+        if (blockContext != null) {
+            final String blockText = this.visit(blockContext).read("$.text");
+            text.append(blockText);
+        }
+        json.put("$", "text", text.toString());
+        return json;
+    }
+
+    @Override
+    public DocumentContext visitBlock(final Dart2Parser.BlockContext context) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Enter `visitBlock` text: {}", context.getText());
+        }
+        final TerminalNode obcTerminal = context.OBC();
+        final Dart2Parser.StatementsContext statementsContext = context.statements();
+        final TerminalNode cbcTerminal = context.CBC();
+        final DocumentContext json = JsonPath.parse("{}");
+        final StringBuilder text = new StringBuilder();
+        text.append(obcTerminal.getText());
+        text.append("\n");
+        this.currentIndentLevel++;
         text.append(this.indentUnit.repeat(this.currentIndentLevel));
-        text.append(declarationText);
+        final String statementsText = this.visit(statementsContext).read("$.text");
+        text.append(statementsText);
+        text.append("\n");
+        this.currentIndentLevel--;
+        text.append(this.indentUnit.repeat(this.currentIndentLevel));
+        text.append(cbcTerminal.getText());
+        json.put("$", "text", text.toString());
+        return json;
+    }
+
+    @Override
+    public DocumentContext visitStatements(final Dart2Parser.StatementsContext context) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Enter `visitStatements` text: {}", context.getText());
+        }
+        final List<Dart2Parser.StatementContext> statementContexts = context.statement();
+        final DocumentContext json = JsonPath.parse("{}");
+        final StringBuilder text = new StringBuilder();
+        for (final Dart2Parser.StatementContext statementContext : statementContexts) {
+            final String statementText = this.visit(statementContext).read("$.text");
+            text.append(statementText);
+        }
+        json.put("$", "text", text.toString());
+        return json;
+    }
+
+    @Override
+    public DocumentContext visitStatement(final Dart2Parser.StatementContext context) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Enter `visitStatement` text: {}", context.getText());
+        }
+        final List<Dart2Parser.LabelContext> labelContexts = context.label();
+        final Dart2Parser.NonLabelledStatementContext nonLabelledStatementContext = context.nonLabelledStatement();
+        if (!labelContexts.isEmpty()) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitStatement -> label");
+        }
+        final DocumentContext json = JsonPath.parse("{}");
+        final StringBuilder text = new StringBuilder();
+        final String nonLabelledStatementText = this.visit(nonLabelledStatementContext).read("$.text");
+        text.append(nonLabelledStatementText);
+        json.put("$", "text", text.toString());
+        return json;
+    }
+
+    @Override
+    public DocumentContext visitNonLabelledStatement(final Dart2Parser.NonLabelledStatementContext context) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Enter `visitNonLabelledStatement` text: {}", context.getText());
+        }
+        final Dart2Parser.BlockContext blockContext = context.block();
+        final Dart2Parser.LocalVariableDeclarationContext localVariableDeclarationContext = context.localVariableDeclaration();
+        final Dart2Parser.ForStatementContext forStatementContext = context.forStatement();
+        final Dart2Parser.WhileStatementContext whileStatementContext = context.whileStatement();
+        final Dart2Parser.DoStatementContext doStatementContext = context.doStatement();
+        final Dart2Parser.SwitchStatementContext switchStatementContext = context.switchStatement();
+        final Dart2Parser.IfStatementContext ifStatementContext = context.ifStatement();
+        final Dart2Parser.RethrowStatementContext rethrowStatementContext = context.rethrowStatement();
+        final Dart2Parser.TryStatementContext tryStatementContext = context.tryStatement();
+        final Dart2Parser.BreakStatementContext breakStatementContext = context.breakStatement();
+        final Dart2Parser.ContinueStatementContext continueStatementContext = context.continueStatement();
+        final Dart2Parser.ReturnStatementContext returnStatementContext = context.returnStatement();
+        final Dart2Parser.YieldStatementContext yieldStatementContext = context.yieldStatement();
+        final Dart2Parser.YieldEachStatementContext yieldEachStatementContext = context.yieldEachStatement();
+        final Dart2Parser.ExpressionStatementContext expressionStatementContext = context.expressionStatement();
+        final Dart2Parser.AssertStatementContext assertStatementContext = context.assertStatement();
+        final Dart2Parser.LocalFunctionDeclarationContext localFunctionDeclarationContext = context.localFunctionDeclaration();
+        if (blockContext != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitNonLabelledStatement -> block");
+        }
+        if (localVariableDeclarationContext != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitNonLabelledStatement -> localVariableDeclaration");
+        }
+        if (forStatementContext != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitNonLabelledStatement -> forStatement");
+        }
+        if (whileStatementContext != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitNonLabelledStatement -> whileStatement");
+        }
+        if (doStatementContext != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitNonLabelledStatement -> doStatement");
+        }
+        if (switchStatementContext != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitNonLabelledStatement -> switchStatement");
+        }
+        if (ifStatementContext != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitNonLabelledStatement -> ifStatement");
+        }
+        if (rethrowStatementContext != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitNonLabelledStatement -> rethrowStatement");
+        }
+        if (tryStatementContext != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitNonLabelledStatement -> tryStatement");
+        }
+        if (breakStatementContext != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitNonLabelledStatement -> breakStatement");
+        }
+        if (continueStatementContext != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitNonLabelledStatement -> continueStatement");
+        }
+        if (yieldStatementContext != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitNonLabelledStatement -> yieldStatement");
+        }
+        if (yieldEachStatementContext != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitNonLabelledStatement -> yieldEachStatement");
+        }
+        if (expressionStatementContext != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitNonLabelledStatement -> expressionStatement");
+        }
+        if (assertStatementContext != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitNonLabelledStatement -> assertStatement");
+        }
+        if (localFunctionDeclarationContext != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitNonLabelledStatement -> localFunctionDeclaration");
+        }
+        final DocumentContext json = JsonPath.parse("{}");
+        final StringBuilder text = new StringBuilder();
+        if (returnStatementContext != null) {
+            final String returnStatementText = this.visit(returnStatementContext).read("$.text");
+            text.append(returnStatementText);
+        }
+        json.put("$", "text", text.toString());
+        return json;
+    }
+
+    @Override
+    public DocumentContext visitReturnStatement(final Dart2Parser.ReturnStatementContext context) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Enter `visitReturnStatement` text: {}", context.getText());
+        }
+        final TerminalNode returnTerminal = context.RETURN_();
+        final Dart2Parser.ExprContext exprContext = context.expr();
+        final TerminalNode scTerminal = context.SC();
+        final DocumentContext json = JsonPath.parse("{}");
+        final StringBuilder text = new StringBuilder();
+        text.append(returnTerminal.getText());
+        text.append(" ");
+        if (exprContext != null) {
+            final String exprText = this.visit(exprContext).read("$.text");
+            text.append(exprText);
+        }
         text.append(scTerminal.getText());
         json.put("$", "text", text.toString());
         return json;
