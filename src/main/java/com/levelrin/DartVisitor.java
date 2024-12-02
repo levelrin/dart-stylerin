@@ -64,14 +64,19 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<DocumentContext> {
         if (libraryNameContext != null) {
             throw new UnsupportedOperationException("The following parsing path is not supported yet: visitLibraryDeclaration -> libraryName");
         }
-        if (!importOrExportContexts.isEmpty()) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitLibraryDeclaration -> importOrExport");
-        }
         if (!partDirectiveContexts.isEmpty()) {
             throw new UnsupportedOperationException("The following parsing path is not supported yet: visitLibraryDeclaration -> partDirective");
         }
         final DocumentContext json = JsonPath.parse("{}");
         final StringBuilder text = new StringBuilder();
+        if (!importOrExportContexts.isEmpty()) {
+            for (final Dart2Parser.ImportOrExportContext importOrExportContext : importOrExportContexts) {
+                final String importOrExportText = this.visit(importOrExportContext).read("$.text");
+                text.append(importOrExportText);
+                text.append("\n");
+            }
+            text.append("\n");
+        }
         if (!metadataContexts.isEmpty()) {
             for (final Dart2Parser.MetadataContext metadataContext : metadataContexts) {
                 if (!metadataContext.getText().isEmpty()) {
@@ -146,6 +151,79 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<DocumentContext> {
     }
 
     @Override
+    public DocumentContext visitImportOrExport(final Dart2Parser.ImportOrExportContext context) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Enter `visitImportOrExport` text: {}", context.getText());
+        }
+        final Dart2Parser.LibraryImportContext libraryImportContext = context.libraryImport();
+        final Dart2Parser.LibraryExportContext libraryExportContext = context.libraryExport();
+        if (libraryExportContext != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitImportOrExport -> libraryExport");
+        }
+        final DocumentContext json = JsonPath.parse("{}");
+        final StringBuilder text = new StringBuilder();
+        if (libraryImportContext != null) {
+            final String libraryImportText = this.visit(libraryImportContext).read("$.text");
+            text.append(libraryImportText);
+        }
+        json.put("$", "text", text.toString());
+        return json;
+    }
+
+    @Override
+    public DocumentContext visitLibraryImport(final Dart2Parser.LibraryImportContext context) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Enter `visitLibraryImport` text: {}", context.getText());
+        }
+        final Dart2Parser.MetadataContext metadataContext = context.metadata();
+        final Dart2Parser.ImportSpecificationContext importSpecificationContext = context.importSpecification();
+        if (!metadataContext.getText().isEmpty()) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitLibraryImport -> metadata");
+        }
+        final DocumentContext json = JsonPath.parse("{}");
+        final StringBuilder text = new StringBuilder();
+        final String importSpecificationText = this.visit(importSpecificationContext).read("$.text");
+        text.append(importSpecificationText);
+        json.put("$", "text", text.toString());
+        return json;
+    }
+
+    @Override
+    public DocumentContext visitImportSpecification(final Dart2Parser.ImportSpecificationContext context) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Enter `visitImportSpecification` text: {}", context.getText());
+        }
+        final TerminalNode importTerminal = context.IMPORT_();
+        final Dart2Parser.ConfigurableUriContext configurableUriContext = context.configurableUri();
+        final TerminalNode deferredTerminal = context.DEFERRED_();
+        final TerminalNode asTerminal = context.AS_();
+        final Dart2Parser.IdentifierContext identifierContext = context.identifier();
+        final List<Dart2Parser.CombinatorContext> combinatorContexts = context.combinator();
+        final TerminalNode scTerminal = context.SC();
+        if (deferredTerminal != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitImportSpecification -> deferred");
+        }
+        if (asTerminal != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitImportSpecification -> as");
+        }
+        if (identifierContext != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitImportSpecification -> identifier");
+        }
+        if (!combinatorContexts.isEmpty()) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitImportSpecification -> combinator");
+        }
+        final DocumentContext json = JsonPath.parse("{}");
+        final StringBuilder text = new StringBuilder();
+        text.append(importTerminal.getText());
+        text.append(" ");
+        // todo: visit configurableUriContext instead of getText().
+        text.append(configurableUriContext.getText());
+        text.append(scTerminal.getText());
+        json.put("$", "text", text.toString());
+        return json;
+    }
+
+    @Override
     public DocumentContext visitClassDeclaration(final Dart2Parser.ClassDeclarationContext context) {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("Enter `visitClassDeclaration` text: {}", context.getText());
@@ -215,11 +293,11 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<DocumentContext> {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("Enter `visitClassMemberDeclaration` text: {}", context.getText());
         }
-        final DocumentContext json = JsonPath.parse("{}");
         final Dart2Parser.DeclarationContext declarationContext = context.declaration();
         final TerminalNode scTerminal = context.SC();
         final Dart2Parser.MethodSignatureContext methodSignatureContext = context.methodSignature();
         final Dart2Parser.FunctionBodyContext functionBodyContext = context.functionBody();
+        final DocumentContext json = JsonPath.parse("{}");
         final StringBuilder text = new StringBuilder();
         if (declarationContext != null) {
             final String declarationText = this.visit(declarationContext).read("$.text");
