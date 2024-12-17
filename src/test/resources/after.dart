@@ -8,6 +8,12 @@ class MyClass {
 
   final String _name = 'Rin';
 
+  final Map<String, String> map = <String, String> {
+    'one': 'uno',
+    'two': 'dos',
+    'three': 'tres',
+  };
+
   String greet() {
     return 'Yoi Yoi';
   }

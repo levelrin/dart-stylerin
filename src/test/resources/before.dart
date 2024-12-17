@@ -1,6 +1,7 @@
 import 'dart:math';import 'package:test/test.dart';import 'path/to/my_other_file.dart';
-class MyClass {
+class MyClass{
   final regex=new RegExp(r'''[a-zA-Z0-9]*]''');
-  final String _name = 'Rin';
-  String greet() {return 'Yoi Yoi';}
+  final String _name='Rin';
+  final Map<String,String>map=<String,String>{'one':'uno','two':'dos','three':'tres',};
+  String greet(){return 'Yoi Yoi';}
 }

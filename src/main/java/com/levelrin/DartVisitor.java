@@ -680,13 +680,125 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<DocumentContext> {
             text.append(" ");
         }
         if (typeContext != null) {
-            // todo: visit typeContext instead of getText().
-            text.append(typeContext.getText());
+            final String typeText = this.visit(typeContext).read("$.text");
+            text.append(typeText);
             text.append(" ");
         }
         if (initializedIdentifierListContext != null) {
             final String initializedIdentifierListText = this.visit(initializedIdentifierListContext).read("$.text");
             text.append(initializedIdentifierListText);
+        }
+        json.put("$", "text", text.toString());
+        return json;
+    }
+
+    @Override
+    public DocumentContext visitType(final Dart2Parser.TypeContext context) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Enter `visitType` text: {}", context.getText());
+        }
+        final Dart2Parser.FunctionTypeContext functionTypeContext = context.functionType();
+        final TerminalNode quTerminal =  context.QU();
+        final Dart2Parser.TypeNotFunctionContext typeNotFunctionContext = context.typeNotFunction();
+        if (functionTypeContext != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitType -> functionType");
+        }
+        if (quTerminal != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitType -> qu");
+        }
+        final DocumentContext json = JsonPath.parse("{}");
+        final StringBuilder text = new StringBuilder();
+        if (typeNotFunctionContext != null) {
+            final String typeNotFunctionText = this.visit(typeNotFunctionContext).read("$.text");
+            text.append(typeNotFunctionText);
+        }
+        json.put("$", "text", text.toString());
+        return json;
+    }
+
+    @Override
+    public DocumentContext visitTypeNotFunction(final Dart2Parser.TypeNotFunctionContext context) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Enter `visitTypeNotFunction` text: {}", context.getText());
+        }
+        final TerminalNode voidTerminal = context.VOID_();
+        final Dart2Parser.TypeNotVoidNotFunctionContext typeNotVoidNotFunctionContext = context.typeNotVoidNotFunction();
+        if (voidTerminal != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitTypeNotFunction -> void");
+        }
+        final DocumentContext json = JsonPath.parse("{}");
+        final StringBuilder text = new StringBuilder();
+        if (typeNotVoidNotFunctionContext != null) {
+            final String typeNotVoidNotFunctionText = this.visit(typeNotVoidNotFunctionContext).read("$.text");
+            text.append(typeNotVoidNotFunctionText);
+        }
+        json.put("$", "text", text.toString());
+        return json;
+    }
+
+    @Override
+    public DocumentContext visitTypeNotVoidNotFunction(final Dart2Parser.TypeNotVoidNotFunctionContext context) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Enter `visitTypeNotVoidNotFunction` text: {}", context.getText());
+        }
+        final Dart2Parser.TypeNameContext typeNameContext = context.typeName();
+        final Dart2Parser.TypeArgumentsContext typeArgumentsContext = context.typeArguments();
+        final TerminalNode quTerminal = context.QU();
+        final TerminalNode functionTerminal = context.FUNCTION_();
+        if (quTerminal != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitTypeNotVoidNotFunction -> qu");
+        }
+        if (functionTerminal != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitTypeNotVoidNotFunction -> function");
+        }
+        final DocumentContext json = JsonPath.parse("{}");
+        final StringBuilder text = new StringBuilder();
+        if (typeNameContext != null) {
+            // todo: visit typeNameContext instead of getText().
+            text.append(typeNameContext.getText());
+        }
+        if (typeArgumentsContext != null) {
+            final String typeArgumentsText = this.visit(typeArgumentsContext).read("$.text");
+            text.append(typeArgumentsText);
+        }
+        json.put("$", "text", text.toString());
+        return json;
+    }
+
+    @Override
+    public DocumentContext visitTypeArguments(final Dart2Parser.TypeArgumentsContext context) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Enter `visitTypeArguments` text: {}", context.getText());
+        }
+        final TerminalNode ltTerminal = context.LT();
+        final Dart2Parser.TypeListContext typeListContext = context.typeList();
+        final TerminalNode gtTerminal = context.GT();
+        final DocumentContext json = JsonPath.parse("{}");
+        final StringBuilder text = new StringBuilder();
+        final String ltTerminalText = ltTerminal.getText();
+        text.append(ltTerminalText);
+        final String typeListText = this.visit(typeListContext).read("$.text");
+        text.append(typeListText);
+        final String gtTerminalText = gtTerminal.getText();
+        text.append(gtTerminalText);
+        json.put("$", "text", text.toString());
+        return json;
+    }
+
+    @Override
+    public DocumentContext visitTypeList(final Dart2Parser.TypeListContext context) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Enter `visitTypeList` text: {}", context.getText());
+        }
+        final List<Dart2Parser.TypeContext> typeContexts = context.type();
+        final DocumentContext json = JsonPath.parse("{}");
+        final StringBuilder text = new StringBuilder();
+        final String firstTypeText = this.visit(typeContexts.get(0)).read("$.text");
+        text.append(firstTypeText);
+        for (int index = 1; index < typeContexts.size(); index++) {
+            text.append(", ");
+            final String typeText = this.visit(typeContexts.get(index)).read("$.text");
+            text.append(typeText);
         }
         json.put("$", "text", text.toString());
         return json;
@@ -1188,9 +1300,164 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<DocumentContext> {
             text.append(newExpressionText);
         }
         if (literalContext != null) {
-            // todo: visit literalContext instead of getText().
-            text.append(literalContext.getText());
+            final String literalText = this.visit(literalContext).read("$.text");
+            text.append(literalText);
         }
+        json.put("$", "text", text.toString());
+        return json;
+    }
+
+    @Override
+    public DocumentContext visitLiteral(final Dart2Parser.LiteralContext context) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Enter `visitLiteral` text: {}", context.getText());
+        }
+        final Dart2Parser.NullLiteralContext nullLiteralContext = context.nullLiteral();
+        final Dart2Parser.BooleanLiteralContext booleanLiteralContext = context.booleanLiteral();
+        final Dart2Parser.NumericLiteralContext numericLiteralContext = context.numericLiteral();
+        final Dart2Parser.StringLiteralContext stringLiteralContext = context.stringLiteral();
+        final Dart2Parser.SymbolLiteralContext symbolLiteralContext = context.symbolLiteral();
+        final Dart2Parser.ListLiteralContext listLiteralContext = context.listLiteral();
+        final Dart2Parser.SetOrMapLiteralContext setOrMapLiteralContext = context.setOrMapLiteral();
+        if (nullLiteralContext != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitLiteral -> nullLiteral");
+        }
+        if (booleanLiteralContext != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitLiteral -> booleanLiteral");
+        }
+        if (numericLiteralContext != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitLiteral -> numericLiteral");
+        }
+        if (symbolLiteralContext != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitLiteral -> symbolLiteral");
+        }
+        if (listLiteralContext != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitLiteral -> listLiteral");
+        }
+        final DocumentContext json = JsonPath.parse("{}");
+        final StringBuilder text = new StringBuilder();
+        if (stringLiteralContext != null) {
+            // todo: visit stringLiteralContext instead of getText().
+            final String stringLiteralText = stringLiteralContext.getText();
+            text.append(stringLiteralText);
+        }
+        if (setOrMapLiteralContext != null) {
+            final String setOrMapLiteralText = this.visit(setOrMapLiteralContext).read("$.text");
+            text.append(setOrMapLiteralText);
+        }
+        json.put("$", "text", text.toString());
+        return json;
+    }
+
+    @Override
+    public DocumentContext visitSetOrMapLiteral(final Dart2Parser.SetOrMapLiteralContext context) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Enter `visitSetOrMapLiteral` text: {}", context.getText());
+        }
+        final TerminalNode constTerminal = context.CONST_();
+        final Dart2Parser.TypeArgumentsContext typeArgumentsContext = context.typeArguments();
+        final TerminalNode obcTerminal = context.OBC();
+        final Dart2Parser.ElementsContext elementsContext = context.elements();
+        final TerminalNode cbcTerminal = context.CBC();
+        if (constTerminal != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitSetOrMapLiteral -> const");
+        }
+        final DocumentContext json = JsonPath.parse("{}");
+        final StringBuilder text = new StringBuilder();
+        if (typeArgumentsContext != null) {
+            final String typeArgumentsText = this.visit(typeArgumentsContext).read("$.text");
+            text.append(typeArgumentsText);
+            text.append(" ");
+        }
+        if (elementsContext == null) {
+            text.append(obcTerminal.getText());
+            text.append(cbcTerminal.getText());
+        } else {
+            text.append(obcTerminal.getText());
+            text.append("\n");
+            this.currentIndentLevel++;
+            text.append(this.indentUnit.repeat(this.currentIndentLevel));
+            final String elementsText = this.visit(elementsContext).read("$.text");
+            text.append(elementsText);
+            text.append("\n");
+            this.currentIndentLevel--;
+            text.append(this.indentUnit.repeat(this.currentIndentLevel));
+            text.append(cbcTerminal.getText());
+        }
+        json.put("$", "text", text.toString());
+        return json;
+    }
+
+    @Override
+    public DocumentContext visitElements(final Dart2Parser.ElementsContext context) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Enter `visitElements` text: {}", context.getText());
+        }
+        final List<Dart2Parser.ElementContext> elementContexts = context.element();
+        final DocumentContext json = JsonPath.parse("{}");
+        final StringBuilder text = new StringBuilder();
+        final Dart2Parser.ElementContext firstElementContext = elementContexts.get(0);
+        final String firstElementText = this.visit(firstElementContext).read("$.text");
+        text.append(firstElementText);
+        for (int index = 1; index < elementContexts.size(); index++) {
+            text.append(",");
+            text.append("\n");
+            text.append(this.indentUnit.repeat(this.currentIndentLevel));
+            final String elementText = this.visit(elementContexts.get(index)).read("$.text");
+            text.append(elementText);
+        }
+        text.append(",");
+        json.put("$", "text", text.toString());
+        return json;
+    }
+
+    @Override
+    public DocumentContext visitElement(final Dart2Parser.ElementContext context) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Enter `visitElement` text: {}", context.getText());
+        }
+        final Dart2Parser.ExpressionElementContext expressionElementContext = context.expressionElement();
+        final Dart2Parser.MapElementContext mapElementContext = context.mapElement();
+        final Dart2Parser.SpreadElementContext spreadElementContext = context.spreadElement();
+        final Dart2Parser.IfElementContext ifElementContext = context.ifElement();
+        final Dart2Parser.ForElementContext forElementContext = context.forElement();
+        if (expressionElementContext != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitElement -> expressionElement");
+        }
+        if (spreadElementContext != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitElement -> spreadElement");
+        }
+        if (ifElementContext != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitElement -> ifElement");
+        }
+        if (forElementContext != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitElement -> forElement");
+        }
+        final DocumentContext json = JsonPath.parse("{}");
+        final StringBuilder text = new StringBuilder();
+        if (mapElementContext != null) {
+            final String mapElementText = this.visit(mapElementContext).read("$.text");
+            text.append(mapElementText);
+        }
+        json.put("$", "text", text.toString());
+        return json;
+    }
+
+    @Override
+    public DocumentContext visitMapElement(final Dart2Parser.MapElementContext context) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Enter `visitMapElement` text: {}", context.getText());
+        }
+        final List<Dart2Parser.ExprContext> exprContexts = context.expr();
+        final TerminalNode coTerminal = context.CO();
+        final DocumentContext json = JsonPath.parse("{}");
+        final StringBuilder text = new StringBuilder();
+        final String firstExprText = this.visit(exprContexts.get(0)).read("$.text");
+        text.append(firstExprText);
+        text.append(coTerminal.getText());
+        text.append(" ");
+        final String secondExprText = this.visit(exprContexts.get(1)).read("$.text");
+        text.append(secondExprText);
         json.put("$", "text", text.toString());
         return json;
     }
