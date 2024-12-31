@@ -26,4 +26,8 @@ class MyClass {
     return 'Yoi Yoi';
   }
 
+  int sum(final int a, final int b) {
+    return a + b;
+  }
+
 }

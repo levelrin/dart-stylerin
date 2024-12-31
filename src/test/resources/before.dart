@@ -5,4 +5,5 @@ class MyClass{
   final Map<String,String>map=<String,String>{'one':'uno','two':'dos','three':'tres',};
   final List<String>list=<String>['one','two','three','four','five',];
   String greet(){return 'Yoi Yoi';}
+  int sum(final int a,final int b){return a+b;}
 }

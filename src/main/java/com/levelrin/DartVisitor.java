@@ -5,6 +5,7 @@ import com.jayway.jsonpath.JsonPath;
 import com.levelrin.antlr.generated.Dart2Parser;
 import com.levelrin.antlr.generated.Dart2ParserBaseVisitor;
 import java.util.List;
+import java.util.StringJoiner;
 import org.antlr.v4.runtime.tree.RuleNode;
 import org.antlr.v4.runtime.tree.TerminalNode;
 import org.slf4j.Logger;
@@ -378,8 +379,193 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<DocumentContext> {
         }
         // todo: visit identifierContext instead of getText().
         text.append(identifierContext.getText());
-        // todo: visit formalParameterPartContext instead of getText().
-        text.append(formalParameterPartContext.getText());
+        final String formalParameterText = this.visit(formalParameterPartContext).read("$.text");
+        text.append(formalParameterText);
+        json.put("$", "text", text.toString());
+        return json;
+    }
+
+    @Override
+    public DocumentContext visitFormalParameterPart(final Dart2Parser.FormalParameterPartContext context) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Enter `visitFormalParameterPart` text: {}", context.getText());
+        }
+        final Dart2Parser.TypeParametersContext typeParametersContext = context.typeParameters();
+        final Dart2Parser.FormalParameterListContext formalParameterListContext = context.formalParameterList();
+        if (typeParametersContext != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitFormalParameterPart -> typeParameters");
+        }
+        final DocumentContext json = JsonPath.parse("{}");
+        final StringBuilder text = new StringBuilder();
+        final String formalParameterListText = this.visit(formalParameterListContext).read("$.text");
+        text.append(formalParameterListText);
+        json.put("$", "text", text.toString());
+        return json;
+    }
+
+    @Override
+    public DocumentContext visitFormalParameterList(final Dart2Parser.FormalParameterListContext context) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Enter `visitFormalParameterList` text: {}", context.getText());
+        }
+        final TerminalNode opTerminal = context.OP();
+        final TerminalNode cpTerminal = context.CP();
+        final Dart2Parser.NormalFormalParametersContext normalFormalParametersContext = context.normalFormalParameters();
+        final TerminalNode cTerminal = context.C();
+        final Dart2Parser.OptionalOrNamedFormalParametersContext optionalOrNamedFormalParametersContext = context.optionalOrNamedFormalParameters();
+        if (cTerminal != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitFormalParameterList -> cTerminal");
+        }
+        if (optionalOrNamedFormalParametersContext != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitFormalParameterList -> optionalOrNamedFormalParameters");
+        }
+        final DocumentContext json = JsonPath.parse("{}");
+        final StringBuilder text = new StringBuilder();
+        text.append(opTerminal.getText());
+        if (normalFormalParametersContext != null) {
+            final String normalFormalParametersText = this.visit(normalFormalParametersContext).read("$.text");
+            text.append(normalFormalParametersText);
+        }
+        text.append(cpTerminal.getText());
+        json.put("$", "text", text.toString());
+        return json;
+    }
+
+    @Override
+    public DocumentContext visitNormalFormalParameters(final Dart2Parser.NormalFormalParametersContext context) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Enter `visitNormalFormalParameters` text: {}", context.getText());
+        }
+        final List<Dart2Parser.NormalFormalParameterContext> normalFormalParameterContexts = context.normalFormalParameter();
+        final DocumentContext json = JsonPath.parse("{}");
+        final StringBuilder text = new StringBuilder();
+        final StringJoiner joiner = new StringJoiner(", ");
+        for (final Dart2Parser.NormalFormalParameterContext normalFormalParameterContext : normalFormalParameterContexts) {
+            final String normalFormalParameterText = this.visit(normalFormalParameterContext).read("$.text");
+            joiner.add(normalFormalParameterText);
+        }
+        text.append(joiner);
+        json.put("$", "text", text.toString());
+        return json;
+    }
+
+    @Override
+    public DocumentContext visitNormalFormalParameter(final Dart2Parser.NormalFormalParameterContext context) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Enter `visitNormalFormalParameter` text: {}", context.getText());
+        }
+        final Dart2Parser.MetadataContext metadataContext = context.metadata();
+        final Dart2Parser.NormalFormalParameterNoMetadataContext normalFormalParameterNoMetadataContext = context.normalFormalParameterNoMetadata();
+        if (!metadataContext.getText().isEmpty()) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitNormalFormalParameter -> metadata");
+        }
+        final DocumentContext json = JsonPath.parse("{}");
+        final StringBuilder text = new StringBuilder();
+        final String normalFormalParameterNoMetadataText = this.visit(normalFormalParameterNoMetadataContext).read("$.text");
+        text.append(normalFormalParameterNoMetadataText);
+        json.put("$", "text", text.toString());
+        return json;
+    }
+
+    @Override
+    public DocumentContext visitNormalFormalParameterNoMetadata(final Dart2Parser.NormalFormalParameterNoMetadataContext context) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Enter `visitNormalFormalParameterNoMetadata` text: {}", context.getText());
+        }
+        final Dart2Parser.FunctionFormalParameterContext functionFormalParameterContext = context.functionFormalParameter();
+        final Dart2Parser.FieldFormalParameterContext fieldFormalParameterContext = context.fieldFormalParameter();
+        final Dart2Parser.SimpleFormalParameterContext simpleFormalParameterContext = context.simpleFormalParameter();
+        if (functionFormalParameterContext != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitNormalFormalParameterNoMetadata -> functionFormalParameter");
+        }
+        if (fieldFormalParameterContext != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitNormalFormalParameterNoMetadata -> fieldFormalParameter");
+        }
+        final DocumentContext json = JsonPath.parse("{}");
+        final StringBuilder text = new StringBuilder();
+        if (simpleFormalParameterContext != null) {
+            final String simpleFormalParameterText = this.visit(simpleFormalParameterContext).read("$.text");
+            text.append(simpleFormalParameterText);
+        }
+        json.put("$", "text", text.toString());
+        return json;
+    }
+
+    @Override
+    public DocumentContext visitSimpleFormalParameter(final Dart2Parser.SimpleFormalParameterContext context) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Enter `visitSimpleFormalParameter` text: {}", context.getText());
+        }
+        final Dart2Parser.DeclaredIdentifierContext declaredIdentifierContext = context.declaredIdentifier();
+        final TerminalNode covariantTerminal = context.COVARIANT_();
+        final Dart2Parser.IdentifierContext identifierContext = context.identifier();
+        if (covariantTerminal != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitSimpleFormalParameter -> covariant");
+        }
+        if (identifierContext != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitSimpleFormalParameter -> identifier");
+        }
+        final DocumentContext json = JsonPath.parse("{}");
+        final StringBuilder text = new StringBuilder();
+        if (declaredIdentifierContext != null) {
+            final String declaredIdentifierText = this.visit(declaredIdentifierContext).read("$.text");
+            text.append(declaredIdentifierText);
+        }
+        json.put("$", "text", text.toString());
+        return json;
+    }
+
+    @Override
+    public DocumentContext visitDeclaredIdentifier(Dart2Parser.DeclaredIdentifierContext context) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Enter `visitDeclaredIdentifier` text: {}", context.getText());
+        }
+        final TerminalNode covariantTerminal = context.COVARIANT_();
+        final Dart2Parser.FinalConstVarOrTypeContext finalConstVarOrTypeContext = context.finalConstVarOrType();
+        final Dart2Parser.IdentifierContext identifierContext = context.identifier();
+        if (covariantTerminal != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitDeclaredIdentifier -> covariant");
+        }
+        final DocumentContext json = JsonPath.parse("{}");
+        final StringBuilder text = new StringBuilder();
+        final String finalConstVarOrTypeText = this.visit(finalConstVarOrTypeContext).read("$.text");
+        text.append(finalConstVarOrTypeText);
+        text.append(" ");
+        final String identifierText = this.visit(identifierContext).read("$.text");
+        text.append(identifierText);
+        json.put("$", "text", text.toString());
+        return json;
+    }
+
+    @Override
+    public DocumentContext visitFinalConstVarOrType(final Dart2Parser.FinalConstVarOrTypeContext context) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Enter `visitFinalConstVarOrType` text: {}", context.getText());
+        }
+        final TerminalNode lateTerminal = context.LATE_();
+        final TerminalNode finalTerminal = context.FINAL_();
+        final Dart2Parser.TypeContext typeContext = context.type();
+        final TerminalNode constTerminal = context.CONST_();
+        final Dart2Parser.VarOrTypeContext varOrTypeContext = context.varOrType();
+        if (lateTerminal != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitFinalConstVarOrType -> late");
+        }
+        if (constTerminal != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitFinalConstVarOrType -> const");
+        }
+        if (varOrTypeContext != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitFinalConstVarOrType -> varOrType");
+        }
+        final DocumentContext json = JsonPath.parse("{}");
+        final StringBuilder text = new StringBuilder();
+        if (finalTerminal != null) {
+            text.append(finalTerminal.getText());
+        }
+        if (typeContext != null) {
+            final String typeText = this.visit(typeContext).read("$.text");
+            text.append(" ");
+            text.append(typeText);
+        }
         json.put("$", "text", text.toString());
         return json;
     }
@@ -1130,17 +1316,23 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<DocumentContext> {
         final List<Dart2Parser.MultiplicativeExpressionContext> multiplicativeExpressionContexts = context.multiplicativeExpression();
         final List<Dart2Parser.AdditiveOperatorContext> additiveOperatorContexts = context.additiveOperator();
         final TerminalNode superTerminal = context.SUPER_();
-        if (!additiveOperatorContexts.isEmpty()) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitAdditiveExpression -> additiveOperator");
-        }
         if (superTerminal != null) {
             throw new UnsupportedOperationException("The following parsing path is not supported yet: visitAdditiveExpression -> super");
         }
         final DocumentContext json = JsonPath.parse("{}");
         final StringBuilder text = new StringBuilder();
-        for (final Dart2Parser.MultiplicativeExpressionContext multiplicativeExpression : multiplicativeExpressionContexts) {
+        for (int index = 0; index < multiplicativeExpressionContexts.size(); index++) {
+            final Dart2Parser.MultiplicativeExpressionContext multiplicativeExpression = multiplicativeExpressionContexts.get(index);
             final String multiplicativeExpressionText = this.visit(multiplicativeExpression).read("$.text");
             text.append(multiplicativeExpressionText);
+            if (index < additiveOperatorContexts.size()) {
+                final Dart2Parser.AdditiveOperatorContext additiveOperatorContext = additiveOperatorContexts.get(index);
+                text.append(" ");
+                // todo: visit additiveOperatorContext instead of getText().
+                final String additiveOperatorText = additiveOperatorContext.getText();
+                text.append(additiveOperatorText);
+                text.append(" ");
+            }
         }
         json.put("$", "text", text.toString());
         return json;
@@ -1275,9 +1467,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<DocumentContext> {
         if (functionExpressionContext != null) {
             throw new UnsupportedOperationException("The following parsing path is not supported yet: visitPrimary -> functionExpression");
         }
-        if (identifierContext != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitPrimary -> identifier");
-        }
         if (constObjectExpressionContext != null) {
             throw new UnsupportedOperationException("The following parsing path is not supported yet: visitPrimary -> constObjectExpression");
         }
@@ -1302,6 +1491,153 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<DocumentContext> {
         if (literalContext != null) {
             final String literalText = this.visit(literalContext).read("$.text");
             text.append(literalText);
+        }
+        if (identifierContext != null) {
+            final String identifierText = this.visit(identifierContext).read("$.text");
+            text.append(identifierText);
+        }
+        json.put("$", "text", text.toString());
+        return json;
+    }
+
+    @Override
+    public DocumentContext visitIdentifier(final Dart2Parser.IdentifierContext context) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Enter `visitIdentifier` text: {}", context.getText());
+        }
+        final TerminalNode identifierTerminal = context.IDENTIFIER();
+        final TerminalNode abstractTerminal = context.ABSTRACT_();
+        final TerminalNode asTerminal = context.AS_();
+        final TerminalNode covariantTerminal = context.COVARIANT_();
+        final TerminalNode deferredTerminal = context.DEFERRED_();
+        final TerminalNode dynamicTerminal = context.DYNAMIC_();
+        final TerminalNode exportTerminal = context.EXPORT_();
+        final TerminalNode externalTerminal = context.EXTERNAL_();
+        final TerminalNode extensionTerminal = context.EXTENSION_();
+        final TerminalNode factoryTerminal = context.FACTORY_();
+        final TerminalNode functionTerminal = context.FUNCTION_();
+        final TerminalNode getTerminal = context.GET_();
+        final TerminalNode implementsTerminal = context.IMPLEMENTS_();
+        final TerminalNode importTerminal = context.IMPORT_();
+        final TerminalNode interfaceTerminal = context.INTERFACE_();
+        final TerminalNode lateTerminal = context.LATE_();
+        final TerminalNode libraryTerminal = context.LIBRARY_();
+        final TerminalNode mixinTerminal = context.MIXIN_();
+        final TerminalNode operatorTerminal = context.OPERATOR_();
+        final TerminalNode partTerminal = context.PART_();
+        final TerminalNode requiredTerminal = context.REQUIRED_();
+        final TerminalNode setTerminal = context.SET_();
+        final TerminalNode staticTerminal = context.STATIC_();
+        final TerminalNode typedefTerminal = context.TYPEDEF_();
+        final TerminalNode asyncTerminal = context.ASYNC_();
+        final TerminalNode hideTerminal = context.HIDE_();
+        final TerminalNode ofTerminal = context.OF_();
+        final TerminalNode onTerminal = context.ON_();
+        final TerminalNode showTerminal = context.SHOW_();
+        final TerminalNode syncTerminal = context.SYNC_();
+        final TerminalNode awaitTerminal = context.AWAIT_();
+        final TerminalNode yieldTerminal = context.YIELD_();
+        final TerminalNode nativeTerminal = context.NATIVE_();
+        if (abstractTerminal != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitIdentifier -> abstract");
+        }
+        if (asTerminal != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitIdentifier -> as");
+        }
+        if (covariantTerminal != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitIdentifier -> covariant");
+        }
+        if (deferredTerminal != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitIdentifier -> deferred");
+        }
+        if (dynamicTerminal != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitIdentifier -> dynamic");
+        }
+        if (exportTerminal != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitIdentifier -> export");
+        }
+        if (externalTerminal != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitIdentifier -> external");
+        }
+        if (extensionTerminal != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitIdentifier -> extension");
+        }
+        if (factoryTerminal != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitIdentifier -> factory");
+        }
+        if (functionTerminal != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitIdentifier -> function");
+        }
+        if (getTerminal != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitIdentifier -> get");
+        }
+        if (implementsTerminal != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitIdentifier -> implements");
+        }
+        if (importTerminal != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitIdentifier -> import");
+        }
+        if (interfaceTerminal != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitIdentifier -> interface");
+        }
+        if (lateTerminal != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitIdentifier -> late");
+        }
+        if (libraryTerminal != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitIdentifier -> library");
+        }
+        if (mixinTerminal != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitIdentifier -> mixin");
+        }
+        if (operatorTerminal != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitIdentifier -> operator");
+        }
+        if (partTerminal != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitIdentifier -> part");
+        }
+        if (requiredTerminal != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitIdentifier -> required");
+        }
+        if (setTerminal != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitIdentifier -> set");
+        }
+        if (staticTerminal != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitIdentifier -> static");
+        }
+        if (typedefTerminal != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitIdentifier -> typedef");
+        }
+        if (asyncTerminal != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitIdentifier -> async");
+        }
+        if (hideTerminal != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitIdentifier -> hide");
+        }
+        if (ofTerminal != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitIdentifier -> of");
+        }
+        if (onTerminal != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitIdentifier -> on");
+        }
+        if (showTerminal != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitIdentifier -> show");
+        }
+        if (syncTerminal != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitIdentifier -> sync");
+        }
+        if (awaitTerminal != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitIdentifier -> await");
+        }
+        if (yieldTerminal != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitIdentifier -> yield");
+        }
+        if (nativeTerminal != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitIdentifier -> native");
+        }
+        final DocumentContext json = JsonPath.parse("{}");
+        final StringBuilder text = new StringBuilder();
+        if (identifierTerminal != null) {
+            text.append(identifierTerminal.getText());
         }
         json.put("$", "text", text.toString());
         return json;
