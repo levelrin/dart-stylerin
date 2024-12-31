@@ -14,6 +14,14 @@ class MyClass {
     'three': 'tres',
   };
 
+  final List<String> list = <String> [
+    'one',
+    'two',
+    'three',
+    'four',
+    'five',
+  ];
+
   String greet() {
     return 'Yoi Yoi';
   }
