@@ -6,4 +6,5 @@ class MyClass{
   final List<String>list=<String>['one','two','three','four','five',];
   String greet(){return 'Yoi Yoi';}
   int sum(final int a,final int b){return a+b;}
+  void count(final int from,final int to){for(int x=from;x<to;x++){print(x);}}
 }
