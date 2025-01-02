@@ -7,4 +7,8 @@ class MyClass{
   String greet(){return 'Yoi Yoi';}
   int sum(final int a,final int b){return a+b;}
   void count(final int from,final int to){for(int x=from;x<to;x++){print(x);}}
+  String toFruit(final int index) {
+      String fruit;
+    if(index==0){fruit='apple';}else if(index==1){fruit='banana';}else{fruit='orange';}return fruit;
+  }
 }
