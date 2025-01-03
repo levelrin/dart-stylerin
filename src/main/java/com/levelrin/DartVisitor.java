@@ -708,9 +708,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<DocumentContext> {
         final Dart2Parser.ExpressionStatementContext expressionStatementContext = context.expressionStatement();
         final Dart2Parser.AssertStatementContext assertStatementContext = context.assertStatement();
         final Dart2Parser.LocalFunctionDeclarationContext localFunctionDeclarationContext = context.localFunctionDeclaration();
-        if (whileStatementContext != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitNonLabelledStatement -> whileStatement");
-        }
         if (doStatementContext != null) {
             throw new UnsupportedOperationException("The following parsing path is not supported yet: visitNonLabelledStatement -> doStatement");
         }
@@ -767,6 +764,35 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<DocumentContext> {
             final String ifStatementText = this.visit(ifStatementContext).read("$.text");
             text.append(ifStatementText);
         }
+        if (whileStatementContext != null) {
+            final String whileStatementText = this.visit(whileStatementContext).read("$.text");
+            text.append(whileStatementText);
+        }
+        json.put("$", "text", text.toString());
+        return json;
+    }
+
+    @Override
+    public DocumentContext visitWhileStatement(final Dart2Parser.WhileStatementContext context) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Enter `visitWhileStatement` text: {}", context.getText());
+        }
+        final TerminalNode whileTerminal = context.WHILE_();
+        final TerminalNode opTerminal = context.OP();
+        final Dart2Parser.ExprContext exprContext = context.expr();
+        final TerminalNode cpTerminal = context.CP();
+        final Dart2Parser.StatementContext statementContext = context.statement();
+        final DocumentContext json = JsonPath.parse("{}");
+        final StringBuilder text = new StringBuilder();
+        text.append(whileTerminal.getText());
+        text.append(" ");
+        text.append(opTerminal.getText());
+        final String exprText = this.visit(exprContext).read("$.text");
+        text.append(exprText);
+        text.append(cpTerminal.getText());
+        text.append(" ");
+        final String statementText = this.visit(statementContext).read("$.text");
+        text.append(statementText);
         json.put("$", "text", text.toString());
         return json;
     }
@@ -1593,17 +1619,25 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<DocumentContext> {
         final List<Dart2Parser.UnaryExpressionContext> unaryExpressionContexts = context.unaryExpression();
         final List<Dart2Parser.MultiplicativeOperatorContext> multiplicativeOperatorContexts = context.multiplicativeOperator();
         final TerminalNode superTerminal = context.SUPER_();
-        if (!multiplicativeOperatorContexts.isEmpty()) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitMultiplicativeExpression -> multiplicativeOperator");
-        }
-        if (superTerminal != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitMultiplicativeExpression -> super");
-        }
         final DocumentContext json = JsonPath.parse("{}");
         final StringBuilder text = new StringBuilder();
-        for (final Dart2Parser.UnaryExpressionContext unaryExpression : unaryExpressionContexts) {
-            final String unaryExpressionText = this.visit(unaryExpression).read("$.text");
-            text.append(unaryExpressionText);
+        if (superTerminal == null) {
+            final Dart2Parser.UnaryExpressionContext firstUnaryExpression = unaryExpressionContexts.get(0);
+            final String firstUnaryExpressionText = this.visit(firstUnaryExpression).read("$.text");
+            text.append(firstUnaryExpressionText);
+            for (int index = 0; index < multiplicativeOperatorContexts.size(); index++) {
+                text.append(" ");
+                final Dart2Parser.MultiplicativeOperatorContext multiplicativeOperatorContext = multiplicativeOperatorContexts.get(index);
+                // todo: visit multiplicativeOperatorContext instead of getText().
+                final String multiplicativeOperatorText = multiplicativeOperatorContext.getText();
+                text.append(multiplicativeOperatorText);
+                text.append(" ");
+                final Dart2Parser.UnaryExpressionContext unaryExpressionContext = unaryExpressionContexts.get(index + 1);
+                final String unaryExpressionText = this.visit(unaryExpressionContext).read("$.text");
+                text.append(unaryExpressionText);
+            }
+        } else {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitMultiplicativeExpression -> super");
         }
         json.put("$", "text", text.toString());
         return json;
@@ -1677,8 +1711,52 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<DocumentContext> {
             text.append(primaryText);
         }
         for (final Dart2Parser.SelectorContext selectorContext : selectorContexts) {
-            // todo: visit selectorContext instead of getText().
-            text.append(selectorContext.getText());
+            final String selectorText = this.visit(selectorContext).read("$.text");
+            text.append(selectorText);
+        }
+        json.put("$", "text", text.toString());
+        return json;
+    }
+
+    @Override
+    public DocumentContext visitSelector(final Dart2Parser.SelectorContext context) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Enter `visitSelector` text: {}", context.getText());
+        }
+        final TerminalNode notTerminal = context.NOT();
+        final Dart2Parser.AssignableSelectorContext assignableSelectorContext = context.assignableSelector();
+        final Dart2Parser.ArgumentPartContext argumentPartContext = context.argumentPart();
+        if (notTerminal != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitSelector -> not");
+        }
+        if (assignableSelectorContext != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitSelector -> assignableSelector");
+        }
+        final DocumentContext json = JsonPath.parse("{}");
+        final StringBuilder text = new StringBuilder();
+        if (argumentPartContext != null) {
+            final String argumentPartText = this.visit(argumentPartContext).read("$.text");
+            text.append(argumentPartText);
+        }
+        json.put("$", "text", text.toString());
+        return json;
+    }
+
+    @Override
+    public DocumentContext visitArgumentPart(final Dart2Parser.ArgumentPartContext context) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Enter `visitArgumentPart` text: {}", context.getText());
+        }
+        final Dart2Parser.TypeArgumentsContext typeArgumentsContext = context.typeArguments();
+        final Dart2Parser.ArgumentsContext argumentsContext = context.arguments();
+        if (typeArgumentsContext != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitArgumentPart -> typeArguments");
+        }
+        final DocumentContext json = JsonPath.parse("{}");
+        final StringBuilder text = new StringBuilder();
+        if (argumentsContext != null) {
+            final String argumentsText = this.visit(argumentsContext).read("$.text");
+            text.append(argumentsText);
         }
         json.put("$", "text", text.toString());
         return json;
@@ -2125,9 +2203,30 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<DocumentContext> {
         final DocumentContext json = JsonPath.parse("{}");
         final StringBuilder text = new StringBuilder();
         text.append(opTerminal.getText());
-        // todo: visit argumentListContext instead of getText().
-        text.append(argumentListContext.getText());
+        if (argumentListContext != null) {
+            final String argumentsText = this.visit(argumentListContext).read("$.text");
+            text.append(argumentsText);
+        }
         text.append(cpTerminal.getText());
+        json.put("$", "text", text.toString());
+        return json;
+    }
+
+    @Override
+    public DocumentContext visitArgumentList(final Dart2Parser.ArgumentListContext context) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Enter `visitArgumentList` text: {}", context.getText());
+        }
+        final List<Dart2Parser.NamedArgumentContext> namedArgumentContexts = context.namedArgument();
+        final List<TerminalNode> cTerminals = context.C();
+        final Dart2Parser.ExpressionListContext expressionListContext = context.expressionList();
+        if (!namedArgumentContexts.isEmpty()) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitArgumentList -> namedArgument");
+        }
+        final DocumentContext json = JsonPath.parse("{}");
+        final StringBuilder text = new StringBuilder();
+        final String expressionListText = this.visit(expressionListContext).read("$.text");
+        text.append(expressionListText);
         json.put("$", "text", text.toString());
         return json;
     }

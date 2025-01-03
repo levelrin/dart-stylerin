@@ -11,4 +11,5 @@ class MyClass{
       String fruit;
     if(index==0){fruit='apple';}else if(index==1){fruit='banana';}else{fruit='orange';}return fruit;
   }
+  void drawStair(){int currentHeight=1;while(currentHeight<=5){print('*'*currentHeight);currentHeight++;}}
 }

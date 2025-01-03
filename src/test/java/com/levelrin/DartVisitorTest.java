@@ -19,7 +19,7 @@ import org.junit.jupiter.api.Test;
 final class DartVisitorTest {
 
     @Test
-    void shouldDoSomething() throws URISyntaxException, IOException {
+    void shouldFormatAll() throws URISyntaxException, IOException {
         final Path beforePath = Paths.get(ClassLoader.getSystemResource("before.dart").toURI());
         final String originalText = Files.readString(beforePath, StandardCharsets.UTF_8);
         final CharStream charStream = CharStreams.fromString(originalText);
