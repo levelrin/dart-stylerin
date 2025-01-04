@@ -337,9 +337,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<DocumentContext> {
         if (initializersContext != null) {
             throw new UnsupportedOperationException("The following parsing path is not supported yet: visitMethodSignature -> initializers");
         }
-        if (factoryConstructorSignatureContext != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitMethodSignature -> factoryConstructorSignature");
-        }
         if (staticTerminal != null) {
             throw new UnsupportedOperationException("The following parsing path is not supported yet: visitMethodSignature -> staticTerminal");
         }
@@ -354,10 +351,38 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<DocumentContext> {
         }
         final DocumentContext json = JsonPath.parse("{}");
         final StringBuilder text = new StringBuilder();
+        if (factoryConstructorSignatureContext != null) {
+            final String factoryConstructorSignatureText = this.visit(factoryConstructorSignatureContext).read("$.text");
+            text.append(factoryConstructorSignatureText);
+        }
         if (functionSignatureContext != null) {
             final String functionSignatureText = this.visit(functionSignatureContext).read("$.text");
             text.append(functionSignatureText);
         }
+        json.put("$", "text", text.toString());
+        return json;
+    }
+
+    @Override
+    public DocumentContext visitFactoryConstructorSignature(final Dart2Parser.FactoryConstructorSignatureContext context) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Enter `visitFactoryConstructorSignature` text: {}", context.getText());
+        }
+        final TerminalNode constTerminal = context.CONST_();
+        final TerminalNode factoryTerminal = context.FACTORY_();
+        final Dart2Parser.ConstructorNameContext constructorNameContext = context.constructorName();
+        final Dart2Parser.FormalParameterListContext formalParameterListContext = context.formalParameterList();
+        if (constTerminal != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitFactoryConstructorSignature -> const");
+        }
+        final DocumentContext json = JsonPath.parse("{}");
+        final StringBuilder text = new StringBuilder();
+        text.append(factoryTerminal.getText());
+        text.append(" ");
+        // todo: visit constructorNameContext instead of getText().
+        text.append(constructorNameContext.getText());
+        final String formalParameterListText = this.visit(formalParameterListContext).read("$.text");
+        text.append(formalParameterListText);
         json.put("$", "text", text.toString());
         return json;
     }
@@ -1062,9 +1087,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<DocumentContext> {
         if (factoryConstructorSignatureContext != null) {
             throw new UnsupportedOperationException("The following parsing path is not supported yet: visitDeclaration -> factoryConstructorSignature");
         }
-        if (constantConstructorSignatureContext != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitDeclaration -> constantConstructorSignature");
-        }
         if (constructorSignatureContext != null) {
             throw new UnsupportedOperationException("The following parsing path is not supported yet: visitDeclaration -> constructorSignature");
         }
@@ -1126,6 +1148,10 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<DocumentContext> {
             text.append(typeText);
             text.append(" ");
         }
+        if (constantConstructorSignatureContext != null) {
+            final String constantConstructorSignatureText = this.visit(constantConstructorSignatureContext).read("$.text");
+            text.append(constantConstructorSignatureText);
+        }
         if (initializedIdentifierListContext != null) {
             final String initializedIdentifierListText = this.visit(initializedIdentifierListContext).read("$.text");
             text.append(initializedIdentifierListText);
@@ -1134,6 +1160,26 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<DocumentContext> {
             final String functionSignatureText = this.visit(functionSignatureContext).read("$.text");
             text.append(functionSignatureText);
         }
+        json.put("$", "text", text.toString());
+        return json;
+    }
+
+    @Override
+    public DocumentContext visitConstantConstructorSignature(final Dart2Parser.ConstantConstructorSignatureContext context) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Enter `visitConstantConstructorSignature` text: {}", context.getText());
+        }
+        final TerminalNode constTerminal = context.CONST_();
+        final Dart2Parser.ConstructorNameContext constructorNameContext = context.constructorName();
+        final Dart2Parser.FormalParameterListContext formalParameterListContext = context.formalParameterList();
+        final DocumentContext json = JsonPath.parse("{}");
+        final StringBuilder text = new StringBuilder();
+        text.append(constTerminal.getText());
+        text.append(" ");
+        // todo: visit constructorNameContext instead of getText().
+        text.append(constructorNameContext.getText());
+        final String formalParameterListText = this.visit(formalParameterListContext).read("$.text");
+        text.append(formalParameterListText);
         json.put("$", "text", text.toString());
         return json;
     }
@@ -1731,11 +1777,12 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<DocumentContext> {
         if (notTerminal != null) {
             throw new UnsupportedOperationException("The following parsing path is not supported yet: visitSelector -> not");
         }
-        if (assignableSelectorContext != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitSelector -> assignableSelector");
-        }
         final DocumentContext json = JsonPath.parse("{}");
         final StringBuilder text = new StringBuilder();
+        if (assignableSelectorContext != null) {
+            // todo: visit assignableSelectorContext instead of getText().
+            text.append(assignableSelectorContext.getText());
+        }
         if (argumentPartContext != null) {
             final String argumentPartText = this.visit(argumentPartContext).read("$.text");
             text.append(argumentPartText);
