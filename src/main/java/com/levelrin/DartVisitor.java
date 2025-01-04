@@ -478,14 +478,15 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<DocumentContext> {
         if (functionFormalParameterContext != null) {
             throw new UnsupportedOperationException("The following parsing path is not supported yet: visitNormalFormalParameterNoMetadata -> functionFormalParameter");
         }
-        if (fieldFormalParameterContext != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitNormalFormalParameterNoMetadata -> fieldFormalParameter");
-        }
         final DocumentContext json = JsonPath.parse("{}");
         final StringBuilder text = new StringBuilder();
         if (simpleFormalParameterContext != null) {
             final String simpleFormalParameterText = this.visit(simpleFormalParameterContext).read("$.text");
             text.append(simpleFormalParameterText);
+        }
+        if (fieldFormalParameterContext != null) {
+            // todo: visit fieldFormalParameterContext instead of getText().
+            text.append(fieldFormalParameterContext.getText());
         }
         json.put("$", "text", text.toString());
         return json;
@@ -1076,9 +1077,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<DocumentContext> {
         if (setterSignatureContext != null) {
             throw new UnsupportedOperationException("The following parsing path is not supported yet: visitDeclaration -> setterSignature");
         }
-        if (functionSignatureContext != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitDeclaration -> functionSignature");
-        }
         if (operatorSignatureContext != null) {
             throw new UnsupportedOperationException("The following parsing path is not supported yet: visitDeclaration -> operatorSignature");
         }
@@ -1131,6 +1129,10 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<DocumentContext> {
         if (initializedIdentifierListContext != null) {
             final String initializedIdentifierListText = this.visit(initializedIdentifierListContext).read("$.text");
             text.append(initializedIdentifierListText);
+        }
+        if (functionSignatureContext != null) {
+            final String functionSignatureText = this.visit(functionSignatureContext).read("$.text");
+            text.append(functionSignatureText);
         }
         json.put("$", "text", text.toString());
         return json;

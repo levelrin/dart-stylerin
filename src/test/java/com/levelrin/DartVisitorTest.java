@@ -50,6 +50,11 @@ final class DartVisitorTest {
     }
 
     @Test
+    void shouldFormatConstructor() {
+        this.compare("constructor-before.dart", "constructor-after.dart");
+    }
+
+    @Test
     void shouldFormatWhileStatement() {
         this.compare("while-before.dart", "while-after.dart");
     }
