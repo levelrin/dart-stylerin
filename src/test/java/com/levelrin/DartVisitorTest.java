@@ -50,6 +50,11 @@ final class DartVisitorTest {
     }
 
     @Test
+    void shouldFormatComposition() {
+        this.compare("composition-before.dart", "composition-after.dart");
+    }
+
+    @Test
     void shouldFormatFactoryConstructor() {
         this.compare("factory-constructor-before.dart", "factory-constructor-after.dart");
     }
