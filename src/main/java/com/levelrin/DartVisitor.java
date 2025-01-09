@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.StringJoiner;
+import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.RuleNode;
 import org.antlr.v4.runtime.tree.TerminalNode;
@@ -35,6 +37,12 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
     private final Map<String, Integer> ruleVisitCounts = new HashMap<>();
 
     private int currentIndentLevel = 0;
+
+    private final CommonTokenStream tokens;
+
+    public DartVisitor(final CommonTokenStream tokens) {
+        this.tokens = tokens;
+    }
 
     @Override
     public String visitCompilationUnit(final Dart2Parser.CompilationUnitContext context) {
@@ -2228,7 +2236,19 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitTerminal(final TerminalNode node) {
-        return node.getText();
+        final int tokenIndex = node.getSymbol().getTokenIndex();
+        final int commentChannel = 3;
+        final List<Token> comments = this.tokens.getHiddenTokensToLeft(tokenIndex, commentChannel);
+        final StringBuilder text = new StringBuilder();
+        if (comments != null) {
+            for (final Token comment : comments) {
+                text.append(comment.getText());
+                text.append("\n");
+                text.append(this.indentUnit.repeat(this.currentIndentLevel));
+            }
+        }
+        text.append(node.getText());
+        return text.toString();
     }
 
 }

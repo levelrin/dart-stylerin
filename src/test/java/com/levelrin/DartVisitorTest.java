@@ -32,7 +32,7 @@ final class DartVisitorTest {
             final CommonTokenStream tokens = new CommonTokenStream(lexer);
             final Dart2Parser parser = new Dart2Parser(tokens);
             final ParseTree tree = parser.compilationUnit();
-            final DartVisitor visitor = new DartVisitor();
+            final DartVisitor visitor = new DartVisitor(tokens);
             final String result = visitor.visit(tree);
             final Path afterPath = Paths.get(ClassLoader.getSystemResource(after).toURI());
             final String expectedText = Files.readString(afterPath, StandardCharsets.UTF_8);

@@ -177,7 +177,7 @@ MultiLineString:
 ;
 IDENTIFIER          : IDENTIFIER_START IDENTIFIER_PART*;
 WHITESPACE          : ( '\t' | ' ' | NEWLINE)+              -> skip;
-SINGLE_LINE_COMMENT : '//' ~[\r\n]*                         -> skip;
+SINGLE_LINE_COMMENT : '//' ~[\r\n]*                         -> channel(3);
 MULTI_LINE_COMMENT  : '/*' ( MULTI_LINE_COMMENT | .)*? '*/' -> skip;
 fragment EXPONENT   : ( 'e' | 'E') ( '+' | '-')? DIGIT+;
 fragment HEX_DIGIT  : 'a' .. 'f' | 'A' .. 'F' | DIGIT;
