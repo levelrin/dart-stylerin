@@ -4,4 +4,8 @@ class MyClass {
 
   final String _name = 'Rin';
 
+  final String Function(String name) withName = (final String name) {
+    return 'Hello, $name!';
+  };
+
 }

@@ -1212,17 +1212,151 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final Dart2Parser.FunctionTypeContext functionTypeContext = context.functionType();
         final TerminalNode quTerminal =  context.QU();
         final Dart2Parser.TypeNotFunctionContext typeNotFunctionContext = context.typeNotFunction();
-        if (functionTypeContext != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitType -> functionType");
-        }
         if (quTerminal != null) {
             throw new UnsupportedOperationException("The following parsing path is not supported yet: visitType -> qu");
         }
         final StringBuilder text = new StringBuilder();
+        if (functionTypeContext != null) {
+            final String functionTypeText = this.visit(functionTypeContext);
+            text.append(functionTypeText);
+        }
         if (typeNotFunctionContext != null) {
             final String typeNotFunctionText = this.visit(typeNotFunctionContext);
             text.append(typeNotFunctionText);
         }
+        return text.toString();
+    }
+
+    @Override
+    public String visitFunctionType(final Dart2Parser.FunctionTypeContext context) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Enter `visitFunctionType` text: {}", context.getText());
+        }
+        final Dart2Parser.FunctionTypeTailsContext functionTypeTailsContext = context.functionTypeTails();
+        final Dart2Parser.TypeNotFunctionContext typeNotFunctionContext = context.typeNotFunction();
+        final StringBuilder text = new StringBuilder();
+        if (typeNotFunctionContext != null) {
+            final String typeNotFunctionText = this.visit(typeNotFunctionContext);
+            text.append(typeNotFunctionText);
+            text.append(" ");
+        }
+        final String functionTypeText = this.visit(functionTypeTailsContext);
+        text.append(functionTypeText);
+        return text.toString();
+    }
+
+    @Override
+    public String visitFunctionTypeTails(final Dart2Parser.FunctionTypeTailsContext context) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Enter `visitFunctionTypeTails` text: {}", context.getText());
+        }
+        final Dart2Parser.FunctionTypeTailContext functionTypeTailContext = context.functionTypeTail();
+        final TerminalNode quTerminal =  context.QU();
+        final Dart2Parser.FunctionTypeTailsContext functionTypeTailsContext = context.functionTypeTails();
+        if (quTerminal != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitFunctionTypeTails -> qu");
+        }
+        if (functionTypeTailsContext != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitFunctionTypeTails -> functionTypeTails");
+        }
+        final StringBuilder text = new StringBuilder();
+        final String functionTypeTailText = this.visit(functionTypeTailContext);
+        text.append(functionTypeTailText);
+        return text.toString();
+    }
+
+    @Override
+    public String visitFunctionTypeTail(final Dart2Parser.FunctionTypeTailContext context) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Enter `visitFunctionTypeTail` text: {}", context.getText());
+        }
+        final TerminalNode functionTerminal = context.FUNCTION_();
+        final Dart2Parser.TypeParametersContext typeParametersContext = context.typeParameters();
+        final Dart2Parser.ParameterTypeListContext parameterTypeListContext = context.parameterTypeList();
+        if (typeParametersContext != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitFunctionTypeTail -> typeParameters");
+        }
+        final StringBuilder text = new StringBuilder();
+        text.append(this.visit(functionTerminal));
+        text.append(this.visit(parameterTypeListContext));
+        return text.toString();
+    }
+
+    @Override
+    public String visitParameterTypeList(final Dart2Parser.ParameterTypeListContext context) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Enter `visitParameterTypeList` text: {}", context.getText());
+        }
+        final TerminalNode opTerminal = context.OP();
+        final TerminalNode cpTerminal = context.CP();
+        final Dart2Parser.NormalParameterTypesContext normalParameterTypesContext = context.normalParameterTypes();
+        final TerminalNode cTerminal = context.C();
+        final Dart2Parser.OptionalParameterTypesContext optionalParameterTypesContext = context.optionalParameterTypes();
+        if (cTerminal != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitParameterTypeList -> c");
+        }
+        if (optionalParameterTypesContext != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitParameterTypeList -> optionalParameterTypes");
+        }
+        final StringBuilder text = new StringBuilder();
+        text.append(this.visit(opTerminal));
+        if (normalParameterTypesContext != null) {
+            text.append(this.visit(normalParameterTypesContext));
+        }
+        text.append(this.visit(cpTerminal));
+        return text.toString();
+    }
+
+    @Override
+    public String visitNormalParameterTypes(final Dart2Parser.NormalParameterTypesContext context) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Enter `visitNormalParameterTypes` text: {}", context.getText());
+        }
+        final List<Dart2Parser.NormalParameterTypeContext> normalParameterTypeContexts = context.normalParameterType();
+        final List<TerminalNode> cTerminals = context.C();
+        final StringBuilder text = new StringBuilder();
+        final Dart2Parser.NormalParameterTypeContext firstNormalParameterTypeContext = normalParameterTypeContexts.get(0);
+        text.append(this.visit(firstNormalParameterTypeContext));
+        for (int index = 0; index < cTerminals.size(); index++) {
+            text.append(this.visit(cTerminals.get(index)));
+            text.append(" ");
+            text.append(this.visit(normalParameterTypeContexts.get(index)));
+        }
+        return text.toString();
+    }
+
+    @Override
+    public String visitNormalParameterType(final Dart2Parser.NormalParameterTypeContext context) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Enter `visitNormalParameterType` text: {}", context.getText());
+        }
+        final Dart2Parser.MetadataContext metadataContext = context.metadata();
+        final Dart2Parser.TypedIdentifierContext typedIdentifierContext = context.typedIdentifier();
+        final Dart2Parser.TypeContext typeContext = context.type();
+        if (!metadataContext.getText().isEmpty()) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitNormalParameterType -> metadata");
+        }
+        if (typeContext != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitNormalParameterType -> type");
+        }
+        final StringBuilder text = new StringBuilder();
+        if (typedIdentifierContext != null) {
+            text.append(this.visit(typedIdentifierContext));
+        }
+        return text.toString();
+    }
+
+    @Override
+    public String visitTypedIdentifier(final Dart2Parser.TypedIdentifierContext context) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Enter `visitTypedIdentifier` text: {}", context.getText());
+        }
+        final Dart2Parser.TypeContext typeContext = context.type();
+        final Dart2Parser.IdentifierContext identifierContext = context.identifier();
+        final StringBuilder text = new StringBuilder();
+        text.append(this.visit(typeContext));
+        text.append(" ");
+        text.append(this.visit(identifierContext));
         return text.toString();
     }
 
@@ -1812,9 +1946,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         if (argumentPartContext != null) {
             throw new UnsupportedOperationException("The following parsing path is not supported yet: visitPrimary -> argumentPart");
         }
-        if (functionExpressionContext != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitPrimary -> functionExpression");
-        }
         if (constObjectExpressionContext != null) {
             throw new UnsupportedOperationException("The following parsing path is not supported yet: visitPrimary -> constObjectExpression");
         }
@@ -1835,6 +1966,9 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
             // todo: visit thisExpressionContext instead of getText().
             text.append(thisExpressionContext.getText());
         }
+        if (functionExpressionContext != null) {
+            text.append(this.visit(functionExpressionContext));
+        }
         if (newExpressionContext != null) {
             final String newExpressionText = this.visit(newExpressionContext);
             text.append(newExpressionText);
@@ -1846,6 +1980,53 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         if (identifierContext != null) {
             final String identifierText = this.visit(identifierContext);
             text.append(identifierText);
+        }
+        return text.toString();
+    }
+
+    @Override
+    public String visitFunctionExpression(final Dart2Parser.FunctionExpressionContext context) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Enter `visitFunctionExpression` text: {}", context.getText());
+        }
+        final Dart2Parser.FormalParameterPartContext formalParameterPartContext = context.formalParameterPart();
+        final Dart2Parser.FunctionExpressionBodyContext functionExpressionBodyContext = context.functionExpressionBody();
+        final StringBuilder text = new StringBuilder();
+        text.append(this.visit(formalParameterPartContext));
+        text.append(" ");
+        text.append(this.visit(functionExpressionBodyContext));
+        return text.toString();
+    }
+
+    @Override
+    public String visitFunctionExpressionBody(final Dart2Parser.FunctionExpressionBodyContext context) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Enter `visitFunctionExpressionBody` text: {}", context.getText());
+        }
+        final TerminalNode asyncTerminal = context.ASYNC_();
+        final TerminalNode egTerminal = context.EG();
+        final Dart2Parser.ExprContext exprContext = context.expr();
+        final TerminalNode stTerminal = context.ST();
+        final TerminalNode syncTerminal = context.SYNC_();
+        final Dart2Parser.BlockContext blockContext = context.block();
+        if (asyncTerminal != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitFunctionExpressionBody -> async");
+        }
+        if (egTerminal != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitFunctionExpressionBody -> eg");
+        }
+        if (exprContext != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitFunctionExpressionBody -> expr");
+        }
+        if (stTerminal != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitFunctionExpressionBody -> st");
+        }
+        if (syncTerminal != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitFunctionExpressionBody -> sync");
+        }
+        final StringBuilder text = new StringBuilder();
+        if (blockContext != null) {
+            text.append(this.visit(blockContext));
         }
         return text.toString();
     }
