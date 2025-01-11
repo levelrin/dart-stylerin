@@ -50,6 +50,11 @@ final class DartVisitorTest {
     }
 
     @Test
+    void shouldFormatParentAndChildClasses() {
+        this.compare("inheritance-before.dart", "inheritance-after.dart");
+    }
+
+    @Test
     void shouldFormatComposition() {
         this.compare("composition-before.dart", "composition-after.dart");
     }

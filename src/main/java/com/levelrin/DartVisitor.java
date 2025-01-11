@@ -276,42 +276,79 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         if (typeParametersContext != null) {
             throw new UnsupportedOperationException("The following parsing path is not supported yet: visitClassDeclaration -> typeParameters");
         }
-        if (superclassContext != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitClassDeclaration -> superclass");
-        }
         if (interfacesContext != null) {
             throw new UnsupportedOperationException("The following parsing path is not supported yet: visitClassDeclaration -> interfaces");
         }
         final StringBuilder text = new StringBuilder();
         if (abstractTerminal != null) {
             text.append(this.visit(abstractTerminal));
-            text.append(" ");
         }
         text.append(this.visit(classTerminal));
         text.append(" ");
         // todo: visit typeIdentifierContext instead of getText().
         text.append(typeIdentifierContext.getText());
         text.append(" ");
+        if (superclassContext != null) {
+            final String superclassText = this.visit(superclassContext);
+            text.append(superclassText);
+            text.append(" ");
+        }
         text.append(this.visit(obcTerminal));
         text.append("\n\n");
+        this.currentIndentLevel++;
         for (final Dart2Parser.MetadataContext metadataContext : metadataContexts) {
             if (!metadataContext.getText().isEmpty()) {
-                throw new UnsupportedOperationException(
-                    String.format(
-                        "The following metadata is not supported yet: %s",
-                        metadataContext.getText()
-                    )
-                );
+                final String metadataText = this.visit(metadataContext);
+                text.append(this.indentUnit.repeat(this.currentIndentLevel));
+                text.append(metadataText);
+                text.append("\n");
             }
         }
-        this.currentIndentLevel++;
         for (final Dart2Parser.ClassMemberDeclarationContext classMemberDeclarationContext : classMemberDeclarationContexts) {
             final String classMemberDeclarationText = this.visit(classMemberDeclarationContext);
+            text.append(this.indentUnit.repeat(this.currentIndentLevel));
             text.append(classMemberDeclarationText);
             text.append("\n\n");
         }
         this.currentIndentLevel--;
         text.append(this.visit(cbcTerminal));
+        return text.toString();
+    }
+
+    @Override
+    public String visitMetadata(final Dart2Parser.MetadataContext context) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Enter `visitMetadata` text: {}", context.getText());
+        }
+        final List<TerminalNode> atTerminals = context.AT();
+        final List<Dart2Parser.MetadatumContext> metadatumContexts = context.metadatum();
+        final StringBuilder text = new StringBuilder();
+        for (int index = 0; index < atTerminals.size(); index++) {
+            final TerminalNode atTerminal = atTerminals.get(index);
+            final Dart2Parser.MetadatumContext metadatumContext = metadatumContexts.get(index);
+            text.append(this.visit(atTerminal));
+            // todo: visit metadatumContext instead of getText().
+            text.append(metadatumContext.getText());
+        }
+        return text.toString();
+    }
+
+    @Override
+    public String visitSuperclass(final Dart2Parser.SuperclassContext context) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Enter `visitSuperclass` text: {}", context.getText());
+        }
+        final TerminalNode extendsTerminal = context.EXTENDS_();
+        final Dart2Parser.TypeNotVoidContext typeNotVoidContext = context.typeNotVoid();
+        final Dart2Parser.MixinsContext mixinsContext = context.mixins();
+        if (mixinsContext != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitSuperclass -> mixins");
+        }
+        final StringBuilder text = new StringBuilder();
+        text.append(this.visit(extendsTerminal));
+        text.append(" ");
+        // todo: visit typeNotVoidContext instead of getText().
+        text.append(typeNotVoidContext.getText());
         return text.toString();
     }
 
@@ -327,13 +364,11 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final StringBuilder text = new StringBuilder();
         if (declarationContext != null) {
             final String declarationText = this.visit(declarationContext);
-            text.append(this.indentUnit.repeat(this.currentIndentLevel));
             text.append(declarationText);
             text.append(this.visit(scTerminal));
         }
         if (methodSignatureContext != null) {
             final String methodSignatureText = this.visit(methodSignatureContext);
-            text.append(this.indentUnit.repeat(this.currentIndentLevel));
             text.append(methodSignatureText);
             text.append(" ");
             final String functionBodyText = this.visit(functionBodyContext);
