@@ -8,4 +8,6 @@ class MyClass {
     return a + b;
   }
 
+  static String tag() => 'TAG';
+
 }

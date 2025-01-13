@@ -396,9 +396,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         if (initializersContext != null) {
             throw new UnsupportedOperationException("The following parsing path is not supported yet: visitMethodSignature -> initializers");
         }
-        if (staticTerminal != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitMethodSignature -> staticTerminal");
-        }
         if (getterSignatureContext != null) {
             throw new UnsupportedOperationException("The following parsing path is not supported yet: visitMethodSignature -> getterSignature");
         }
@@ -412,6 +409,10 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         if (factoryConstructorSignatureContext != null) {
             final String factoryConstructorSignatureText = this.visit(factoryConstructorSignatureContext);
             text.append(factoryConstructorSignatureText);
+        }
+        if (staticTerminal != null) {
+            text.append(this.visit(staticTerminal));
+            text.append(" ");
         }
         if (functionSignatureContext != null) {
             final String functionSignatureText = this.visit(functionSignatureContext);
@@ -784,22 +785,19 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         if (stringLiteralContext != null) {
             throw new UnsupportedOperationException("The following parsing path is not supported yet: visitFunctionBody -> stringLiteral");
         }
-        if (scTerminal != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitFunctionBody -> sc");
-        }
         if (asyncTerminal != null) {
             throw new UnsupportedOperationException("The following parsing path is not supported yet: visitFunctionBody -> async");
-        }
-        if (egTerminal != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitFunctionBody -> eg");
-        }
-        if (exprContext != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitFunctionBody -> expr");
         }
         if (stTerminal != null) {
             throw new UnsupportedOperationException("The following parsing path is not supported yet: visitFunctionBody -> st");
         }
         final StringBuilder text = new StringBuilder();
+        if (egTerminal != null) {
+            text.append(this.visit(egTerminal));
+            text.append(" ");
+            text.append(this.visit(exprContext));
+            text.append(this.visit(scTerminal));
+        }
         if (blockContext != null) {
             final String blockText = this.visit(blockContext);
             text.append(blockText);
