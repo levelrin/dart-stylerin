@@ -50,6 +50,11 @@ final class DartVisitorTest {
     }
 
     @Test
+    void shouldFormatNamedParameters() {
+        this.compare("named-param-before.dart", "named-param-after.dart");
+    }
+
+    @Test
     void shouldFormatParentAndChildClasses() {
         this.compare("inheritance-before.dart", "inheritance-after.dart");
     }

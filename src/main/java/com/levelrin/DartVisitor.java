@@ -497,13 +497,142 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         }
         if (cTerminal != null) {
             text.append(this.visit(cTerminal));
+            text.append(" ");
         }
         if (optionalOrNamedFormalParametersContext != null) {
-            text.append(" ");
-            // todo: visit optionalOrNamedFormalParametersContext instead of getText().
-            text.append(optionalOrNamedFormalParametersContext.getText());
+            text.append(this.visit(optionalOrNamedFormalParametersContext));
         }
         text.append(this.visit(cpTerminal));
+        return text.toString();
+    }
+
+    @Override
+    public String visitOptionalOrNamedFormalParameters(final Dart2Parser.OptionalOrNamedFormalParametersContext context) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Enter `visitOptionalOrNamedFormalParameters` text: {}", context.getText());
+        }
+        final Dart2Parser.OptionalPositionalFormalParametersContext optionalPositionalFormalParametersContext = context.optionalPositionalFormalParameters();
+        final Dart2Parser.NamedFormalParametersContext namedFormalParametersContext = context.namedFormalParameters();
+        final StringBuilder text = new StringBuilder();
+        if (optionalPositionalFormalParametersContext != null) {
+            text.append(this.visit(optionalPositionalFormalParametersContext));
+        }
+        if (namedFormalParametersContext != null) {
+            text.append(this.visit(namedFormalParametersContext));
+        }
+        return text.toString();
+    }
+
+    @Override
+    public String visitOptionalPositionalFormalParameters(final Dart2Parser.OptionalPositionalFormalParametersContext context) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Enter `visitOptionalPositionalFormalParameters` text: {}", context.getText());
+        }
+        final TerminalNode obTerminal = context.OB();
+        final List<Dart2Parser.DefaultFormalParameterContext> defaultFormalParameterContexts = context.defaultFormalParameter();
+        final List<TerminalNode> cTerminals = context.C();
+        final TerminalNode cbTerminal = context.CB();
+        final StringBuilder text = new StringBuilder();
+        text.append(this.visit(obTerminal));
+        final Dart2Parser.DefaultFormalParameterContext firstDefaultFormalParameterContext = defaultFormalParameterContexts.get(0);
+        text.append(this.visit(firstDefaultFormalParameterContext));
+        if (defaultFormalParameterContexts.size() > 1) {
+            for (int index = 0; index < cTerminals.size(); index++) {
+                final TerminalNode cTerminal = cTerminals.get(index);
+                if (defaultFormalParameterContexts.size() > index + 1) {
+                    text.append(this.visit(cTerminal));
+                    text.append(" ");
+                    final Dart2Parser.DefaultFormalParameterContext defaultFormalParameterContext = defaultFormalParameterContexts.get(index + 1);
+                    text.append(this.visit(defaultFormalParameterContext));
+                } else {
+                    text.append(this.visit(cTerminal));
+                }
+            }
+        }
+        text.append(this.visit(cbTerminal));
+        return text.toString();
+    }
+
+    @Override
+    public String visitDefaultFormalParameter(final Dart2Parser.DefaultFormalParameterContext context) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Enter `visitDefaultFormalParameter` text: {}", context.getText());
+        }
+        final Dart2Parser.NormalFormalParameterContext normalFormalParameterContext = context.normalFormalParameter();
+        final TerminalNode eqTerminal = context.EQ();
+        final Dart2Parser.ExprContext exprContext = context.expr();
+        if (eqTerminal != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitDefaultFormalParameter -> eq");
+        }
+        if (exprContext != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitDefaultFormalParameter -> expr");
+        }
+        final StringBuilder text = new StringBuilder();
+        text.append(this.visit(normalFormalParameterContext));
+        return text.toString();
+    }
+
+    @Override
+    public String visitNamedFormalParameters(final Dart2Parser.NamedFormalParametersContext context) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Enter `visitNamedFormalParameters` text: {}", context.getText());
+        }
+        final TerminalNode obcTerminal = context.OBC();
+        final List<Dart2Parser.DefaultNamedParameterContext> defaultNamedParameterContexts = context.defaultNamedParameter();
+        final List<TerminalNode> cTerminals = context.C();
+        final TerminalNode cbcTerminal = context.CBC();
+        final StringBuilder text = new StringBuilder();
+        text.append(this.visit(obcTerminal));
+        text.append("\n");
+        this.currentIndentLevel++;
+        text.append(this.indentUnit.repeat(this.currentIndentLevel));
+        final Dart2Parser.DefaultNamedParameterContext firstDefaultNamedParameterContext = defaultNamedParameterContexts.get(0);
+        text.append(this.visit(firstDefaultNamedParameterContext));
+        if (defaultNamedParameterContexts.size() > 1) {
+            for (int index = 0; index < cTerminals.size(); index++) {
+                final TerminalNode cTerminal = cTerminals.get(index);
+                if (defaultNamedParameterContexts.size() > index + 1) {
+                    text.append(this.visit(cTerminal));
+                    text.append("\n");
+                    text.append(this.indentUnit.repeat(this.currentIndentLevel));
+                    final Dart2Parser.DefaultNamedParameterContext defaultNamedParameterContext = defaultNamedParameterContexts.get(index + 1);
+                    text.append(this.visit(defaultNamedParameterContext));
+                } else {
+                    text.append(this.visit(cTerminal));
+                }
+            }
+        }
+        text.append("\n");
+        this.currentIndentLevel--;
+        text.append(this.indentUnit.repeat(this.currentIndentLevel));
+        text.append(this.visit(cbcTerminal));
+        return text.toString();
+    }
+
+    @Override
+    public String visitDefaultNamedParameter(final Dart2Parser.DefaultNamedParameterContext context) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Enter `visitDefaultNamedParameter` text: {}", context.getText());
+        }
+        final Dart2Parser.MetadataContext metadataContext = context.metadata();
+        final TerminalNode requiredTerminal = context.REQUIRED_();
+        final Dart2Parser.NormalFormalParameterNoMetadataContext normalFormalParameterNoMetadataContext = context.normalFormalParameterNoMetadata();
+        // todo: use `eqTerminal` and `coTerminal` with tests.
+        final TerminalNode eqTerminal = context.EQ();
+        final TerminalNode coTerminal = context.CO();
+        final Dart2Parser.ExprContext exprContext = context.expr();
+        if (exprContext != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitDefaultNamedParameter -> expr");
+        }
+        if (!metadataContext.getText().isEmpty()) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitDefaultNamedParameter -> metadata");
+        }
+        final StringBuilder text = new StringBuilder();
+        if (requiredTerminal != null) {
+            text.append(this.visit(requiredTerminal));
+            text.append(" ");
+        }
+        text.append(this.visit(normalFormalParameterNoMetadataContext));
         return text.toString();
     }
 
@@ -936,6 +1065,7 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final TerminalNode scTerminal = context.SC();
         final Dart2Parser.ExpressionListContext expressionListContext = context.expressionList();
         final Dart2Parser.MetadataContext metadataContext = context.metadata();
+        // todo: use `declaredIdentifierContext` and `inTerminal` with tests.
         final Dart2Parser.DeclaredIdentifierContext declaredIdentifierContext = context.declaredIdentifier();
         final TerminalNode inTerminal = context.IN_();
         final Dart2Parser.IdentifierContext identifierContext = context.identifier();
@@ -1045,6 +1175,7 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final TerminalNode eqTerminal = context.EQ();
         final Dart2Parser.ExprContext exprContext = context.expr();
         final List<TerminalNode> cTerminals = context.C();
+        // todo: use `initializedIdentifierContexts` with tests.
         final List<Dart2Parser.InitializedIdentifierContext> initializedIdentifierContexts = context.initializedIdentifier();
         if (!cTerminals.isEmpty()) {
             throw new UnsupportedOperationException("The following parsing path is not supported yet: visitInitializedVariableDeclaration -> c");
@@ -2385,29 +2516,36 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final Dart2Parser.ArgumentListContext argumentListContext = context.argumentList();
         final TerminalNode cTerminal = context.C();
         final TerminalNode cpTerminal = context.CP();
-        if (cTerminal != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitArguments -> c");
-        }
         final StringBuilder text = new StringBuilder();
         text.append(this.visit(opTerminal));
         if (argumentListContext != null) {
             final int visitArgumentsCountBefore = this.ruleVisitCounts.getOrDefault(Dart2Parser.ArgumentsContext.class.getSimpleName(), 0);
+            final int visitNamedArgumentCountBefore = this.ruleVisitCounts.getOrDefault(Dart2Parser.NamedArgumentContext.class.getSimpleName(), 0);
             // We need to increment the indentation up front so that the child will have the correct indentation level.
             // If the incrementation turns out to be wrong, we can remove it later.
             this.currentIndentLevel++;
             final String argumentsText = this.visit(argumentListContext);
             final int visitArgumentsCountAfter = this.ruleVisitCounts.getOrDefault(Dart2Parser.ArgumentsContext.class.getSimpleName(), 0);
+            final int visitNamedArgumentCountAfter = this.ruleVisitCounts.getOrDefault(Dart2Parser.NamedArgumentContext.class.getSimpleName(), 0);
             // We assume the following condition means nested object initialization. Ex: User(User('Rin'));
-            if (visitArgumentsCountBefore < visitArgumentsCountAfter) {
+            final boolean objNested = visitArgumentsCountBefore < visitArgumentsCountAfter;
+            final boolean namedParamUsed = visitNamedArgumentCountBefore < visitNamedArgumentCountAfter;
+            if (objNested || namedParamUsed) {
                 text.append("\n");
                 text.append(this.indentUnit.repeat(this.currentIndentLevel));
                 text.append(argumentsText);
+                if (cTerminal != null) {
+                    text.append(this.visit(cTerminal));
+                }
                 text.append("\n");
                 this.currentIndentLevel--;
                 text.append(this.indentUnit.repeat(this.currentIndentLevel));
             } else {
                 this.currentIndentLevel--;
                 text.append(argumentsText);
+                if (cTerminal != null) {
+                    text.append(this.visit(cTerminal));
+                }
             }
         }
         text.append(this.visit(cpTerminal));
@@ -2422,12 +2560,55 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final List<Dart2Parser.NamedArgumentContext> namedArgumentContexts = context.namedArgument();
         final List<TerminalNode> cTerminals = context.C();
         final Dart2Parser.ExpressionListContext expressionListContext = context.expressionList();
-        if (!namedArgumentContexts.isEmpty()) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitArgumentList -> namedArgument");
-        }
         final StringBuilder text = new StringBuilder();
-        final String expressionListText = this.visit(expressionListContext);
-        text.append(expressionListText);
+        if (!namedArgumentContexts.isEmpty()) {
+            final Dart2Parser.NamedArgumentContext firstNamedArgumentContext = namedArgumentContexts.get(0);
+            text.append(this.visit(firstNamedArgumentContext));
+        }
+        if (expressionListContext != null) {
+            final String expressionListText = this.visit(expressionListContext);
+            text.append(expressionListText);
+        }
+        for (int index = 0; index < cTerminals.size(); index++) {
+            final TerminalNode cTerminal = cTerminals.get(index);
+            final Dart2Parser.NamedArgumentContext namedArgumentContext;
+            if (cTerminals.size() == namedArgumentContexts.size()) {
+                namedArgumentContext = namedArgumentContexts.get(index);
+            } else {
+                namedArgumentContext = namedArgumentContexts.get(index + 1);
+            }
+            text.append(this.visit(cTerminal));
+            text.append("\n");
+            text.append(this.indentUnit.repeat(this.currentIndentLevel));
+            text.append(this.visit(namedArgumentContext));
+        }
+        return text.toString();
+    }
+
+    @Override
+    public String visitNamedArgument(final Dart2Parser.NamedArgumentContext context) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Enter `visitNamedArgument` text: {}", context.getText());
+        }
+        final Dart2Parser.LabelContext labelContext = context.label();
+        final Dart2Parser.ExprContext exprContext = context.expr();
+        final StringBuilder text = new StringBuilder();
+        text.append(this.visit(labelContext));
+        text.append(" ");
+        text.append(this.visit(exprContext));
+        return text.toString();
+    }
+
+    @Override
+    public String visitLabel(final Dart2Parser.LabelContext context) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Enter `visitLabel` text: {}", context.getText());
+        }
+        final Dart2Parser.IdentifierContext identifierContext = context.identifier();
+        final TerminalNode coTerminal = context.CO();
+        final StringBuilder text = new StringBuilder();
+        text.append(this.visit(identifierContext));
+        text.append(this.visit(coTerminal));
         return text.toString();
     }
 
