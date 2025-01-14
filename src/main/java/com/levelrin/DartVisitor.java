@@ -471,10 +471,11 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         }
         final Dart2Parser.TypeParametersContext typeParametersContext = context.typeParameters();
         final Dart2Parser.FormalParameterListContext formalParameterListContext = context.formalParameterList();
-        if (typeParametersContext != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitFormalParameterPart -> typeParameters");
-        }
         final StringBuilder text = new StringBuilder();
+        if (typeParametersContext != null) {
+            // todo: visit typeParametersContext instead of getText().
+            text.append(typeParametersContext.getText());
+        }
         final String formalParameterListText = this.visit(formalParameterListContext);
         text.append(formalParameterListText);
         return text.toString();
@@ -2124,10 +2125,11 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         }
         final Dart2Parser.TypeArgumentsContext typeArgumentsContext = context.typeArguments();
         final Dart2Parser.ArgumentsContext argumentsContext = context.arguments();
-        if (typeArgumentsContext != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitArgumentPart -> typeArguments");
-        }
         final StringBuilder text = new StringBuilder();
+        if (typeArgumentsContext != null) {
+            // todo: visit typeArgumentsContext instead of getText().
+            text.append(typeArgumentsContext.getText());
+        }
         if (argumentsContext != null) {
             final String argumentsText = this.visit(argumentsContext);
             text.append(argumentsText);

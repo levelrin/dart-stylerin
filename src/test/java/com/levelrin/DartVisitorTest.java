@@ -50,6 +50,11 @@ final class DartVisitorTest {
     }
 
     @Test
+    void shouldFormatGenerics() {
+        this.compare("generic-before.dart", "generic-after.dart");
+    }
+
+    @Test
     void shouldFormatSwitch() {
         this.compare("switch-before.dart", "switch-after.dart");
     }
