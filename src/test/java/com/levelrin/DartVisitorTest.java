@@ -50,6 +50,11 @@ final class DartVisitorTest {
     }
 
     @Test
+    void shouldFormatSwitch() {
+        this.compare("switch-before.dart", "switch-after.dart");
+    }
+
+    @Test
     void shouldFormatNamedParameters() {
         this.compare("named-param-before.dart", "named-param-after.dart");
     }

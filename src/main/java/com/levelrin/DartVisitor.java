@@ -895,9 +895,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         if (doStatementContext != null) {
             throw new UnsupportedOperationException("The following parsing path is not supported yet: visitNonLabelledStatement -> doStatement");
         }
-        if (switchStatementContext != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitNonLabelledStatement -> switchStatement");
-        }
         if (rethrowStatementContext != null) {
             throw new UnsupportedOperationException("The following parsing path is not supported yet: visitNonLabelledStatement -> rethrowStatement");
         }
@@ -951,6 +948,97 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
             final String whileStatementText = this.visit(whileStatementContext);
             text.append(whileStatementText);
         }
+        if (switchStatementContext != null) {
+            text.append(this.visit(switchStatementContext));
+        }
+        return text.toString();
+    }
+
+    @Override
+    public String visitSwitchStatement(final Dart2Parser.SwitchStatementContext context) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Enter `visitSwitchStatement` text: {}", context.getText());
+        }
+        final TerminalNode switchTerminal = context.SWITCH_();
+        final TerminalNode opTerminal = context.OP();
+        final Dart2Parser.ExprContext exprContext = context.expr();
+        final TerminalNode cpTerminal = context.CP();
+        final TerminalNode obcTerminal = context.OBC();
+        final List<Dart2Parser.SwitchCaseContext> switchCaseContexts = context.switchCase();
+        final Dart2Parser.DefaultCaseContext defaultCaseContext = context.defaultCase();
+        final TerminalNode cbcTerminal = context.CBC();
+        final StringBuilder text = new StringBuilder();
+        text.append(this.visit(switchTerminal));
+        text.append(" ");
+        text.append(this.visit(opTerminal));
+        text.append(this.visit(exprContext));
+        text.append(this.visit(cpTerminal));
+        text.append(" ");
+        text.append(this.visit(obcTerminal));
+        this.currentIndentLevel++;
+        for (final Dart2Parser.SwitchCaseContext switchCaseContext : switchCaseContexts) {
+            text.append("\n");
+            text.append(this.indentUnit.repeat(this.currentIndentLevel));
+            text.append(this.visit(switchCaseContext));
+        }
+        if (defaultCaseContext != null) {
+            text.append("\n");
+            text.append(this.indentUnit.repeat(this.currentIndentLevel));
+            text.append(this.visit(defaultCaseContext));
+        }
+        text.append("\n");
+        this.currentIndentLevel--;
+        text.append(this.indentUnit.repeat(this.currentIndentLevel));
+        text.append(this.visit(cbcTerminal));
+        return text.toString();
+    }
+
+    @Override
+    public String visitSwitchCase(final Dart2Parser.SwitchCaseContext context) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Enter `visitSwitchCase` text: {}", context.getText());
+        }
+        final List<Dart2Parser.LabelContext> labelContexts = context.label();
+        final TerminalNode caseTerminal = context.CASE_();
+        final Dart2Parser.ExprContext exprContext = context.expr();
+        final TerminalNode coTerminal = context.CO();
+        final Dart2Parser.StatementsContext statementsContext = context.statements();
+        if (!labelContexts.isEmpty()) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitSwitchCase -> label");
+        }
+        final StringBuilder text = new StringBuilder();
+        text.append(this.visit(caseTerminal));
+        text.append(" ");
+        text.append(this.visit(exprContext));
+        text.append(this.visit(coTerminal));
+        text.append("\n");
+        this.currentIndentLevel++;
+        text.append(this.indentUnit.repeat(this.currentIndentLevel));
+        text.append(this.visit(statementsContext));
+        this.currentIndentLevel--;
+        return text.toString();
+    }
+
+    @Override
+    public String visitDefaultCase(final Dart2Parser.DefaultCaseContext context) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Enter `visitDefaultCase` text: {}", context.getText());
+        }
+        final List<Dart2Parser.LabelContext> labelContexts = context.label();
+        final TerminalNode defaultTerminal = context.DEFAULT_();
+        final TerminalNode coTerminal = context.CO();
+        final Dart2Parser.StatementsContext statementsContext = context.statements();
+        if (!labelContexts.isEmpty()) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitDefaultCase -> label");
+        }
+        final StringBuilder text = new StringBuilder();
+        text.append(this.visit(defaultTerminal));
+        text.append(this.visit(coTerminal));
+        text.append("\n");
+        this.currentIndentLevel++;
+        text.append(this.indentUnit.repeat(this.currentIndentLevel));
+        text.append(this.visit(statementsContext));
+        this.currentIndentLevel--;
         return text.toString();
     }
 
@@ -1948,12 +2036,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final TerminalNode superTerminal = context.SUPER_();
         final Dart2Parser.IncrementOperatorContext incrementOperatorContext = context.incrementOperator();
         final Dart2Parser.AssignableExpressionContext assignableExpressionContext = context.assignableExpression();
-        if (prefixOperatorContext != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitUnaryExpression -> prefixOperator");
-        }
-        if (unaryExpressionContext != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitUnaryExpression -> unaryExpression");
-        }
         if (awaitExpressionContext != null) {
             throw new UnsupportedOperationException("The following parsing path is not supported yet: visitUnaryExpression -> awaitExpression");
         }
@@ -1973,6 +2055,11 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
             throw new UnsupportedOperationException("The following parsing path is not supported yet: visitUnaryExpression -> assignableExpression");
         }
         final StringBuilder text = new StringBuilder();
+        if (prefixOperatorContext != null) {
+            // todo: visit prefixOperatorContext instead of getText().
+            text.append(prefixOperatorContext.getText());
+            text.append(this.visit(unaryExpressionContext));
+        }
         if (postfixExpressionContext != null) {
             final String postfixExpressionText = this.visit(postfixExpressionContext);
             text.append(postfixExpressionText);
