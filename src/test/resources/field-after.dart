@@ -8,4 +8,6 @@ class MyClass {
     return 'Hello, $name!';
   };
 
+  static final tag = 'TAG';
+
 }
