@@ -12,4 +12,6 @@ class MyClass {
 
   late int statusCode;
 
+  final bool checked = false;
+
 }

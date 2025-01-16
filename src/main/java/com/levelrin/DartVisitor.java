@@ -2552,9 +2552,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final Dart2Parser.SymbolLiteralContext symbolLiteralContext = context.symbolLiteral();
         final Dart2Parser.ListLiteralContext listLiteralContext = context.listLiteral();
         final Dart2Parser.SetOrMapLiteralContext setOrMapLiteralContext = context.setOrMapLiteral();
-        if (booleanLiteralContext != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitLiteral -> booleanLiteral");
-        }
         if (symbolLiteralContext != null) {
             throw new UnsupportedOperationException("The following parsing path is not supported yet: visitLiteral -> symbolLiteral");
         }
@@ -2562,6 +2559,10 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         if (nullLiteralContext != null) {
             // todo: visit nullLiteralContext instead of getText().
             text.append(nullLiteralContext.getText());
+        }
+        if (booleanLiteralContext != null) {
+            // todo: visit booleanLiteralContext instead of getText().
+            text.append(booleanLiteralContext.getText());
         }
         if (stringLiteralContext != null) {
             // todo: visit stringLiteralContext instead of getText().
