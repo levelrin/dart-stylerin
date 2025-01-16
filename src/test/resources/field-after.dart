@@ -10,4 +10,6 @@ class MyClass {
 
   static final tag = 'TAG';
 
+  late int statusCode;
+
 }

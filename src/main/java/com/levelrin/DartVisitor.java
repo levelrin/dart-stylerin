@@ -1453,12 +1453,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         if (constTerminal != null) {
             throw new UnsupportedOperationException("The following parsing path is not supported yet: visitDeclaration -> const");
         }
-        if (lateTerminal != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitDeclaration -> late");
-        }
-        if (varOrTypeContext != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitDeclaration -> varOrType");
-        }
         if (covariantTerminal != null) {
             throw new UnsupportedOperationException("The following parsing path is not supported yet: visitDeclaration -> covariant");
         }
@@ -1487,8 +1481,17 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
             text.append(this.visit(staticTerminal));
             text.append(" ");
         }
+        if (lateTerminal != null) {
+            text.append(this.visit(lateTerminal));
+            text.append(" ");
+        }
         if (finalTerminal != null) {
             text.append(this.visit(finalTerminal));
+            text.append(" ");
+        }
+        if (varOrTypeContext != null) {
+            // todo: visit varOrTypeContext instead of getText().
+            text.append(varOrTypeContext.getText());
             text.append(" ");
         }
         if (staticFinalDeclarationListContext != null) {
