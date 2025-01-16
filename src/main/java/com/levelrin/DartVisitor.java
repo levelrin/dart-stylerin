@@ -139,9 +139,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final Dart2Parser.StaticFinalDeclarationListContext staticFinalDeclarationListContext = context.staticFinalDeclarationList();
         final Dart2Parser.InitializedIdentifierListContext initializedIdentifierListContext = context.initializedIdentifierList();
         final Dart2Parser.VarOrTypeContext varOrTypeContext = context.varOrType();
-        if (mixinDeclarationContext != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitTopLevelDeclaration -> mixinDeclaration");
-        }
         if (extensionDeclarationContext != null) {
             throw new UnsupportedOperationException("The following parsing path is not supported yet: visitTopLevelDeclaration -> extensionDeclaration");
         }
@@ -174,6 +171,9 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
             final String classDeclarationText = this.visit(classDeclarationContext);
             text.append(classDeclarationText);
         }
+        if (mixinDeclarationContext != null) {
+            text.append(this.visit(mixinDeclarationContext));
+        }
         if (functionSignatureContext != null) {
             final String functionSignatureText = this.visit(functionSignatureContext);
             text.append(functionSignatureText);
@@ -183,6 +183,58 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
             final String functionBodyText = this.visit(functionBodyContext);
             text.append(functionBodyText);
         }
+        return text.toString();
+    }
+
+    @Override
+    public String visitMixinDeclaration(final Dart2Parser.MixinDeclarationContext context) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Enter `visitMixinDeclaration` text: {}", context.getText());
+        }
+        final TerminalNode mixinTerminal = context.MIXIN_();
+        final Dart2Parser.TypeIdentifierContext typeIdentifierContext = context.typeIdentifier();
+        final Dart2Parser.TypeParametersContext typeParametersContext = context.typeParameters();
+        final TerminalNode onTerminal = context.ON_();
+        // todo: use `typeNotVoidListContext` with tests.
+        final Dart2Parser.TypeNotVoidListContext typeNotVoidListContext = context.typeNotVoidList();
+        final Dart2Parser.InterfacesContext interfacesContext = context.interfaces();
+        final TerminalNode obcTerminal = context.OBC();
+        final List<Dart2Parser.MetadataContext> metadataContexts = context.metadata();
+        final List<Dart2Parser.ClassMemberDeclarationContext> classMemberDeclarationContexts = context.classMemberDeclaration();
+        final TerminalNode cbcTerminal = context.CBC();
+        if (typeParametersContext != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitMixinDeclaration -> typeParameters");
+        }
+        if (onTerminal != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitMixinDeclaration -> on");
+        }
+        if (interfacesContext != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitMixinDeclaration -> interfaces");
+        }
+        final StringBuilder text = new StringBuilder();
+        text.append(this.visit(mixinTerminal));
+        text.append(" ");
+        // todo: visit typeIdentifierContext instead of getText().
+        text.append(typeIdentifierContext.getText());
+        text.append(" ");
+        text.append(this.visit(obcTerminal));
+        for (int index = 0; index < classMemberDeclarationContexts.size(); index++) {
+            final Dart2Parser.MetadataContext metadataContext = metadataContexts.get(index);
+            final Dart2Parser.ClassMemberDeclarationContext classMemberDeclarationContext = classMemberDeclarationContexts.get(index);
+            if (!metadataContext.getText().isEmpty()) {
+                throw new UnsupportedOperationException("The following parsing path is not supported yet: visitMixinDeclaration -> metadata");
+            }
+            text.append("\n\n");
+            this.currentIndentLevel++;
+            text.append(this.indentUnit.repeat(this.currentIndentLevel));
+            text.append(this.visit(classMemberDeclarationContext));
+            this.currentIndentLevel--;
+            if (index == classMemberDeclarationContexts.size() - 1) {
+                text.append("\n\n");
+                text.append(this.indentUnit.repeat(this.currentIndentLevel));
+            }
+        }
+        text.append(this.visit(cbcTerminal));
         return text.toString();
     }
 
@@ -341,14 +393,71 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final TerminalNode extendsTerminal = context.EXTENDS_();
         final Dart2Parser.TypeNotVoidContext typeNotVoidContext = context.typeNotVoid();
         final Dart2Parser.MixinsContext mixinsContext = context.mixins();
-        if (mixinsContext != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitSuperclass -> mixins");
+        final StringBuilder text = new StringBuilder();
+        if (extendsTerminal != null) {
+            text.append(this.visit(extendsTerminal));
+            text.append(" ");
+            text.append(this.visit(typeNotVoidContext));
+            if (mixinsContext != null) {
+                text.append(" ");
+                text.append(this.visit(mixinsContext));
+            }
+        } else {
+            text.append(this.visit(mixinsContext));
+        }
+        return text.toString();
+    }
+
+    @Override
+    public String visitMixins(final Dart2Parser.MixinsContext context) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Enter `visitMixins` text: {}", context.getText());
+        }
+        final TerminalNode withTerminal = context.WITH_();
+        final Dart2Parser.TypeNotVoidListContext typeNotVoidListContext = context.typeNotVoidList();
+        final StringBuilder text = new StringBuilder();
+        text.append(this.visit(withTerminal));
+        text.append(" ");
+        text.append(this.visit(typeNotVoidListContext));
+        return text.toString();
+    }
+
+    @Override
+    public String visitTypeNotVoidList(final Dart2Parser.TypeNotVoidListContext context) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Enter `visitTypeNotVoidList` text: {}", context.getText());
+        }
+        final List<Dart2Parser.TypeNotVoidContext> typeNotVoidContexts = context.typeNotVoid();
+        final List<TerminalNode> cTerminals = context.C();
+        final StringBuilder text = new StringBuilder();
+        final Dart2Parser.TypeNotVoidContext firstTypeNotVoidContext = typeNotVoidContexts.get(0);
+        text.append(this.visit(firstTypeNotVoidContext));
+        for (int index = 0; index < cTerminals.size(); index++) {
+            final TerminalNode cTerminal = cTerminals.get(index);
+            final Dart2Parser.TypeNotVoidContext typeNotVoidContext = typeNotVoidContexts.get(index + 1);
+            text.append(this.visit(cTerminal));
+            text.append(" ");
+            text.append(this.visit(typeNotVoidContext));
+        }
+        return text.toString();
+    }
+
+    @Override
+    public String visitTypeNotVoid(final Dart2Parser.TypeNotVoidContext context) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Enter `visitTypeNotVoid` text: {}", context.getText());
+        }
+        final Dart2Parser.FunctionTypeContext functionTypeContext = context.functionType();
+        // todo: use `quTerminal` with tests.
+        final TerminalNode quTerminal = context.QU();
+        final Dart2Parser.TypeNotVoidNotFunctionContext typeNotVoidNotFunctionContext = context.typeNotVoidNotFunction();
+        if (functionTypeContext != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitTypeNotVoid -> functionType");
         }
         final StringBuilder text = new StringBuilder();
-        text.append(this.visit(extendsTerminal));
-        text.append(" ");
-        // todo: visit typeNotVoidContext instead of getText().
-        text.append(typeNotVoidContext.getText());
+        if (typeNotVoidNotFunctionContext != null) {
+            text.append(this.visit(typeNotVoidNotFunctionContext));
+        }
         return text.toString();
     }
 

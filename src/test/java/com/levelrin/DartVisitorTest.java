@@ -50,6 +50,11 @@ final class DartVisitorTest {
     }
 
     @Test
+    void shouldFormatMixin() {
+        this.compare("mixin-before.dart", "mixin-after.dart");
+    }
+
+    @Test
     void shouldFormatGenerics() {
         this.compare("generic-before.dart", "generic-after.dart");
     }
