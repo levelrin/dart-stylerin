@@ -1,6 +1,6 @@
 class MyClass {
 
-  final List<String> list = <String> [
+  final List<String> list = <String>[
     'one',
     'two',
     'three',

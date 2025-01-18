@@ -50,6 +50,11 @@ final class DartVisitorTest {
     }
 
     @Test
+    void shouldFormatLambda() {
+        this.compare("lambda-before.dart", "lambda-after.dart");
+    }
+
+    @Test
     void shouldFormatMixin() {
         this.compare("mixin-before.dart", "mixin-after.dart");
     }

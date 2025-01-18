@@ -813,13 +813,13 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         if (covariantTerminal != null) {
             throw new UnsupportedOperationException("The following parsing path is not supported yet: visitSimpleFormalParameter -> covariant");
         }
-        if (identifierContext != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitSimpleFormalParameter -> identifier");
-        }
         final StringBuilder text = new StringBuilder();
         if (declaredIdentifierContext != null) {
             final String declaredIdentifierText = this.visit(declaredIdentifierContext);
             text.append(declaredIdentifierText);
+        }
+        if (identifierContext != null) {
+            text.append(this.visit(identifierContext));
         }
         return text.toString();
     }
@@ -1261,13 +1261,9 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final TerminalNode scTerminal = context.SC();
         final Dart2Parser.ExpressionListContext expressionListContext = context.expressionList();
         final Dart2Parser.MetadataContext metadataContext = context.metadata();
-        // todo: use `declaredIdentifierContext` and `inTerminal` with tests.
         final Dart2Parser.DeclaredIdentifierContext declaredIdentifierContext = context.declaredIdentifier();
         final TerminalNode inTerminal = context.IN_();
         final Dart2Parser.IdentifierContext identifierContext = context.identifier();
-        if (metadataContext != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitForLoopParts -> metadata");
-        }
         if (identifierContext != null) {
             throw new UnsupportedOperationException("The following parsing path is not supported yet: visitForLoopParts -> identifier");
         }
@@ -1286,6 +1282,16 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
                 final String expressionListText = this.visit(expressionListContext);
                 text.append(expressionListText);
             }
+        }
+        if (metadataContext != null) {
+            if (!metadataContext.getText().isEmpty()) {
+                throw new UnsupportedOperationException("The following parsing path is not supported yet: visitForLoopParts -> metadata");
+            }
+            text.append(this.visit(declaredIdentifierContext));
+            text.append(" ");
+            text.append(this.visit(inTerminal));
+            text.append(" ");
+            text.append(this.visit(exprContext));
         }
         return text.toString();
     }
@@ -1735,10 +1741,10 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         }
         final TerminalNode voidTerminal = context.VOID_();
         final Dart2Parser.TypeNotVoidNotFunctionContext typeNotVoidNotFunctionContext = context.typeNotVoidNotFunction();
-        if (voidTerminal != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitTypeNotFunction -> void");
-        }
         final StringBuilder text = new StringBuilder();
+        if (voidTerminal != null) {
+            text.append(this.visit(voidTerminal));
+        }
         if (typeNotVoidNotFunctionContext != null) {
             final String typeNotVoidNotFunctionText = this.visit(typeNotVoidNotFunctionContext);
             text.append(typeNotVoidNotFunctionText);
@@ -2380,12 +2386,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         if (asyncTerminal != null) {
             throw new UnsupportedOperationException("The following parsing path is not supported yet: visitFunctionExpressionBody -> async");
         }
-        if (egTerminal != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitFunctionExpressionBody -> eg");
-        }
-        if (exprContext != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitFunctionExpressionBody -> expr");
-        }
         if (stTerminal != null) {
             throw new UnsupportedOperationException("The following parsing path is not supported yet: visitFunctionExpressionBody -> st");
         }
@@ -2393,6 +2393,11 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
             throw new UnsupportedOperationException("The following parsing path is not supported yet: visitFunctionExpressionBody -> sync");
         }
         final StringBuilder text = new StringBuilder();
+        if (egTerminal != null) {
+            text.append(this.visit(egTerminal));
+            text.append(" ");
+            text.append(this.visit(exprContext));
+        }
         if (blockContext != null) {
             text.append(this.visit(blockContext));
         }
@@ -2599,10 +2604,7 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         }
         final StringBuilder text = new StringBuilder();
         if (typeArgumentsContext != null) {
-            // todo: visit typeArgumentsContext instead of getText().
-            final String typeArgumentsText = typeArgumentsContext.getText();
-            text.append(typeArgumentsText);
-            text.append(" ");
+            text.append(this.visit(typeArgumentsContext));
         }
         text.append(this.visit(obTerminal));
         if (elementsContext != null) {
@@ -2636,7 +2638,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         if (typeArgumentsContext != null) {
             final String typeArgumentsText = this.visit(typeArgumentsContext);
             text.append(typeArgumentsText);
-            text.append(" ");
         }
         if (elementsContext == null) {
             text.append(this.visit(obcTerminal));
