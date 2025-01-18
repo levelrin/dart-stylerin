@@ -2311,12 +2311,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final TerminalNode opTerminal = context.OP();
         final Dart2Parser.ExprContext exprContext = context.expr();
         final TerminalNode cpTerminal = context.CP();
-        if (superTerminal != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitPrimary -> super");
-        }
-        if (unconditionalAssignableSelectorContext != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitPrimary -> unconditionalAssignableSelector");
-        }
         if (argumentPartContext != null) {
             throw new UnsupportedOperationException("The following parsing path is not supported yet: visitPrimary -> argumentPart");
         }
@@ -2339,6 +2333,13 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         if (thisExpressionContext != null) {
             // todo: visit thisExpressionContext instead of getText().
             text.append(thisExpressionContext.getText());
+        }
+        if (superTerminal != null) {
+            text.append(this.visit(superTerminal));
+            if (unconditionalAssignableSelectorContext != null) {
+                // todo: visit unconditionalAssignableSelectorContext instead of getText().
+                text.append(unconditionalAssignableSelectorContext.getText());
+            }
         }
         if (functionExpressionContext != null) {
             text.append(this.visit(functionExpressionContext));

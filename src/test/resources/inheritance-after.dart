@@ -10,7 +10,7 @@ class Child extends Parent {
 
   @override
   int money() {
-    return 1;
+    return super.money() + 1;
   }
 
 }
