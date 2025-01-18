@@ -1,6 +1,6 @@
 class User {
 
-  User(this._name);
+  const User(this._name);
 
   final String _name;
 
@@ -8,4 +8,9 @@ class User {
     print('Hi, my name is ' + _name + '!');
   }
 
+}
+
+void main() {
+  const User user = const User('Rin');
+  user.introduce();
 }

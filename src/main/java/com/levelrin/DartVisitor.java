@@ -857,12 +857,12 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         if (lateTerminal != null) {
             throw new UnsupportedOperationException("The following parsing path is not supported yet: visitFinalConstVarOrType -> late");
         }
-        if (constTerminal != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitFinalConstVarOrType -> const");
-        }
         final StringBuilder text = new StringBuilder();
         if (finalTerminal != null) {
             text.append(this.visit(finalTerminal));
+        }
+        if (constTerminal != null) {
+            text.append(this.visit(constTerminal));
         }
         if (typeContext != null) {
             final String typeText = this.visit(typeContext);
@@ -2314,9 +2314,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         if (argumentPartContext != null) {
             throw new UnsupportedOperationException("The following parsing path is not supported yet: visitPrimary -> argumentPart");
         }
-        if (constObjectExpressionContext != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitPrimary -> constObjectExpression");
-        }
         if (constructorInvocationContext != null) {
             throw new UnsupportedOperationException("The following parsing path is not supported yet: visitPrimary -> constructorInvocation");
         }
@@ -2348,6 +2345,9 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
             final String newExpressionText = this.visit(newExpressionContext);
             text.append(newExpressionText);
         }
+        if (constObjectExpressionContext != null) {
+            text.append(this.visit(constObjectExpressionContext));
+        }
         if (literalContext != null) {
             final String literalText = this.visit(literalContext);
             text.append(literalText);
@@ -2356,6 +2356,23 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
             final String identifierText = this.visit(identifierContext);
             text.append(identifierText);
         }
+        return text.toString();
+    }
+
+    @Override
+    public String visitConstObjectExpression(final Dart2Parser.ConstObjectExpressionContext context) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Enter `visitConstObjectExpression` text: {}", context.getText());
+        }
+        final TerminalNode constTerminal = context.CONST_();
+        final Dart2Parser.ConstructorDesignationContext constructorDesignationContext = context.constructorDesignation();
+        final Dart2Parser.ArgumentsContext argumentsContext = context.arguments();
+        final StringBuilder text = new StringBuilder();
+        text.append(this.visit(constTerminal));
+        text.append(" ");
+        // todo: visit constructorDesignationContext instead of getText().
+        text.append(constructorDesignationContext.getText());
+        text.append(this.visit(argumentsContext));
         return text.toString();
     }
 
