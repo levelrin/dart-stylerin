@@ -1941,13 +1941,16 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         }
         final List<Dart2Parser.LogicalAndExpressionContext> logicalAndExpressionContexts = context.logicalAndExpression();
         final List<TerminalNode> ppTerminals = context.PP();
-        if (!ppTerminals.isEmpty()) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitLogicalOrExpression -> pp");
-        }
+        final Dart2Parser.LogicalAndExpressionContext firstLogicalAndExpressionContext = logicalAndExpressionContexts.get(0);
         final StringBuilder text = new StringBuilder();
-        for (final Dart2Parser.LogicalAndExpressionContext logicalAndExpression : logicalAndExpressionContexts) {
-            final String logicalAndExpressionText = this.visit(logicalAndExpression);
-            text.append(logicalAndExpressionText);
+        text.append(this.visit(firstLogicalAndExpressionContext));
+        for (int index = 0; index < ppTerminals.size(); index++) {
+            final TerminalNode ppTerminal = ppTerminals.get(index);
+            final Dart2Parser.LogicalAndExpressionContext logicalAndExpressionContext = logicalAndExpressionContexts.get(index + 1);
+            text.append(" ");
+            text.append(this.visit(ppTerminal));
+            text.append(" ");
+            text.append(this.visit(logicalAndExpressionContext));
         }
         return text.toString();
     }
@@ -1959,13 +1962,16 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         }
         final List<Dart2Parser.EqualityExpressionContext> equalityExpressionContexts = context.equalityExpression();
         final List<TerminalNode> aaTerminals = context.AA();
-        if (!aaTerminals.isEmpty()) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitLogicalAndExpression -> aa");
-        }
         final StringBuilder text = new StringBuilder();
-        for (final Dart2Parser.EqualityExpressionContext equalityExpression : equalityExpressionContexts) {
-            final String equalityExpressionText = this.visit(equalityExpression);
-            text.append(equalityExpressionText);
+        final Dart2Parser.EqualityExpressionContext firstEqualityExpressionContext = equalityExpressionContexts.get(0);
+        text.append(this.visit(firstEqualityExpressionContext));
+        for (int index = 0; index < aaTerminals.size(); index++) {
+            final TerminalNode aaTerminal = aaTerminals.get(index);
+            final Dart2Parser.EqualityExpressionContext equalityExpressionContext = equalityExpressionContexts.get(index + 1);
+            text.append(" ");
+            text.append(this.visit(aaTerminal));
+            text.append(" ");
+            text.append(this.visit(equalityExpressionContext));
         }
         return text.toString();
     }
