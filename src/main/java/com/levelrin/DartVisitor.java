@@ -505,12 +505,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         if (initializersContext != null) {
             throw new UnsupportedOperationException("The following parsing path is not supported yet: visitMethodSignature -> initializers");
         }
-        if (getterSignatureContext != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitMethodSignature -> getterSignature");
-        }
-        if (setterSignatureContext != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitMethodSignature -> setterSignature");
-        }
         if (operatorSignatureContext != null) {
             throw new UnsupportedOperationException("The following parsing path is not supported yet: visitMethodSignature -> operatorSignature");
         }
@@ -523,10 +517,56 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
             text.append(this.visit(staticTerminal));
             text.append(" ");
         }
+        if (getterSignatureContext != null) {
+            text.append(this.visit(getterSignatureContext));
+        }
+        if (setterSignatureContext != null) {
+            text.append(this.visit(setterSignatureContext));
+        }
         if (functionSignatureContext != null) {
             final String functionSignatureText = this.visit(functionSignatureContext);
             text.append(functionSignatureText);
         }
+        return text.toString();
+    }
+
+    @Override
+    public String visitSetterSignature(final Dart2Parser.SetterSignatureContext context) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Enter `visitSetterSignature` text: {}", context.getText());
+        }
+        final Dart2Parser.TypeContext typeContext = context.type();
+        final TerminalNode setTerminal = context.SET_();
+        final Dart2Parser.IdentifierContext identifierContext = context.identifier();
+        final Dart2Parser.FormalParameterListContext formalParameterListContext = context.formalParameterList();
+        final StringBuilder text = new StringBuilder();
+        if (typeContext != null) {
+            text.append(this.visit(typeContext));
+            text.append(" ");
+        }
+        text.append(this.visit(setTerminal));
+        text.append(" ");
+        text.append(this.visit(identifierContext));
+        text.append(this.visit(formalParameterListContext));
+        return text.toString();
+    }
+
+    @Override
+    public String visitGetterSignature(final Dart2Parser.GetterSignatureContext context) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Enter `visitGetterSignature` text: {}", context.getText());
+        }
+        final Dart2Parser.TypeContext typeContext = context.type();
+        final TerminalNode getTerminal = context.GET_();
+        final Dart2Parser.IdentifierContext identifierContext = context.identifier();
+        final StringBuilder text = new StringBuilder();
+        if (typeContext != null) {
+            text.append(this.visit(typeContext));
+            text.append(" ");
+        }
+        text.append(this.visit(getTerminal));
+        text.append(" ");
+        text.append(this.visit(identifierContext));
         return text.toString();
     }
 

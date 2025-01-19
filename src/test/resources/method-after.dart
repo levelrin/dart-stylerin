@@ -1,5 +1,7 @@
 class MyClass {
 
+  int _num = 0;
+
   String greet() {
     return 'Yoi Yoi';
   }
@@ -10,4 +12,14 @@ class MyClass {
 
   static String tag() => 'TAG';
 
+  int get num => this._num;
+
+  set num(final int value) => this._num = value;
+
+}
+
+void main() {
+  MyClass obj = MyClass();
+  obj.num = 3;
+  print(obj.num);
 }
