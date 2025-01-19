@@ -1920,13 +1920,16 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         }
         final List<Dart2Parser.LogicalOrExpressionContext> logicalOrExpressionContexts = context.logicalOrExpression();
         final List<TerminalNode> ququTerminals = context.QUQU();
-        if (!ququTerminals.isEmpty()) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitIfNullExpression -> ququ");
-        }
         final StringBuilder text = new StringBuilder();
-        for (final Dart2Parser.LogicalOrExpressionContext logicalOrExpression : logicalOrExpressionContexts) {
-            final String logicalOrExpressionText = this.visit(logicalOrExpression);
-            text.append(logicalOrExpressionText);
+        final Dart2Parser.LogicalOrExpressionContext firstLogicalOrExpression = logicalOrExpressionContexts.get(0);
+        text.append(this.visit(firstLogicalOrExpression));
+        for (int index = 0; index < ququTerminals.size(); index++) {
+            final TerminalNode ququTerminal = ququTerminals.get(index);
+            final Dart2Parser.LogicalOrExpressionContext logicalOrExpressionContext = logicalOrExpressionContexts.get(index + 1);
+            text.append(" ");
+            text.append(this.visit(ququTerminal));
+            text.append(" ");
+            text.append(this.visit(logicalOrExpressionContext));
         }
         return text.toString();
     }
@@ -2259,10 +2262,10 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final TerminalNode notTerminal = context.NOT();
         final Dart2Parser.AssignableSelectorContext assignableSelectorContext = context.assignableSelector();
         final Dart2Parser.ArgumentPartContext argumentPartContext = context.argumentPart();
-        if (notTerminal != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitSelector -> not");
-        }
         final StringBuilder text = new StringBuilder();
+        if (notTerminal != null) {
+            text.append(this.visit(notTerminal));
+        }
         if (assignableSelectorContext != null) {
             // todo: visit assignableSelectorContext instead of getText().
             text.append(assignableSelectorContext.getText());

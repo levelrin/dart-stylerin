@@ -50,6 +50,11 @@ final class DartVisitorTest {
     }
 
     @Test
+    void shouldFormatNullable() {
+        this.compare("nullable-before.dart", "nullable-after.dart");
+    }
+
+    @Test
     void shouldFormatLambda() {
         this.compare("lambda-before.dart", "lambda-after.dart");
     }
