@@ -50,6 +50,11 @@ final class DartVisitorTest {
     }
 
     @Test
+    void shouldFormatAsync() {
+        this.compare("async-before.dart", "async-after.dart");
+    }
+
+    @Test
     void shouldFormatNullable() {
         this.compare("nullable-before.dart", "nullable-after.dart");
     }

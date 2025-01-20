@@ -928,6 +928,7 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final TerminalNode egTerminal = context.EG();
         final Dart2Parser.ExprContext exprContext = context.expr();
         final TerminalNode stTerminal = context.ST();
+        final TerminalNode syncTerminal = context.SYNC_();
         final Dart2Parser.BlockContext blockContext = context.block();
         if (nativeTerminal != null) {
             throw new UnsupportedOperationException("The following parsing path is not supported yet: visitFunctionBody -> native");
@@ -935,20 +936,29 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         if (stringLiteralContext != null) {
             throw new UnsupportedOperationException("The following parsing path is not supported yet: visitFunctionBody -> stringLiteral");
         }
-        if (asyncTerminal != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitFunctionBody -> async");
-        }
         if (stTerminal != null) {
             throw new UnsupportedOperationException("The following parsing path is not supported yet: visitFunctionBody -> st");
         }
         final StringBuilder text = new StringBuilder();
         if (egTerminal != null) {
+            if (asyncTerminal != null) {
+                text.append(this.visit(asyncTerminal));
+                text.append(" ");
+            }
             text.append(this.visit(egTerminal));
             text.append(" ");
             text.append(this.visit(exprContext));
             text.append(this.visit(scTerminal));
         }
         if (blockContext != null) {
+            if (asyncTerminal != null) {
+                text.append(this.visit(asyncTerminal));
+                text.append(" ");
+            }
+            if (syncTerminal != null) {
+                text.append(this.visit(syncTerminal));
+                text.append(" ");
+            }
             final String blockText = this.visit(blockContext);
             text.append(blockText);
         }
@@ -2242,9 +2252,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final TerminalNode superTerminal = context.SUPER_();
         final Dart2Parser.IncrementOperatorContext incrementOperatorContext = context.incrementOperator();
         final Dart2Parser.AssignableExpressionContext assignableExpressionContext = context.assignableExpression();
-        if (awaitExpressionContext != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitUnaryExpression -> awaitExpression");
-        }
         if (minusOperatorContext != null) {
             throw new UnsupportedOperationException("The following parsing path is not supported yet: visitUnaryExpression -> minusOperator");
         }
@@ -2266,10 +2273,27 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
             text.append(prefixOperatorContext.getText());
             text.append(this.visit(unaryExpressionContext));
         }
+        if (awaitExpressionContext != null) {
+            text.append(this.visit(awaitExpressionContext));
+        }
         if (postfixExpressionContext != null) {
             final String postfixExpressionText = this.visit(postfixExpressionContext);
             text.append(postfixExpressionText);
         }
+        return text.toString();
+    }
+
+    @Override
+    public String visitAwaitExpression(final Dart2Parser.AwaitExpressionContext context) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Enter `visitAwaitExpression` text: {}", context.getText());
+        }
+        final TerminalNode awaitTerminal = context.AWAIT_();
+        final Dart2Parser.UnaryExpressionContext unaryExpressionContext = context.unaryExpression();
+        final StringBuilder text = new StringBuilder();
+        text.append(this.visit(awaitTerminal));
+        text.append(" ");
+        text.append(this.visit(unaryExpressionContext));
         return text.toString();
     }
 
