@@ -348,21 +348,25 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         text.append(this.visit(obcTerminal));
         text.append("\n\n");
         this.currentIndentLevel++;
-        for (final Dart2Parser.MetadataContext metadataContext : metadataContexts) {
+        if (!classMemberDeclarationContexts.isEmpty()) {
+            text.append(this.indentUnit.repeat(this.currentIndentLevel));
+        }
+        for (int index = 0; index < classMemberDeclarationContexts.size(); index++) {
+            final Dart2Parser.MetadataContext metadataContext = metadataContexts.get(index);
+            final Dart2Parser.ClassMemberDeclarationContext classMemberDeclarationContext = classMemberDeclarationContexts.get(index);
             if (!metadataContext.getText().isEmpty()) {
-                final String metadataText = this.visit(metadataContext);
-                text.append(this.indentUnit.repeat(this.currentIndentLevel));
-                text.append(metadataText);
+                text.append(this.visit(metadataContext));
                 text.append("\n");
+                text.append(this.indentUnit.repeat(this.currentIndentLevel));
+            }
+            text.append(this.visit(classMemberDeclarationContext));
+            text.append("\n\n");
+            if (index < classMemberDeclarationContexts.size() - 1) {
+                text.append(this.indentUnit.repeat(this.currentIndentLevel));
             }
         }
-        for (final Dart2Parser.ClassMemberDeclarationContext classMemberDeclarationContext : classMemberDeclarationContexts) {
-            final String classMemberDeclarationText = this.visit(classMemberDeclarationContext);
-            text.append(this.indentUnit.repeat(this.currentIndentLevel));
-            text.append(classMemberDeclarationText);
-            text.append("\n\n");
-        }
         this.currentIndentLevel--;
+        text.append(this.indentUnit.repeat(this.currentIndentLevel));
         text.append(this.visit(cbcTerminal));
         return text.toString();
     }
