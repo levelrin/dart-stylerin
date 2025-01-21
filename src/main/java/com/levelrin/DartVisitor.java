@@ -1047,21 +1047,12 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         }
         final List<Dart2Parser.StatementContext> statementContexts = context.statement();
         final StringBuilder text = new StringBuilder();
-        if (statementContexts.size() > 1) {
-            final Dart2Parser.StatementContext firstStatementContext = statementContexts.get(0);
-            final String firstStatementText = this.visit(firstStatementContext);
-            text.append(firstStatementText);
-            for (int index = 1; index < statementContexts.size(); index++) {
+        for (int index = 0; index < statementContexts.size(); index++) {
+            final Dart2Parser.StatementContext statementContext = statementContexts.get(index);
+            text.append(this.visit(statementContext));
+            if (index < statementContexts.size() - 1) {
                 text.append("\n");
                 text.append(this.indentUnit.repeat(this.currentIndentLevel));
-                final Dart2Parser.StatementContext statementContext = statementContexts.get(index);
-                final String statementText = this.visit(statementContext);
-                text.append(statementText);
-            }
-        } else {
-            for (final Dart2Parser.StatementContext statementContext : statementContexts) {
-                final String statementText = this.visit(statementContext);
-                text.append(statementText);
             }
         }
         return text.toString();
@@ -1224,16 +1215,16 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         text.append(" ");
         text.append(this.visit(exprContext));
         text.append(this.visit(coTerminal));
+        this.currentIndentLevel++;
         final int visitStatementCountBefore = this.ruleVisitCounts.getOrDefault(Dart2Parser.StatementContext.class.getSimpleName(), 0);
         final String statementsText = this.visit(statementsContext);
         final int visitStatementCountAfter = this.ruleVisitCounts.getOrDefault(Dart2Parser.StatementContext.class.getSimpleName(), 0);
         if (visitStatementCountBefore < visitStatementCountAfter) {
             text.append("\n");
-            this.currentIndentLevel++;
             text.append(this.indentUnit.repeat(this.currentIndentLevel));
             text.append(statementsText);
-            this.currentIndentLevel--;
         }
+        this.currentIndentLevel--;
         return text.toString();
     }
 

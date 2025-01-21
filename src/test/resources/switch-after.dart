@@ -1,3 +1,5 @@
+import 'dart:math';
+
 class User {
 
   int toNumber(final String number) {
@@ -23,10 +25,24 @@ class User {
       case 1:
       case 2:
         result = 'banana';
+      case 3:
+        final Random random = Random();
+        if (random.nextBool()) {
+          result = 'kiwi';
+        } else {
+          result = 'mango';
+        }
       default:
         result = 'orange';
     }
     return result;
   }
 
+}
+
+void main() {
+  final User user = User();
+  print(
+    user.toFruit(3)
+  );
 }
