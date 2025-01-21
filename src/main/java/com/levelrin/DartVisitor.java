@@ -325,9 +325,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         if (mixinApplicationClassContext != null) {
             throw new UnsupportedOperationException("The following parsing path is not supported yet: visitClassDeclaration -> mixinApplicationClass");
         }
-        if (typeParametersContext != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitClassDeclaration -> typeParameters");
-        }
         if (interfacesContext != null) {
             throw new UnsupportedOperationException("The following parsing path is not supported yet: visitClassDeclaration -> interfaces");
         }
@@ -339,7 +336,12 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         text.append(" ");
         // todo: visit typeIdentifierContext instead of getText().
         text.append(typeIdentifierContext.getText());
-        text.append(" ");
+        if (typeParametersContext == null) {
+            text.append(" ");
+        } else {
+            text.append(this.visit(typeParametersContext));
+            text.append(" ");
+        }
         if (superclassContext != null) {
             final String superclassText = this.visit(superclassContext);
             text.append(superclassText);
@@ -368,6 +370,54 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         this.currentIndentLevel--;
         text.append(this.indentUnit.repeat(this.currentIndentLevel));
         text.append(this.visit(cbcTerminal));
+        return text.toString();
+    }
+
+    @Override
+    public String visitTypeParameters(final Dart2Parser.TypeParametersContext context) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Enter `visitTypeParameters` text: {}", context.getText());
+        }
+        final TerminalNode ltTerminal = context.LT();
+        final List<Dart2Parser.TypeParameterContext> typeParameterContexts = context.typeParameter();
+        final List<TerminalNode> cTerminals = context.C();
+        final TerminalNode gtTerminal = context.GT();
+        final StringBuilder text = new StringBuilder();
+        text.append(this.visit(ltTerminal));
+        final Dart2Parser.TypeParameterContext firstTypeParameter = typeParameterContexts.get(0);
+        text.append(this.visit(firstTypeParameter));
+        for (int index = 0; index < cTerminals.size(); index++) {
+            final TerminalNode cTerminal = cTerminals.get(index);
+            final Dart2Parser.TypeParameterContext typeParameterContext = typeParameterContexts.get(index + 1);
+            text.append(this.visit(cTerminal));
+            text.append(" ");
+            text.append(this.visit(typeParameterContext));
+        }
+        text.append(this.visit(gtTerminal));
+        return text.toString();
+    }
+
+    @Override
+    public String visitTypeParameter(final Dart2Parser.TypeParameterContext context) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Enter `visitTypeParameter` text: {}", context.getText());
+        }
+        final Dart2Parser.MetadataContext metadataContext = context.metadata();
+        final Dart2Parser.IdentifierContext identifierContext = context.identifier();
+        final TerminalNode extendsTerminal = context.EXTENDS_();
+        final Dart2Parser.TypeNotVoidContext typeNotVoidContext = context.typeNotVoid();
+        final StringBuilder text = new StringBuilder();
+        if (!metadataContext.getText().isEmpty()) {
+            text.append(this.visit(metadataContext));
+            text.append(" ");
+        }
+        text.append(this.visit(identifierContext));
+        if (extendsTerminal != null) {
+            text.append(" ");
+            text.append(this.visit(extendsTerminal));
+            text.append(" ");
+            text.append(this.visit(typeNotVoidContext));
+        }
         return text.toString();
     }
 
@@ -914,8 +964,7 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
             text.append(typeText);
         }
         if (varOrTypeContext != null) {
-            // todo: visit varOrTypeContext instead of getText().
-            text.append(varOrTypeContext.getText());
+            text.append(this.visit(varOrTypeContext));
         }
         return text.toString();
     }
@@ -1533,46 +1582,98 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
             text.append(this.visit(abstractTerminal));
             text.append(" ");
         }
-        if (externalTerminal != null) {
+        if (externalTerminal != null && constantConstructorSignatureContext != null) {
+            // EXTERNAL_ constantConstructorSignature
             text.append(this.visit(externalTerminal));
             text.append(" ");
-        }
-        if (staticTerminal != null) {
+            text.append(this.visit(constantConstructorSignatureContext));
+        } else if (functionSignatureContext != null) {
+            // ( EXTERNAL_ STATIC_?)? functionSignature
+            if (externalTerminal != null) {
+                text.append(this.visit(externalTerminal));
+                text.append(" ");
+            }
+            if (staticTerminal != null) {
+                text.append(this.visit(staticTerminal));
+                text.append(" ");
+            }
+            text.append(this.visit(functionSignatureContext));
+        } else if (staticTerminal != null && finalTerminal != null && staticFinalDeclarationListContext != null) {
+            // STATIC_ FINAL_ type? staticFinalDeclarationList
             text.append(this.visit(staticTerminal));
             text.append(" ");
-        }
-        if (lateTerminal != null) {
-            text.append(this.visit(lateTerminal));
-            text.append(" ");
-        }
-        if (finalTerminal != null) {
             text.append(this.visit(finalTerminal));
             text.append(" ");
-        }
-        if (varOrTypeContext != null) {
-            // todo: visit varOrTypeContext instead of getText().
-            text.append(varOrTypeContext.getText());
-            text.append(" ");
-        }
-        if (staticFinalDeclarationListContext != null) {
+            if (typeContext != null) {
+                text.append(this.visit(typeContext));
+                text.append(" ");
+            }
             text.append(this.visit(staticFinalDeclarationListContext));
-        }
-        if (typeContext != null) {
-            final String typeText = this.visit(typeContext);
-            text.append(typeText);
+        } else if (staticTerminal != null && lateTerminal != null && finalTerminal != null && initializedIdentifierListContext != null) {
+            // STATIC_ LATE_ FINAL_ type? initializedIdentifierList
+            text.append(this.visit(staticTerminal));
             text.append(" ");
+            text.append(this.visit(lateTerminal));
+            text.append(" ");
+            text.append(this.visit(finalTerminal));
+            text.append(" ");
+            if (typeContext != null) {
+                text.append(this.visit(typeContext));
+                text.append(" ");
+            }
+            text.append(this.visit(initializedIdentifierListContext));
+        } else if (staticTerminal != null && varOrTypeContext != null && initializedIdentifierListContext != null) {
+            // STATIC_ LATE_? varOrType initializedIdentifierList
+            text.append(this.visit(staticTerminal));
+            text.append(" ");
+            if (lateTerminal != null) {
+                text.append(this.visit(lateTerminal));
+                text.append(" ");
+            }
+            text.append(this.visit(varOrTypeContext));
+            text.append(" ");
+            text.append(this.visit(initializedIdentifierListContext));
+        } else if (finalTerminal != null && initializedIdentifierListContext != null) {
+            // LATE_? FINAL_ type? initializedIdentifierList
+            if (lateTerminal != null) {
+                text.append(this.visit(lateTerminal));
+                text.append(" ");
+            }
+            text.append(this.visit(finalTerminal));
+            text.append(" ");
+            if (typeContext != null) {
+                text.append(this.visit(typeContext));
+                text.append(" ");
+            }
+            text.append(this.visit(initializedIdentifierListContext));
+        } else if (varOrTypeContext != null && initializedIdentifierListContext != null) {
+            // LATE_? varOrType initializedIdentifierList
+            if (lateTerminal != null) {
+                text.append(this.visit(lateTerminal));
+                text.append(" ");
+            }
+            text.append(this.visit(varOrTypeContext));
+            text.append(" ");
+            text.append(this.visit(initializedIdentifierListContext));
+        } else if (constantConstructorSignatureContext != null) {
+            // constantConstructorSignature ( redirection | initializers)?
+            text.append(this.visit(constantConstructorSignatureContext));
         }
-        if (constantConstructorSignatureContext != null) {
-            final String constantConstructorSignatureText = this.visit(constantConstructorSignatureContext);
-            text.append(constantConstructorSignatureText);
+        return text.toString();
+    }
+
+    @Override
+    public String visitVarOrType(final Dart2Parser.VarOrTypeContext context) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Enter `visitVarOrType` text: {}", context.getText());
         }
-        if (initializedIdentifierListContext != null) {
-            final String initializedIdentifierListText = this.visit(initializedIdentifierListContext);
-            text.append(initializedIdentifierListText);
-        }
-        if (functionSignatureContext != null) {
-            final String functionSignatureText = this.visit(functionSignatureContext);
-            text.append(functionSignatureText);
+        final TerminalNode varTerminal = context.VAR_();
+        final Dart2Parser.TypeContext typeContext = context.type();
+        final StringBuilder text = new StringBuilder();
+        if (varTerminal != null) {
+            text.append(this.visit(varTerminal));
+        } else if (typeContext != null) {
+            text.append(this.visit(typeContext));
         }
         return text.toString();
     }
