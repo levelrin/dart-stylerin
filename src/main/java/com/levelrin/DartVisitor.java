@@ -1224,11 +1224,16 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         text.append(" ");
         text.append(this.visit(exprContext));
         text.append(this.visit(coTerminal));
-        text.append("\n");
-        this.currentIndentLevel++;
-        text.append(this.indentUnit.repeat(this.currentIndentLevel));
-        text.append(this.visit(statementsContext));
-        this.currentIndentLevel--;
+        final int visitStatementCountBefore = this.ruleVisitCounts.getOrDefault(Dart2Parser.StatementContext.class.getSimpleName(), 0);
+        final String statementsText = this.visit(statementsContext);
+        final int visitStatementCountAfter = this.ruleVisitCounts.getOrDefault(Dart2Parser.StatementContext.class.getSimpleName(), 0);
+        if (visitStatementCountBefore < visitStatementCountAfter) {
+            text.append("\n");
+            this.currentIndentLevel++;
+            text.append(this.indentUnit.repeat(this.currentIndentLevel));
+            text.append(statementsText);
+            this.currentIndentLevel--;
+        }
         return text.toString();
     }
 

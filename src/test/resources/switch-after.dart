@@ -15,4 +15,18 @@ class User {
     return result;
   }
 
+  String toFruit(final int index) {
+    String result;
+    switch (index) {
+      case 0:
+        result = 'apple';
+      case 1:
+      case 2:
+        result = 'banana';
+      default:
+        result = 'orange';
+    }
+    return result;
+  }
+
 }
