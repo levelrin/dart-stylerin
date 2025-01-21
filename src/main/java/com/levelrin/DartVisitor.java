@@ -2973,7 +2973,13 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
                 text.append(this.indentUnit.repeat(this.currentIndentLevel));
             } else {
                 this.currentIndentLevel--;
-                text.append(argumentsText);
+                text.append(
+                    // Dedent the arguments because it was wrong.
+                    argumentsText.replaceAll(
+                        "\n" + this.indentUnit,
+                        "\n"
+                    )
+                );
                 if (cTerminal != null) {
                     text.append(this.visit(cTerminal));
                 }
