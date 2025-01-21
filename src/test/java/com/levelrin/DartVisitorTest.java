@@ -50,6 +50,11 @@ final class DartVisitorTest {
     }
 
     @Test
+    void shouldFormatTemp() {
+        this.compare("super-param-before.dart", "super-param-after.dart");
+    }
+
+    @Test
     void shouldFormatAsync() {
         this.compare("async-before.dart", "async-after.dart");
     }

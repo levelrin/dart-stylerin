@@ -355,7 +355,9 @@ factoryConstructorSignature
     ;
 
 fieldFormalParameter
-    : finalConstVarOrType? THIS_ D identifier (formalParameterPart QU?)?
+    // The original rule was: finalConstVarOrType? THIS_ D identifier (formalParameterPart QU?)?
+    // Since Dart spec does not have super parameters, I include SUPER_ as a workaround.
+    : finalConstVarOrType? (THIS_|SUPER_) D identifier (formalParameterPart QU?)?
     ;
 
 fieldInitializer
