@@ -50,6 +50,11 @@ final class DartVisitorTest {
     }
 
     @Test
+    void shouldFormatException() {
+        this.compare("exception-before.dart", "exception-after.dart");
+    }
+
+    @Test
     void shouldFormatInterface() {
         this.compare("interface-before.dart", "interface-after.dart");
     }

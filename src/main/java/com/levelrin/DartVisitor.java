@@ -1117,9 +1117,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         if (rethrowStatementContext != null) {
             throw new UnsupportedOperationException("The following parsing path is not supported yet: visitNonLabelledStatement -> rethrowStatement");
         }
-        if (tryStatementContext != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitNonLabelledStatement -> tryStatement");
-        }
         if (breakStatementContext != null) {
             throw new UnsupportedOperationException("The following parsing path is not supported yet: visitNonLabelledStatement -> breakStatement");
         }
@@ -1140,36 +1137,118 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         }
         final StringBuilder text = new StringBuilder();
         if (blockContext != null) {
-            final String blockText = this.visit(blockContext);
-            text.append(blockText);
-        }
-        if (returnStatementContext != null) {
-            final String returnStatementText = this.visit(returnStatementContext);
-            text.append(returnStatementText);
-        }
-        if (forStatementContext != null) {
-            final String forStatementText = this.visit(forStatementContext);
-            text.append(forStatementText);
-        }
-        if (expressionStatementContext != null) {
-            final String expressionText = this.visit(expressionStatementContext);
-            text.append(expressionText);
-        }
-        if (localVariableDeclarationContext != null) {
-            final String localVariableDeclarationText = this.visit(localVariableDeclarationContext);
-            text.append(localVariableDeclarationText);
-        }
-        if (ifStatementContext != null) {
-            final String ifStatementText = this.visit(ifStatementContext);
-            text.append(ifStatementText);
-        }
-        if (whileStatementContext != null) {
-            final String whileStatementText = this.visit(whileStatementContext);
-            text.append(whileStatementText);
-        }
-        if (switchStatementContext != null) {
+            text.append(this.visit(blockContext));
+        } else if (returnStatementContext != null) {
+            text.append(this.visit(returnStatementContext));
+        } else if (forStatementContext != null) {
+            text.append(this.visit(forStatementContext));
+        } else if (expressionStatementContext != null) {
+            text.append(this.visit(expressionStatementContext));
+        } else if (localVariableDeclarationContext != null) {
+            text.append(this.visit(localVariableDeclarationContext));
+        } else if (ifStatementContext != null) {
+            text.append(this.visit(ifStatementContext));
+        } else if (tryStatementContext != null) {
+            text.append(this.visit(tryStatementContext));
+        } else if (whileStatementContext != null) {
+            text.append(this.visit(whileStatementContext));
+        } else if (switchStatementContext != null) {
             text.append(this.visit(switchStatementContext));
         }
+        return text.toString();
+    }
+
+    @Override
+    public String visitTryStatement(final Dart2Parser.TryStatementContext context) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Enter `visitTryStatement` text: {}", context.getText());
+        }
+        final TerminalNode tryTerminal = context.TRY_();
+        final Dart2Parser.BlockContext blockContext = context.block();
+        final List<Dart2Parser.OnPartContext> onPartContexts = context.onPart();
+        final Dart2Parser.FinallyPartContext finallyPartContext = context.finallyPart();
+        final StringBuilder text = new StringBuilder();
+        text.append(this.visit(tryTerminal));
+        text.append(" ");
+        text.append(this.visit(blockContext));
+        for (final Dart2Parser.OnPartContext onPartContext : onPartContexts) {
+            text.append(" ");
+            text.append(this.visit(onPartContext));
+        }
+        if (finallyPartContext != null) {
+            text.append(" ");
+            text.append(this.visit(finallyPartContext));
+        }
+        return text.toString();
+    }
+
+    @Override
+    public String visitFinallyPart(final Dart2Parser.FinallyPartContext context) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Enter `visitFinallyPart` text: {}", context.getText());
+        }
+        final TerminalNode finallyTerminal = context.FINALLY_();
+        final Dart2Parser.BlockContext blockContext = context.block();
+        final StringBuilder text = new StringBuilder();
+        text.append(this.visit(finallyTerminal));
+        text.append(" ");
+        text.append(this.visit(blockContext));
+        return text.toString();
+    }
+
+    @Override
+    public String visitOnPart(final Dart2Parser.OnPartContext context) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Enter `visitOnPart` text: {}", context.getText());
+        }
+        final Dart2Parser.CatchPartContext catchPartContext = context.catchPart();
+        final Dart2Parser.BlockContext blockContext = context.block();
+        final TerminalNode onTerminal = context.ON_();
+        final Dart2Parser.TypeNotVoidContext typeNotVoidContext = context.typeNotVoid();
+        final StringBuilder text = new StringBuilder();
+        if (onTerminal == null) {
+            // catchPart block
+            text.append(this.visit(catchPartContext));
+            text.append(" ");
+            text.append(this.visit(blockContext));
+        } else {
+            // ON_ typeNotVoid catchPart? block
+            text.append(this.visit(onTerminal));
+            text.append(" ");
+            text.append(this.visit(typeNotVoidContext));
+            if (catchPartContext != null) {
+                text.append(" ");
+                text.append(this.visit(catchPartContext));
+            }
+            text.append(" ");
+            text.append(this.visit(blockContext));
+        }
+        return text.toString();
+    }
+
+    @Override
+    public String visitCatchPart(final Dart2Parser.CatchPartContext context) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Enter `visitCatchPart` text: {}", context.getText());
+        }
+        final TerminalNode catchTerminal = context.CATCH_();
+        final TerminalNode opTerminal = context.OP();
+        final List<Dart2Parser.IdentifierContext> identifierContexts = context.identifier();
+        final TerminalNode cTerminal = context.C();
+        final TerminalNode cpTerminal = context.CP();
+        final StringBuilder text = new StringBuilder();
+        text.append(this.visit(catchTerminal));
+        text.append(" ");
+        text.append(this.visit(opTerminal));
+        final Dart2Parser.IdentifierContext firstIdentifierContext = identifierContexts.get(0);
+        text.append(this.visit(firstIdentifierContext));
+        if (cTerminal != null) {
+            text.append(this.visit(cTerminal));
+            text.append(" ");
+            final Dart2Parser.IdentifierContext secondIdentifierContext = identifierContexts.get(1);
+            text.append(this.visit(secondIdentifierContext));
+        }
+        text.append(this.visit(cpTerminal));
         return text.toString();
     }
 
@@ -2033,9 +2112,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         if (cascadeContext != null) {
             throw new UnsupportedOperationException("The following parsing path is not supported yet: visitExpr -> cascade");
         }
-        if (throwExpressionContext != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitExpr -> throwExpression");
-        }
         final StringBuilder text = new StringBuilder();
         if (assignableExpressionContext != null) {
             // todo: visit assignableExpressionContext instead of getText().
@@ -2046,11 +2122,25 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
             text.append(" ");
             final String exprText = this.visit(exprContext);
             text.append(exprText);
+        } else if (conditionalExpressionContext != null) {
+            text.append(this.visit(conditionalExpressionContext));
+        } else if (throwExpressionContext != null) {
+            text.append(this.visit(throwExpressionContext));
         }
-        if (conditionalExpressionContext != null) {
-            final String conditionalExpressionText = this.visit(conditionalExpressionContext);
-            text.append(conditionalExpressionText);
+        return text.toString();
+    }
+
+    @Override
+    public String visitThrowExpression(final Dart2Parser.ThrowExpressionContext context) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Enter `visitThrowExpression` text: {}", context.getText());
         }
+        final TerminalNode throwTerminal = context.THROW_();
+        final Dart2Parser.ExprContext exprContext = context.expr();
+        final StringBuilder text = new StringBuilder();
+        text.append(this.visit(throwTerminal));
+        text.append(" ");
+        text.append(this.visit(exprContext));
         return text.toString();
     }
 
