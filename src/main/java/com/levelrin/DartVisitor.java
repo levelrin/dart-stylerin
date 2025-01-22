@@ -2891,14 +2891,22 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         }
         final StringBuilder text = new StringBuilder();
         if (expressionElementContext != null) {
-            // todo: visit expressionElementContext instead of getText().
-            final String expressionText = expressionElementContext.getText();
-            text.append(expressionText);
-        }
-        if (mapElementContext != null) {
+            text.append(this.visit(expressionElementContext));
+        } else if (mapElementContext != null) {
             final String mapElementText = this.visit(mapElementContext);
             text.append(mapElementText);
         }
+        return text.toString();
+    }
+
+    @Override
+    public String visitExpressionElement(final Dart2Parser.ExpressionElementContext context) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Enter `visitExpressionElement` text: {}", context.getText());
+        }
+        final Dart2Parser.ExprContext exprContext = context.expr();
+        final StringBuilder text = new StringBuilder();
+        text.append(this.visit(exprContext));
         return text.toString();
     }
 
