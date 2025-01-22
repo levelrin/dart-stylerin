@@ -287,12 +287,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         if (deferredTerminal != null) {
             throw new UnsupportedOperationException("The following parsing path is not supported yet: visitImportSpecification -> deferred");
         }
-        if (asTerminal != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitImportSpecification -> as");
-        }
-        if (identifierContext != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitImportSpecification -> identifier");
-        }
         if (!combinatorContexts.isEmpty()) {
             throw new UnsupportedOperationException("The following parsing path is not supported yet: visitImportSpecification -> combinator");
         }
@@ -301,6 +295,12 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         text.append(" ");
         // todo: visit configurableUriContext instead of getText().
         text.append(configurableUriContext.getText());
+        if (asTerminal != null) {
+            text.append(" ");
+            text.append(this.visit(asTerminal));
+            text.append(" ");
+            text.append(this.visit(identifierContext));
+        }
         text.append(this.visit(scTerminal));
         return text.toString();
     }
