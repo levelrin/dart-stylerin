@@ -1737,15 +1737,14 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final Dart2Parser.FunctionTypeContext functionTypeContext = context.functionType();
         final TerminalNode quTerminal =  context.QU();
         final Dart2Parser.TypeNotFunctionContext typeNotFunctionContext = context.typeNotFunction();
-        if (quTerminal != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitType -> qu");
-        }
         final StringBuilder text = new StringBuilder();
         if (functionTypeContext != null) {
             final String functionTypeText = this.visit(functionTypeContext);
             text.append(functionTypeText);
-        }
-        if (typeNotFunctionContext != null) {
+            if (quTerminal != null) {
+                text.append(this.visit(quTerminal));
+            }
+        } else if (typeNotFunctionContext != null) {
             final String typeNotFunctionText = this.visit(typeNotFunctionContext);
             text.append(typeNotFunctionText);
         }
@@ -2575,22 +2574,28 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final TerminalNode stTerminal = context.ST();
         final TerminalNode syncTerminal = context.SYNC_();
         final Dart2Parser.BlockContext blockContext = context.block();
-        if (asyncTerminal != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitFunctionExpressionBody -> async");
-        }
         if (stTerminal != null) {
             throw new UnsupportedOperationException("The following parsing path is not supported yet: visitFunctionExpressionBody -> st");
         }
-        if (syncTerminal != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitFunctionExpressionBody -> sync");
-        }
         final StringBuilder text = new StringBuilder();
         if (egTerminal != null) {
+            // ASYNC_? EG expr
+            if (asyncTerminal != null) {
+                text.append(this.visit(asyncTerminal));
+                text.append(" ");
+            }
             text.append(this.visit(egTerminal));
             text.append(" ");
             text.append(this.visit(exprContext));
-        }
-        if (blockContext != null) {
+        } else if (blockContext != null) {
+            // ( ASYNC_ ST? | SYNC_ ST)? block
+            if (asyncTerminal != null) {
+                text.append(this.visit(asyncTerminal));
+                text.append(" ");
+            } else if (syncTerminal != null) {
+                text.append(this.visit(syncTerminal));
+                text.append(" ");
+            }
             text.append(this.visit(blockContext));
         }
         return text.toString();

@@ -1,5 +1,15 @@
 import 'dart:async';
 
+class Basket {
+
+  Future<String> Function()? onFetch;
+
+  Basket({
+    this.onFetch
+  });
+
+}
+
 Future<String> fetchData() async {
   await Future.delayed(
     Duration(
@@ -12,4 +22,14 @@ Future<String> fetchData() async {
 void main() async {
   final String fruit = await fetchData();
   print(fruit);
+  Basket(
+    onFetch: () async {
+      await Future.delayed(
+        Duration(
+          seconds: 1
+        )
+      );
+      return 'banana';
+    }
+  );
 }
