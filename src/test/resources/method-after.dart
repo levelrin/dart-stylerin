@@ -22,4 +22,6 @@ void main() {
   MyClass obj = MyClass();
   obj.num = 3;
   print(obj.num);
+  final int value1 = (obj.num + 3) * 2;
+  print(value1);
 }

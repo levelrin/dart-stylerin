@@ -2490,15 +2490,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         if (constructorInvocationContext != null) {
             throw new UnsupportedOperationException("The following parsing path is not supported yet: visitPrimary -> constructorInvocation");
         }
-        if (opTerminal != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitPrimary -> op");
-        }
-        if (exprContext != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitPrimary -> expr");
-        }
-        if (cpTerminal != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitPrimary -> cp");
-        }
         final StringBuilder text = new StringBuilder();
         if (thisExpressionContext != null) {
             // todo: visit thisExpressionContext instead of getText().
@@ -2528,6 +2519,11 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         if (identifierContext != null) {
             final String identifierText = this.visit(identifierContext);
             text.append(identifierText);
+        }
+        if (opTerminal != null) {
+            text.append(this.visit(opTerminal));
+            text.append(this.visit(exprContext));
+            text.append(this.visit(cpTerminal));
         }
         return text.toString();
     }
