@@ -325,12 +325,10 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         if (mixinApplicationClassContext != null) {
             throw new UnsupportedOperationException("The following parsing path is not supported yet: visitClassDeclaration -> mixinApplicationClass");
         }
-        if (interfacesContext != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitClassDeclaration -> interfaces");
-        }
         final StringBuilder text = new StringBuilder();
         if (abstractTerminal != null) {
             text.append(this.visit(abstractTerminal));
+            text.append(" ");
         }
         text.append(this.visit(classTerminal));
         text.append(" ");
@@ -343,8 +341,11 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
             text.append(" ");
         }
         if (superclassContext != null) {
-            final String superclassText = this.visit(superclassContext);
-            text.append(superclassText);
+            text.append(this.visit(superclassContext));
+            text.append(" ");
+        }
+        if (interfacesContext != null) {
+            text.append(this.visit(interfacesContext));
             text.append(" ");
         }
         text.append(this.visit(obcTerminal));
@@ -370,6 +371,20 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         this.currentIndentLevel--;
         text.append(this.indentUnit.repeat(this.currentIndentLevel));
         text.append(this.visit(cbcTerminal));
+        return text.toString();
+    }
+
+    @Override
+    public String visitInterfaces(final Dart2Parser.InterfacesContext context) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Enter `visitInterfaces` text: {}", context.getText());
+        }
+        final TerminalNode implementsTerminal = context.IMPLEMENTS_();
+        final Dart2Parser.TypeNotVoidListContext typeNotVoidListContext = context.typeNotVoidList();
+        final StringBuilder text = new StringBuilder();
+        text.append(this.visit(implementsTerminal));
+        text.append(" ");
+        text.append(this.visit(typeNotVoidListContext));
         return text.toString();
     }
 

@@ -50,7 +50,12 @@ final class DartVisitorTest {
     }
 
     @Test
-    void shouldFormatTemp() {
+    void shouldFormatInterface() {
+        this.compare("interface-before.dart", "interface-after.dart");
+    }
+
+    @Test
+    void shouldFormatSuperParam() {
         this.compare("super-param-before.dart", "super-param-after.dart");
     }
 
