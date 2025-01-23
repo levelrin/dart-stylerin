@@ -771,10 +771,26 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final StringBuilder text = new StringBuilder();
         text.append(this.visit(factoryTerminal));
         text.append(" ");
-        // todo: visit constructorNameContext instead of getText().
-        text.append(constructorNameContext.getText());
+        text.append(this.visit(constructorNameContext));
         final String formalParameterListText = this.visit(formalParameterListContext);
         text.append(formalParameterListText);
+        return text.toString();
+    }
+
+    @Override
+    public String visitConstructorName(final Dart2Parser.ConstructorNameContext context) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Enter `visitConstructorName` text: {}", context.getText());
+        }
+        final Dart2Parser.TypeIdentifierContext typeIdentifierContext = context.typeIdentifier();
+        final TerminalNode dTerminal = context.D();
+        final Dart2Parser.IdentifierContext identifierContext = context.identifier();
+        final StringBuilder text = new StringBuilder();
+        text.append(this.visit(typeIdentifierContext));
+        if (dTerminal != null) {
+            text.append(this.visit(dTerminal));
+            text.append(this.visit(identifierContext));
+        }
         return text.toString();
     }
 
@@ -1933,8 +1949,7 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final StringBuilder text = new StringBuilder();
         text.append(this.visit(constTerminal));
         text.append(" ");
-        // todo: visit constructorNameContext instead of getText().
-        text.append(constructorNameContext.getText());
+        text.append(this.visit(constructorNameContext));
         final String formalParameterListText = this.visit(formalParameterListContext);
         text.append(formalParameterListText);
         return text.toString();
