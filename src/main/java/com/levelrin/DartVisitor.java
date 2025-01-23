@@ -2285,8 +2285,7 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final Dart2Parser.ThrowExpressionContext throwExpressionContext = context.throwExpression();
         final StringBuilder text = new StringBuilder();
         if (assignableExpressionContext != null) {
-            // todo: visit assignableExpressionContext instead of getText().
-            text.append(assignableExpressionContext.getText());
+            text.append(this.visit(assignableExpressionContext));
             text.append(" ");
             // todo: visit assignmentOperatorContext instead of getText().
             text.append(assignmentOperatorContext.getText());
@@ -2300,6 +2299,44 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         } else if (throwExpressionContext != null) {
             text.append(this.visit(throwExpressionContext));
         }
+        return text.toString();
+    }
+
+    @Override
+    public String visitAssignableExpression(final Dart2Parser.AssignableExpressionContext context) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Enter `visitAssignableExpression` text: {}", context.getText());
+        }
+        final Dart2Parser.PrimaryContext primaryContext = context.primary();
+        final Dart2Parser.AssignableSelectorPartContext assignableSelectorPartContext = context.assignableSelectorPart();
+        final TerminalNode superTerminal = context.SUPER_();
+        // todo: use `unconditionalAssignableSelectorContext` with tests.
+        final Dart2Parser.UnconditionalAssignableSelectorContext unconditionalAssignableSelectorContext = context.unconditionalAssignableSelector();
+        final Dart2Parser.IdentifierContext identifierContext = context.identifier();
+        final StringBuilder text = new StringBuilder();
+        if (primaryContext != null) {
+            text.append(this.visit(primaryContext));
+            text.append(this.visit(assignableSelectorPartContext));
+        } else if (superTerminal != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitAssignableExpression -> super");
+        } else {
+            text.append(this.visit(identifierContext));
+        }
+        return text.toString();
+    }
+
+    @Override
+    public String visitAssignableSelectorPart(final Dart2Parser.AssignableSelectorPartContext context) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Enter `visitAssignableSelectorPart` text: {}", context.getText());
+        }
+        final List<Dart2Parser.SelectorContext> selectorContexts = context.selector();
+        final Dart2Parser.AssignableSelectorContext assignableSelectorContext = context.assignableSelector();
+        if (!selectorContexts.isEmpty()) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitAssignableSelectorPart -> selector");
+        }
+        final StringBuilder text = new StringBuilder();
+        text.append(this.visit(assignableSelectorContext));
         return text.toString();
     }
 
@@ -2770,8 +2807,7 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final List<Dart2Parser.SelectorContext> selectorContexts = context.selector();
         final StringBuilder text = new StringBuilder();
         if (assignableExpressionContext != null) {
-            // todo: visit assignableExpressionContext instead of getText().
-            text.append(assignableExpressionContext.getText());
+            text.append(this.visit(assignableExpressionContext));
             // todo: visit postfixOperatorContext instead of getText().
             text.append(postfixOperatorContext.getText());
         }
