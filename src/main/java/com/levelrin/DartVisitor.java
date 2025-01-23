@@ -2751,11 +2751,25 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
             if (index < additiveOperatorContexts.size()) {
                 final Dart2Parser.AdditiveOperatorContext additiveOperatorContext = additiveOperatorContexts.get(index);
                 text.append(" ");
-                // todo: visit additiveOperatorContext instead of getText().
-                final String additiveOperatorText = additiveOperatorContext.getText();
-                text.append(additiveOperatorText);
+                text.append(this.visit(additiveOperatorContext));
                 text.append(" ");
             }
+        }
+        return text.toString();
+    }
+
+    @Override
+    public String visitAdditiveOperator(final Dart2Parser.AdditiveOperatorContext context) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Enter `visitAdditiveOperator` text: {}", context.getText());
+        }
+        final TerminalNode plTerminal = context.PL();
+        final TerminalNode minusTerminal = context.MINUS();
+        final StringBuilder text = new StringBuilder();
+        if (plTerminal != null) {
+            text.append(this.visit(plTerminal));
+        } else {
+            text.append(this.visit(minusTerminal));
         }
         return text.toString();
     }
