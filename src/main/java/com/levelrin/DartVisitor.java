@@ -2606,8 +2606,7 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         if (bitwiseOrExpressionContexts.size() > 1) {
             text.append(firstBitwiseOrExpressionText);
             text.append(" ");
-            // todo: visit relationalOperatorContext instead of getText().
-            text.append(relationalOperatorContext.getText());
+            text.append(this.visit(relationalOperatorContext));
             text.append(" ");
             final Dart2Parser.BitwiseOrExpressionContext secondBitwiseOrExpression = bitwiseOrExpressionContexts.get(1);
             final String secondBitwiseOrExpressionText = this.visit(secondBitwiseOrExpression);
@@ -2618,6 +2617,29 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
             } else {
                 throw new UnsupportedOperationException("The following parsing path is not supported yet: visitRelationalExpression -> super");
             }
+        }
+        return text.toString();
+    }
+
+    @Override
+    public String visitRelationalOperator(final Dart2Parser.RelationalOperatorContext context) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Enter `visitRelationalOperator` text: {}", context.getText());
+        }
+        final TerminalNode gtTerminal = context.GT();
+        final TerminalNode eqTerminal = context.EQ();
+        final TerminalNode lteTerminal = context.LTE();
+        final TerminalNode ltTerminal = context.LT();
+        final StringBuilder text = new StringBuilder();
+        if (eqTerminal != null) {
+            text.append(this.visit(gtTerminal));
+            text.append(this.visit(eqTerminal));
+        } else if (gtTerminal != null) {
+            text.append(this.visit(gtTerminal));
+        } else if (lteTerminal != null) {
+            text.append(this.visit(lteTerminal));
+        } else {
+            text.append(this.visit(ltTerminal));
         }
         return text.toString();
     }
