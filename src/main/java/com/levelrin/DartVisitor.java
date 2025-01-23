@@ -2287,8 +2287,7 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         if (assignableExpressionContext != null) {
             text.append(this.visit(assignableExpressionContext));
             text.append(" ");
-            // todo: visit assignmentOperatorContext instead of getText().
-            text.append(assignmentOperatorContext.getText());
+            text.append(this.visit(assignmentOperatorContext));
             text.append(" ");
             final String exprText = this.visit(exprContext);
             text.append(exprText);
@@ -2298,6 +2297,23 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
             text.append(this.visit(cascadeContext));
         } else if (throwExpressionContext != null) {
             text.append(this.visit(throwExpressionContext));
+        }
+        return text.toString();
+    }
+
+    @Override
+    public String visitAssignmentOperator(final Dart2Parser.AssignmentOperatorContext context) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Enter `visitAssignmentOperator` text: {}", context.getText());
+        }
+        final TerminalNode eqTerminal = context.EQ();
+        // todo: use `compoundAssignmentOperatorContext` with tests.
+        final Dart2Parser.CompoundAssignmentOperatorContext compoundAssignmentOperatorContext = context.compoundAssignmentOperator();
+        final StringBuilder text = new StringBuilder();
+        if (eqTerminal != null) {
+            text.append(this.visit(eqTerminal));
+        } else {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitAssignmentOperator -> compoundAssignmentOperator");
         }
         return text.toString();
     }
