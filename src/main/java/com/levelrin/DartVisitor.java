@@ -2556,8 +2556,7 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
             text.append(firstRelationalExpressionText);
             if (equalityOperatorContext != null) {
                 text.append(" ");
-                // todo: visit equalityOperatorContext instead of getText().
-                text.append(equalityOperatorContext.getText());
+                text.append(this.visit(equalityOperatorContext));
                 text.append(" ");
                 final Dart2Parser.RelationalExpressionContext secondRelationalExpressionContext = relationalExpressionContexts.get(1);
                 final String secondRelationalExpressionText = this.visit(secondRelationalExpressionContext);
@@ -2565,6 +2564,22 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
             }
         } else {
             throw new UnsupportedOperationException("The following parsing path is not supported yet: visitEqualityExpression -> super");
+        }
+        return text.toString();
+    }
+
+    @Override
+    public String visitEqualityOperator(final Dart2Parser.EqualityOperatorContext context) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Enter `visitEqualityOperator` text: {}", context.getText());
+        }
+        final TerminalNode eeTerminal = context.EE();
+        final TerminalNode neTerminal = context.NE();
+        final StringBuilder text = new StringBuilder();
+        if (eeTerminal != null) {
+            text.append(this.visit(eeTerminal));
+        } else {
+            text.append(this.visit(neTerminal));
         }
         return text.toString();
     }
