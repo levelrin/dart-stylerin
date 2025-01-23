@@ -2923,8 +2923,7 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final Dart2Parser.ArgumentsContext argumentsContext = context.arguments();
         final StringBuilder text = new StringBuilder();
         if (typeArgumentsContext != null) {
-            // todo: visit typeArgumentsContext instead of getText().
-            text.append(typeArgumentsContext.getText());
+            text.append(this.visit(typeArgumentsContext));
         }
         if (argumentsContext != null) {
             final String argumentsText = this.visit(argumentsContext);
