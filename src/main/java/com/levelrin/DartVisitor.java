@@ -808,8 +808,7 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
             text.append(typeContext.getText());
             text.append(" ");
         }
-        // todo: visit identifierContext instead of getText().
-        text.append(identifierContext.getText());
+        text.append(this.visit(identifierContext));
         final String formalParameterText = this.visit(formalParameterPartContext);
         text.append(formalParameterText);
         return text.toString();
@@ -2235,8 +2234,7 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final TerminalNode eqTerminal = context.EQ();
         final Dart2Parser.ExprContext exprContext = context.expr();
         final StringBuilder text = new StringBuilder();
-        // todo: visit identifierContext instead of getText().
-        text.append(identifierContext.getText());
+        text.append(this.visit(identifierContext));
         if (eqTerminal != null) {
             text.append(" ");
             text.append(this.visit(eqTerminal));
