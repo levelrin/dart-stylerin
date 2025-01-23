@@ -2109,9 +2109,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final Dart2Parser.ConditionalExpressionContext conditionalExpressionContext = context.conditionalExpression();
         final Dart2Parser.CascadeContext cascadeContext = context.cascade();
         final Dart2Parser.ThrowExpressionContext throwExpressionContext = context.throwExpression();
-        if (cascadeContext != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitExpr -> cascade");
-        }
         final StringBuilder text = new StringBuilder();
         if (assignableExpressionContext != null) {
             // todo: visit assignableExpressionContext instead of getText().
@@ -2124,8 +2121,94 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
             text.append(exprText);
         } else if (conditionalExpressionContext != null) {
             text.append(this.visit(conditionalExpressionContext));
+        } else if (cascadeContext != null) {
+            text.append(this.visit(cascadeContext));
         } else if (throwExpressionContext != null) {
             text.append(this.visit(throwExpressionContext));
+        }
+        return text.toString();
+    }
+
+    @Override
+    public String visitCascade(final Dart2Parser.CascadeContext context) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Enter `visitCascade` text: {}", context.getText());
+        }
+        final Dart2Parser.CascadeContext cascadeContext = context.cascade();
+        final TerminalNode ddTerminal = context.DD();
+        final Dart2Parser.CascadeSectionContext cascadeSectionContext = context.cascadeSection();
+        final Dart2Parser.ConditionalExpressionContext conditionalExpressionContext = context.conditionalExpression();
+        final TerminalNode quddTerminal = context.QUDD();
+        if (quddTerminal != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitCascade -> qudd");
+        }
+        final StringBuilder text = new StringBuilder();
+        if (cascadeContext != null) {
+            text.append(this.visit(cascadeContext));
+            text.append(this.visit(ddTerminal));
+            text.append(this.visit(cascadeSectionContext));
+        } else if (conditionalExpressionContext != null) {
+            text.append(this.visit(conditionalExpressionContext));
+            if (ddTerminal != null) {
+                text.append(this.visit(ddTerminal));
+            }
+            text.append(this.visit(cascadeSectionContext));
+        }
+        return text.toString();
+    }
+
+    @Override
+    public String visitCascadeSection(final Dart2Parser.CascadeSectionContext context) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Enter `visitCascadeSection` text: {}", context.getText());
+        }
+        final Dart2Parser.CascadeSelectorContext cascadeSelectorContext = context.cascadeSelector();
+        final Dart2Parser.CascadeSectionTailContext cascadeSectionTailContext = context.cascadeSectionTail();
+        final StringBuilder text = new StringBuilder();
+        text.append(this.visit(cascadeSelectorContext));
+        text.append(this.visit(cascadeSectionTailContext));
+        return text.toString();
+    }
+
+    @Override
+    public String visitCascadeSelector(final Dart2Parser.CascadeSelectorContext context) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Enter `visitCascadeSelector` text: {}", context.getText());
+        }
+        final TerminalNode obTerminal = context.OB();
+        // todo: use `exprContext` and `cbTerminal` with tests.
+        final Dart2Parser.ExprContext exprContext = context.expr();
+        final TerminalNode cbTerminal = context.CB();
+        final Dart2Parser.IdentifierContext identifierContext = context.identifier();
+        final StringBuilder text = new StringBuilder();
+        if (obTerminal != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitCascadeSelector -> ob");
+        } else {
+            text.append(this.visit(identifierContext));
+        }
+        return text.toString();
+    }
+
+    @Override
+    public String visitCascadeSectionTail(final Dart2Parser.CascadeSectionTailContext context) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Enter `visitCascadeSectionTail` text: {}", context.getText());
+        }
+        final Dart2Parser.CascadeAssignmentContext cascadeAssignmentContext = context.cascadeAssignment();
+        final List<Dart2Parser.SelectorContext> selectorContexts = context.selector();
+        final Dart2Parser.AssignableSelectorContext assignableSelectorContext = context.assignableSelector();
+        final StringBuilder text = new StringBuilder();
+        if (cascadeAssignmentContext != null && assignableSelectorContext == null) {
+            // cascadeAssignment
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitCascadeSectionTail -> cascadeAssignment");
+        } else {
+            // selector* ( assignableSelector cascadeAssignment)?
+            for (final Dart2Parser.SelectorContext selectorContext : selectorContexts) {
+                text.append(this.visit(selectorContext));
+            }
+            if (assignableSelectorContext != null) {
+                throw new UnsupportedOperationException("The following parsing path is not supported yet: visitCascadeSectionTail -> assignableSelector");
+            }
         }
         return text.toString();
     }
@@ -2540,14 +2623,57 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final StringBuilder text = new StringBuilder();
         if (notTerminal != null) {
             text.append(this.visit(notTerminal));
-        }
-        if (assignableSelectorContext != null) {
-            // todo: visit assignableSelectorContext instead of getText().
-            text.append(assignableSelectorContext.getText());
-        }
-        if (argumentPartContext != null) {
+        } else if (assignableSelectorContext != null) {
+            text.append(this.visit(assignableSelectorContext));
+        } else {
             final String argumentPartText = this.visit(argumentPartContext);
             text.append(argumentPartText);
+        }
+        return text.toString();
+    }
+
+    @Override
+    public String visitAssignableSelector(final Dart2Parser.AssignableSelectorContext context) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Enter `visitAssignableSelector` text: {}", context.getText());
+        }
+        final Dart2Parser.UnconditionalAssignableSelectorContext unconditionalAssignableSelectorContext = context.unconditionalAssignableSelector();
+        final TerminalNode qudTerminal = context.QUD();
+        // todo: use `quTerminal`, `obTerminal`, `exprContext`, and `cbTerminal` with tests.
+        final Dart2Parser.IdentifierContext identifierContext = context.identifier();
+        final TerminalNode quTerminal = context.QU();
+        final TerminalNode obTerminal = context.OB();
+        final Dart2Parser.ExprContext exprContext = context.expr();
+        final TerminalNode cbTerminal = context.CB();
+        final StringBuilder text = new StringBuilder();
+        if (unconditionalAssignableSelectorContext != null) {
+            text.append(this.visit(unconditionalAssignableSelectorContext));
+        } else if (qudTerminal != null) {
+            text.append(this.visit(qudTerminal));
+            text.append(this.visit(identifierContext));
+        } else {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitAssignableSelector -> qu");
+        }
+        return text.toString();
+    }
+
+    @Override
+    public String visitUnconditionalAssignableSelector(final Dart2Parser.UnconditionalAssignableSelectorContext context) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Enter `visitUnconditionalAssignableSelector` text: {}", context.getText());
+        }
+        final TerminalNode obTerminal = context.OB();
+        // todo: use `exprContext` and `cbTerminal` with tests.
+        final Dart2Parser.ExprContext exprContext = context.expr();
+        final TerminalNode cbTerminal = context.CB();
+        final TerminalNode dTerminal = context.D();
+        final Dart2Parser.IdentifierContext identifierContext = context.identifier();
+        final StringBuilder text = new StringBuilder();
+        if (obTerminal != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitUnconditionalAssignableSelector -> ob");
+        } else {
+            text.append(this.visit(dTerminal));
+            text.append(this.visit(identifierContext));
         }
         return text.toString();
     }

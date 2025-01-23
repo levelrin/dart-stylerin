@@ -50,6 +50,11 @@ final class DartVisitorTest {
     }
 
     @Test
+    void shouldFormatMethodChain() {
+        this.compare("method-chain-before.dart", "method-chain-after.dart");
+    }
+
+    @Test
     void shouldFormatException() {
         this.compare("exception-before.dart", "exception-after.dart");
     }
