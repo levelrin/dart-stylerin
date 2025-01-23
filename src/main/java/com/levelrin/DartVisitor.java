@@ -338,8 +338,7 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final StringBuilder text = new StringBuilder();
         text.append(this.visit(importTerminal));
         text.append(" ");
-        // todo: visit configurableUriContext instead of getText().
-        text.append(configurableUriContext.getText());
+        text.append(this.visit(configurableUriContext));
         if (asTerminal != null) {
             text.append(" ");
             text.append(this.visit(asTerminal));
@@ -347,6 +346,60 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
             text.append(this.visit(identifierContext));
         }
         text.append(this.visit(scTerminal));
+        return text.toString();
+    }
+
+    @Override
+    public String visitConfigurableUri(final Dart2Parser.ConfigurableUriContext context) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Enter `visitConfigurableUri` text: {}", context.getText());
+        }
+        final Dart2Parser.UriContext uriContext = context.uri();
+        final List<Dart2Parser.ConfigurationUriContext> configurationUriContexts = context.configurationUri();
+        if (!configurationUriContexts.isEmpty()) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitConfigurableUri -> configurationUri");
+        }
+        final StringBuilder text = new StringBuilder();
+        text.append(this.visit(uriContext));
+        return text.toString();
+    }
+
+    @Override
+    public String visitUri(final Dart2Parser.UriContext context) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Enter `visitUri` text: {}", context.getText());
+        }
+        final Dart2Parser.StringLiteralContext stringLiteralContext = context.stringLiteral();
+        final StringBuilder text = new StringBuilder();
+        text.append(this.visit(stringLiteralContext));
+        return text.toString();
+    }
+
+    @Override
+    public String visitStringLiteral(final Dart2Parser.StringLiteralContext context) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Enter `visitStringLiteral` text: {}", context.getText());
+        }
+        final List<Dart2Parser.MultilineStringContext> multilineStringContexts = context.multilineString();
+        final List<Dart2Parser.SingleLineStringContext> singleLineStringContexts = context.singleLineString();
+        if (!multilineStringContexts.isEmpty()) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitStringLiteral -> multilineString");
+        }
+        final StringBuilder text = new StringBuilder();
+        for (final Dart2Parser.SingleLineStringContext singleLineStringContext : singleLineStringContexts) {
+            text.append(this.visit(singleLineStringContext));
+        }
+        return text.toString();
+    }
+
+    @Override
+    public String visitSingleLineString(final Dart2Parser.SingleLineStringContext context) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Enter `visitSingleLineString` text: {}", context.getText());
+        }
+        final TerminalNode singleLineString = context.SingleLineString();
+        final StringBuilder text = new StringBuilder();
+        text.append(this.visit(singleLineString));
         return text.toString();
     }
 
