@@ -3390,8 +3390,7 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         }
         final StringBuilder text = new StringBuilder();
         if (nullLiteralContext != null) {
-            // todo: visit nullLiteralContext instead of getText().
-            text.append(nullLiteralContext.getText());
+            text.append(this.visit(nullLiteralContext));
         }
         if (booleanLiteralContext != null) {
             // todo: visit booleanLiteralContext instead of getText().
@@ -3414,6 +3413,17 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
             // todo: visit numericLiteralContext instead of getText().
             text.append(numericLiteralContext.getText());
         }
+        return text.toString();
+    }
+
+    @Override
+    public String visitNullLiteral(final Dart2Parser.NullLiteralContext context) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Enter `visitNullLiteral` text: {}", context.getText());
+        }
+        final TerminalNode nullTerminal = context.NULL_();
+        final StringBuilder text = new StringBuilder();
+        text.append(this.visit(nullTerminal));
         return text.toString();
     }
 
