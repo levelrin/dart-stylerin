@@ -822,8 +822,7 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final Dart2Parser.FormalParameterListContext formalParameterListContext = context.formalParameterList();
         final StringBuilder text = new StringBuilder();
         if (typeParametersContext != null) {
-            // todo: visit typeParametersContext instead of getText().
-            text.append(typeParametersContext.getText());
+            text.append(this.visit(typeParametersContext));
         }
         final String formalParameterListText = this.visit(formalParameterListContext);
         text.append(formalParameterListText);
