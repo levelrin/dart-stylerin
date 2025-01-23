@@ -2808,8 +2808,7 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final StringBuilder text = new StringBuilder();
         if (assignableExpressionContext != null) {
             text.append(this.visit(assignableExpressionContext));
-            // todo: visit postfixOperatorContext instead of getText().
-            text.append(postfixOperatorContext.getText());
+            text.append(this.visit(postfixOperatorContext));
         }
         if (primaryContext != null) {
             final String primaryText = this.visit(primaryContext);
@@ -2818,6 +2817,33 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         for (final Dart2Parser.SelectorContext selectorContext : selectorContexts) {
             final String selectorText = this.visit(selectorContext);
             text.append(selectorText);
+        }
+        return text.toString();
+    }
+
+    @Override
+    public String visitPostfixOperator(final Dart2Parser.PostfixOperatorContext context) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Enter `visitPostfixOperator` text: {}", context.getText());
+        }
+        final Dart2Parser.IncrementOperatorContext incrementOperatorContext = context.incrementOperator();
+        final StringBuilder text = new StringBuilder();
+        text.append(this.visit(incrementOperatorContext));
+        return text.toString();
+    }
+
+    @Override
+    public String visitIncrementOperator(final Dart2Parser.IncrementOperatorContext context) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Enter `visitIncrementOperator` text: {}", context.getText());
+        }
+        final TerminalNode plplTerminal = context.PLPL();
+        final TerminalNode mmTerminal = context.MM();
+        final StringBuilder text = new StringBuilder();
+        if (plplTerminal != null) {
+            text.append(this.visit(plplTerminal));
+        } else {
+            text.append(this.visit(mmTerminal));
         }
         return text.toString();
     }
