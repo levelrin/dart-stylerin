@@ -3101,8 +3101,7 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         if (superTerminal != null) {
             text.append(this.visit(superTerminal));
             if (unconditionalAssignableSelectorContext != null) {
-                // todo: visit unconditionalAssignableSelectorContext instead of getText().
-                text.append(unconditionalAssignableSelectorContext.getText());
+                text.append(this.visit(unconditionalAssignableSelectorContext));
             }
         }
         if (functionExpressionContext != null) {
