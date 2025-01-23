@@ -2790,9 +2790,7 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
             for (int index = 0; index < multiplicativeOperatorContexts.size(); index++) {
                 text.append(" ");
                 final Dart2Parser.MultiplicativeOperatorContext multiplicativeOperatorContext = multiplicativeOperatorContexts.get(index);
-                // todo: visit multiplicativeOperatorContext instead of getText().
-                final String multiplicativeOperatorText = multiplicativeOperatorContext.getText();
-                text.append(multiplicativeOperatorText);
+                text.append(this.visit(multiplicativeOperatorContext));
                 text.append(" ");
                 final Dart2Parser.UnaryExpressionContext unaryExpressionContext = unaryExpressionContexts.get(index + 1);
                 final String unaryExpressionText = this.visit(unaryExpressionContext);
@@ -2800,6 +2798,28 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
             }
         } else {
             throw new UnsupportedOperationException("The following parsing path is not supported yet: visitMultiplicativeExpression -> super");
+        }
+        return text.toString();
+    }
+
+    @Override
+    public String visitMultiplicativeOperator(final Dart2Parser.MultiplicativeOperatorContext context) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Enter `visitMultiplicativeOperator` text: {}", context.getText());
+        }
+        final TerminalNode stTerminal = context.ST();
+        final TerminalNode slTerminal = context.SL();
+        final TerminalNode pcTerminal = context.PC();
+        final TerminalNode sqsTerminal = context.SQS();
+        final StringBuilder text = new StringBuilder();
+        if (stTerminal != null) {
+            text.append(this.visit(stTerminal));
+        } else if (slTerminal != null) {
+            text.append(this.visit(slTerminal));
+        } else if (pcTerminal != null) {
+            text.append(this.visit(pcTerminal));
+        } else {
+            text.append(this.visit(sqsTerminal));
         }
         return text.toString();
     }
