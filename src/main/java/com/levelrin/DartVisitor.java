@@ -3096,8 +3096,7 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         }
         final StringBuilder text = new StringBuilder();
         if (thisExpressionContext != null) {
-            // todo: visit thisExpressionContext instead of getText().
-            text.append(thisExpressionContext.getText());
+            text.append(this.visit(thisExpressionContext));
         }
         if (superTerminal != null) {
             text.append(this.visit(superTerminal));
@@ -3129,6 +3128,17 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
             text.append(this.visit(exprContext));
             text.append(this.visit(cpTerminal));
         }
+        return text.toString();
+    }
+
+    @Override
+    public String visitThisExpression(final Dart2Parser.ThisExpressionContext context) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Enter `visitThisExpression` text: {}", context.getText());
+        }
+        final TerminalNode thisTerminal = context.THIS_();
+        final StringBuilder text = new StringBuilder();
+        text.append(this.visit(thisTerminal));
         return text.toString();
     }
 
