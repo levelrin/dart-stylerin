@@ -1035,8 +1035,37 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
             text.append(simpleFormalParameterText);
         }
         if (fieldFormalParameterContext != null) {
-            // todo: visit fieldFormalParameterContext instead of getText().
-            text.append(fieldFormalParameterContext.getText());
+            text.append(this.visit(fieldFormalParameterContext));
+        }
+        return text.toString();
+    }
+
+    @Override
+    public String visitFieldFormalParameter(final Dart2Parser.FieldFormalParameterContext context) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Enter `visitFieldFormalParameter` text: {}", context.getText());
+        }
+        final Dart2Parser.FinalConstVarOrTypeContext finalConstVarOrTypeContext = context.finalConstVarOrType();
+        final TerminalNode thisTerminal = context.THIS_();
+        final TerminalNode superTerminal = context.SUPER_();
+        final TerminalNode dTerminal = context.D();
+        final Dart2Parser.IdentifierContext identifierContext = context.identifier();
+        final Dart2Parser.FormalParameterPartContext formalParameterPartContext = context.formalParameterPart();
+        // todo: use `quTerminal` with tests.
+        final TerminalNode quTerminal = context.QU();
+        final StringBuilder text = new StringBuilder();
+        if (finalConstVarOrTypeContext != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitFieldFormalParameter -> finalConstVarOrType");
+        }
+        if (thisTerminal != null) {
+            text.append(this.visit(thisTerminal));
+        } else if (superTerminal != null) {
+            text.append(this.visit(superTerminal));
+        }
+        text.append(this.visit(dTerminal));
+        text.append(this.visit(identifierContext));
+        if (formalParameterPartContext != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitFieldFormalParameter -> formalParameterPart");
         }
         return text.toString();
     }
