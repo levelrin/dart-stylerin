@@ -382,13 +382,24 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         }
         final List<Dart2Parser.MultilineStringContext> multilineStringContexts = context.multilineString();
         final List<Dart2Parser.SingleLineStringContext> singleLineStringContexts = context.singleLineString();
-        if (!multilineStringContexts.isEmpty()) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitStringLiteral -> multilineString");
-        }
         final StringBuilder text = new StringBuilder();
+        for (final Dart2Parser.MultilineStringContext multilineStringContext : multilineStringContexts) {
+            text.append(this.visit(multilineStringContext));
+        }
         for (final Dart2Parser.SingleLineStringContext singleLineStringContext : singleLineStringContexts) {
             text.append(this.visit(singleLineStringContext));
         }
+        return text.toString();
+    }
+
+    @Override
+    public String visitMultilineString(final Dart2Parser.MultilineStringContext context) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Enter `visitMultilineString` text: {}", context.getText());
+        }
+        final TerminalNode multiLineStringTerminal = context.MultiLineString();
+        final StringBuilder text = new StringBuilder();
+        text.append(this.visit(multiLineStringTerminal));
         return text.toString();
     }
 
@@ -3396,9 +3407,7 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
             text.append(this.visit(booleanLiteralContext));
         }
         if (stringLiteralContext != null) {
-            // todo: visit stringLiteralContext instead of getText().
-            final String stringLiteralText = stringLiteralContext.getText();
-            text.append(stringLiteralText);
+            text.append(this.visit(stringLiteralContext));
         }
         if (setOrMapLiteralContext != null) {
             final String setOrMapLiteralText = this.visit(setOrMapLiteralContext);
