@@ -2142,8 +2142,7 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         }
         final StringBuilder text = new StringBuilder();
         if (typeNameContext != null) {
-            // todo: visit typeNameContext instead of getText().
-            text.append(typeNameContext.getText());
+            text.append(this.visit(typeNameContext));
         }
         if (typeArgumentsContext != null) {
             final String typeArgumentsText = this.visit(typeArgumentsContext);
@@ -2151,6 +2150,24 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         }
         if (quTerminal != null) {
             text.append(this.visit(quTerminal));
+        }
+        return text.toString();
+    }
+
+    @Override
+    public String visitTypeName(final Dart2Parser.TypeNameContext context) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Enter `visitTypeName` text: {}", context.getText());
+        }
+        final List<Dart2Parser.TypeIdentifierContext> typeIdentifierContexts = context.typeIdentifier();
+        final TerminalNode dTerminal = context.D();
+        final StringBuilder text = new StringBuilder();
+        final Dart2Parser.TypeIdentifierContext firstTypeIdentifierContext = typeIdentifierContexts.get(0);
+        text.append(this.visit(firstTypeIdentifierContext));
+        if (dTerminal != null) {
+            text.append(this.visit(dTerminal));
+            final Dart2Parser.TypeIdentifierContext secondTypeIdentifierContext = typeIdentifierContexts.get(1);
+            text.append(this.visit(secondTypeIdentifierContext));
         }
         return text.toString();
     }
