@@ -3152,9 +3152,31 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final StringBuilder text = new StringBuilder();
         text.append(this.visit(constTerminal));
         text.append(" ");
-        // todo: visit constructorDesignationContext instead of getText().
-        text.append(constructorDesignationContext.getText());
+        text.append(this.visit(constructorDesignationContext));
         text.append(this.visit(argumentsContext));
+        return text.toString();
+    }
+
+    @Override
+    public String visitConstructorDesignation(final Dart2Parser.ConstructorDesignationContext context) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Enter `visitConstructorDesignation` text: {}", context.getText());
+        }
+        final Dart2Parser.TypeIdentifierContext typeIdentifierContext = context.typeIdentifier();
+        final Dart2Parser.QualifiedNameContext qualifiedNameContext = context.qualifiedName();
+        // todo: use `typeNameContext`, `typeArgumentsContext`, `dTerminal`, and `identifierContext` with tests.
+        final Dart2Parser.TypeNameContext typeNameContext = context.typeName();
+        final Dart2Parser.TypeArgumentsContext typeArgumentsContext = context.typeArguments();
+        final TerminalNode dTerminal = context.D();
+        final Dart2Parser.IdentifierContext identifierContext = context.identifier();
+        final StringBuilder text = new StringBuilder();
+        if (typeIdentifierContext != null) {
+            text.append(this.visit(typeIdentifierContext));
+        } else if (qualifiedNameContext != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitConstructorDesignation -> qualifiedName");
+        } else {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitConstructorDesignation -> typeName");
+        }
         return text.toString();
     }
 
@@ -3553,8 +3575,7 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final StringBuilder text = new StringBuilder();
         text.append(this.visit(newTerminal));
         text.append(" ");
-        // todo: visit constructorDesignationContext instead of getText().
-        text.append(constructorDesignationContext.getText());
+        text.append(this.visit(constructorDesignationContext));
         final String argumentsText = this.visit(argumentsContext);
         text.append(argumentsText);
         return text.toString();
