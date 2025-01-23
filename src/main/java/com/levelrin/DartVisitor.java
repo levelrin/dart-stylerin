@@ -214,8 +214,7 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final StringBuilder text = new StringBuilder();
         text.append(this.visit(mixinTerminal));
         text.append(" ");
-        // todo: visit typeIdentifierContext instead of getText().
-        text.append(typeIdentifierContext.getText());
+        text.append(this.visit(typeIdentifierContext));
         text.append(" ");
         text.append(this.visit(obcTerminal));
         for (int index = 0; index < classMemberDeclarationContexts.size(); index++) {
@@ -235,6 +234,52 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
             }
         }
         text.append(this.visit(cbcTerminal));
+        return text.toString();
+    }
+
+    @Override
+    public String visitTypeIdentifier(final Dart2Parser.TypeIdentifierContext context) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Enter `visitTypeIdentifier` text: {}", context.getText());
+        }
+        final TerminalNode identifierTerminal = context.IDENTIFIER();
+        final TerminalNode asyncTerminal = context.ASYNC_();
+        final TerminalNode hideTerminal = context.HIDE_();
+        final TerminalNode ofTerminal = context.OF_();
+        final TerminalNode onTerminal = context.ON_();
+        final TerminalNode showTerminal = context.SHOW_();
+        final TerminalNode syncTerminal = context.SYNC_();
+        final TerminalNode awaitTerminal = context.AWAIT_();
+        final TerminalNode yieldTerminal = context.YIELD_();
+        final TerminalNode dynamicTerminal = context.DYNAMIC_();
+        final TerminalNode nativeTerminal = context.NATIVE_();
+        final TerminalNode functionTerminal = context.FUNCTION_();
+        final StringBuilder text = new StringBuilder();
+        if (identifierTerminal != null) {
+            text.append(this.visit(identifierTerminal));
+        } else if (asyncTerminal != null) {
+            text.append(this.visit(asyncTerminal));
+        } else if (hideTerminal != null) {
+            text.append(this.visit(hideTerminal));
+        } else if (ofTerminal != null) {
+            text.append(this.visit(ofTerminal));
+        } else if (onTerminal != null) {
+            text.append(this.visit(onTerminal));
+        } else if (showTerminal != null) {
+            text.append(this.visit(showTerminal));
+        } else if (syncTerminal != null) {
+            text.append(this.visit(syncTerminal));
+        } else if (awaitTerminal != null) {
+            text.append(this.visit(awaitTerminal));
+        } else if (yieldTerminal != null) {
+            text.append(this.visit(yieldTerminal));
+        } else if (dynamicTerminal != null) {
+            text.append(this.visit(dynamicTerminal));
+        } else if (nativeTerminal != null) {
+            text.append(this.visit(nativeTerminal));
+        } else if (functionTerminal != null) {
+            text.append(this.visit(functionTerminal));
+        }
         return text.toString();
     }
 
@@ -332,8 +377,7 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         }
         text.append(this.visit(classTerminal));
         text.append(" ");
-        // todo: visit typeIdentifierContext instead of getText().
-        text.append(typeIdentifierContext.getText());
+        text.append(this.visit(typeIdentifierContext));
         if (typeParametersContext == null) {
             text.append(" ");
         } else {
