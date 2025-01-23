@@ -2855,8 +2855,7 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         }
         final StringBuilder text = new StringBuilder();
         if (prefixOperatorContext != null) {
-            // todo: visit prefixOperatorContext instead of getText().
-            text.append(prefixOperatorContext.getText());
+            text.append(this.visit(prefixOperatorContext));
             text.append(this.visit(unaryExpressionContext));
         }
         if (awaitExpressionContext != null) {
@@ -2866,6 +2865,58 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
             final String postfixExpressionText = this.visit(postfixExpressionContext);
             text.append(postfixExpressionText);
         }
+        return text.toString();
+    }
+
+    @Override
+    public String visitPrefixOperator(final Dart2Parser.PrefixOperatorContext context) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Enter `visitPrefixOperator` text: {}", context.getText());
+        }
+        final Dart2Parser.MinusOperatorContext minusOperatorContext = context.minusOperator();
+        final Dart2Parser.NegationOperatorContext negationOperatorContext = context.negationOperator();
+        final Dart2Parser.TildeOperatorContext tildeOperatorContext = context.tildeOperator();
+        final StringBuilder text = new StringBuilder();
+        if (minusOperatorContext != null) {
+            text.append(this.visit(minusOperatorContext));
+        } else if (negationOperatorContext != null) {
+            text.append(this.visit(negationOperatorContext));
+        } else {
+            text.append(this.visit(tildeOperatorContext));
+        }
+        return text.toString();
+    }
+
+    @Override
+    public String visitMinusOperator(final Dart2Parser.MinusOperatorContext context) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Enter `visitMinusOperator` text: {}", context.getText());
+        }
+        final TerminalNode minusTerminal = context.MINUS();
+        final StringBuilder text = new StringBuilder();
+        text.append(this.visit(minusTerminal));
+        return text.toString();
+    }
+
+    @Override
+    public String visitNegationOperator(final Dart2Parser.NegationOperatorContext context) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Enter `visitNegationOperator` text: {}", context.getText());
+        }
+        final TerminalNode notTerminal = context.NOT();
+        final StringBuilder text = new StringBuilder();
+        text.append(this.visit(notTerminal));
+        return text.toString();
+    }
+
+    @Override
+    public String visitTildeOperator(final Dart2Parser.TildeOperatorContext context) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Enter `visitTildeOperator` text: {}", context.getText());
+        }
+        final TerminalNode sqigTerminal = context.SQUIG();
+        final StringBuilder text = new StringBuilder();
+        text.append(this.visit(sqigTerminal));
         return text.toString();
     }
 
