@@ -545,8 +545,28 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
             final TerminalNode atTerminal = atTerminals.get(index);
             final Dart2Parser.MetadatumContext metadatumContext = metadatumContexts.get(index);
             text.append(this.visit(atTerminal));
-            // todo: visit metadatumContext instead of getText().
-            text.append(metadatumContext.getText());
+            text.append(this.visit(metadatumContext));
+        }
+        return text.toString();
+    }
+
+    @Override
+    public String visitMetadatum(final Dart2Parser.MetadatumContext context) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Enter `visitMetadatum` text: {}", context.getText());
+        }
+        final Dart2Parser.IdentifierContext identifierContext = context.identifier();
+        final Dart2Parser.QualifiedNameContext qualifiedNameContext = context.qualifiedName();
+        // todo: use `constructorDesignationContext`, `argumentsContext`, and `argumentsContext` with tests.
+        final Dart2Parser.ConstructorDesignationContext constructorDesignationContext = context.constructorDesignation();
+        final Dart2Parser.ArgumentsContext argumentsContext = context.arguments();
+        final StringBuilder text = new StringBuilder();
+        if (identifierContext != null) {
+            text.append(this.visit(identifierContext));
+        } else if (qualifiedNameContext != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitMetadatum -> qualifiedName");
+        } else {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitMetadatum -> constructorDesignation");
         }
         return text.toString();
     }
