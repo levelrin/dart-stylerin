@@ -3418,8 +3418,23 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
             text.append(listLiteralText);
         }
         if (numericLiteralContext != null) {
-            // todo: visit numericLiteralContext instead of getText().
-            text.append(numericLiteralContext.getText());
+            text.append(this.visit(numericLiteralContext));
+        }
+        return text.toString();
+    }
+
+    @Override
+    public String visitNumericLiteral(final Dart2Parser.NumericLiteralContext context) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Enter `visitNumericLiteral` text: {}", context.getText());
+        }
+        final TerminalNode numberTerminal = context.NUMBER();
+        final TerminalNode hexNumberTerminal = context.HEX_NUMBER();
+        final StringBuilder text = new StringBuilder();
+        if (numberTerminal == null) {
+            text.append(this.visit(hexNumberTerminal));
+        } else {
+            text.append(this.visit(numberTerminal));
         }
         return text.toString();
     }
