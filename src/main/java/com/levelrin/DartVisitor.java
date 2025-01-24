@@ -46,9 +46,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitCompilationUnit(final Dart2Parser.CompilationUnitContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitCompilationUnit` text: {}", context.getText());
-        }
         final Dart2Parser.LibraryDeclarationContext libraryDeclarationContext = context.libraryDeclaration();
         final Dart2Parser.PartDeclarationContext partDeclarationContext =  context.partDeclaration();
         final Dart2Parser.ExprContext exprContext = context.expr();
@@ -73,9 +70,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitLibraryDeclaration(final Dart2Parser.LibraryDeclarationContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitLibraryDeclaration` text: {}", context.getText());
-        }
         final Dart2Parser.LibraryNameContext libraryNameContext = context.libraryName();
         final List<Dart2Parser.ImportOrExportContext> importOrExportContexts = context.importOrExport();
         final List<Dart2Parser.PartDirectiveContext> partDirectiveContexts = context.partDirective();
@@ -123,9 +117,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitTopLevelDeclaration(final Dart2Parser.TopLevelDeclarationContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitTopLevelDeclaration` text: {}", context.getText());
-        }
         final Dart2Parser.ClassDeclarationContext classDeclarationContext = context.classDeclaration();
         final Dart2Parser.MixinDeclarationContext mixinDeclarationContext = context.mixinDeclaration();
         final Dart2Parser.ExtensionDeclarationContext extensionDeclarationContext = context.extensionDeclaration();
@@ -188,9 +179,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitMixinDeclaration(final Dart2Parser.MixinDeclarationContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitMixinDeclaration` text: {}", context.getText());
-        }
         final TerminalNode mixinTerminal = context.MIXIN_();
         final Dart2Parser.TypeIdentifierContext typeIdentifierContext = context.typeIdentifier();
         final Dart2Parser.TypeParametersContext typeParametersContext = context.typeParameters();
@@ -239,9 +227,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitTypeIdentifier(final Dart2Parser.TypeIdentifierContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitTypeIdentifier` text: {}", context.getText());
-        }
         final TerminalNode identifierTerminal = context.IDENTIFIER();
         final TerminalNode asyncTerminal = context.ASYNC_();
         final TerminalNode hideTerminal = context.HIDE_();
@@ -285,9 +270,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitImportOrExport(final Dart2Parser.ImportOrExportContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitImportOrExport` text: {}", context.getText());
-        }
         final Dart2Parser.LibraryImportContext libraryImportContext = context.libraryImport();
         final Dart2Parser.LibraryExportContext libraryExportContext = context.libraryExport();
         if (libraryExportContext != null) {
@@ -303,9 +285,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitLibraryImport(final Dart2Parser.LibraryImportContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitLibraryImport` text: {}", context.getText());
-        }
         final Dart2Parser.MetadataContext metadataContext = context.metadata();
         final Dart2Parser.ImportSpecificationContext importSpecificationContext = context.importSpecification();
         if (!metadataContext.getText().isEmpty()) {
@@ -319,9 +298,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitImportSpecification(final Dart2Parser.ImportSpecificationContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitImportSpecification` text: {}", context.getText());
-        }
         final TerminalNode importTerminal = context.IMPORT_();
         final Dart2Parser.ConfigurableUriContext configurableUriContext = context.configurableUri();
         final TerminalNode deferredTerminal = context.DEFERRED_();
@@ -351,9 +327,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitConfigurableUri(final Dart2Parser.ConfigurableUriContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitConfigurableUri` text: {}", context.getText());
-        }
         final Dart2Parser.UriContext uriContext = context.uri();
         final List<Dart2Parser.ConfigurationUriContext> configurationUriContexts = context.configurationUri();
         if (!configurationUriContexts.isEmpty()) {
@@ -366,9 +339,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitUri(final Dart2Parser.UriContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitUri` text: {}", context.getText());
-        }
         final Dart2Parser.StringLiteralContext stringLiteralContext = context.stringLiteral();
         final StringBuilder text = new StringBuilder();
         text.append(this.visit(stringLiteralContext));
@@ -377,9 +347,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitStringLiteral(final Dart2Parser.StringLiteralContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitStringLiteral` text: {}", context.getText());
-        }
         final List<Dart2Parser.MultilineStringContext> multilineStringContexts = context.multilineString();
         final List<Dart2Parser.SingleLineStringContext> singleLineStringContexts = context.singleLineString();
         final StringBuilder text = new StringBuilder();
@@ -394,9 +361,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitMultilineString(final Dart2Parser.MultilineStringContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitMultilineString` text: {}", context.getText());
-        }
         final TerminalNode multiLineStringTerminal = context.MultiLineString();
         final StringBuilder text = new StringBuilder();
         text.append(this.visit(multiLineStringTerminal));
@@ -405,9 +369,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitSingleLineString(final Dart2Parser.SingleLineStringContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitSingleLineString` text: {}", context.getText());
-        }
         final TerminalNode singleLineString = context.SingleLineString();
         final StringBuilder text = new StringBuilder();
         text.append(this.visit(singleLineString));
@@ -416,9 +377,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitClassDeclaration(final Dart2Parser.ClassDeclarationContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitClassDeclaration` text: {}", context.getText());
-        }
         final TerminalNode abstractTerminal = context.ABSTRACT_();
         final TerminalNode classTerminal = context.CLASS_();
         // It can be a class name.
@@ -484,9 +442,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitInterfaces(final Dart2Parser.InterfacesContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitInterfaces` text: {}", context.getText());
-        }
         final TerminalNode implementsTerminal = context.IMPLEMENTS_();
         final Dart2Parser.TypeNotVoidListContext typeNotVoidListContext = context.typeNotVoidList();
         final StringBuilder text = new StringBuilder();
@@ -498,9 +453,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitTypeParameters(final Dart2Parser.TypeParametersContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitTypeParameters` text: {}", context.getText());
-        }
         final TerminalNode ltTerminal = context.LT();
         final List<Dart2Parser.TypeParameterContext> typeParameterContexts = context.typeParameter();
         final List<TerminalNode> cTerminals = context.C();
@@ -522,9 +474,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitTypeParameter(final Dart2Parser.TypeParameterContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitTypeParameter` text: {}", context.getText());
-        }
         final Dart2Parser.MetadataContext metadataContext = context.metadata();
         final Dart2Parser.IdentifierContext identifierContext = context.identifier();
         final TerminalNode extendsTerminal = context.EXTENDS_();
@@ -546,9 +495,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitMetadata(final Dart2Parser.MetadataContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitMetadata` text: {}", context.getText());
-        }
         final List<TerminalNode> atTerminals = context.AT();
         final List<Dart2Parser.MetadatumContext> metadatumContexts = context.metadatum();
         final StringBuilder text = new StringBuilder();
@@ -563,9 +509,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitMetadatum(final Dart2Parser.MetadatumContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitMetadatum` text: {}", context.getText());
-        }
         final Dart2Parser.IdentifierContext identifierContext = context.identifier();
         final Dart2Parser.QualifiedNameContext qualifiedNameContext = context.qualifiedName();
         // todo: use `constructorDesignationContext`, `argumentsContext`, and `argumentsContext` with tests.
@@ -584,9 +527,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitSuperclass(final Dart2Parser.SuperclassContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitSuperclass` text: {}", context.getText());
-        }
         final TerminalNode extendsTerminal = context.EXTENDS_();
         final Dart2Parser.TypeNotVoidContext typeNotVoidContext = context.typeNotVoid();
         final Dart2Parser.MixinsContext mixinsContext = context.mixins();
@@ -607,9 +547,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitMixins(final Dart2Parser.MixinsContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitMixins` text: {}", context.getText());
-        }
         final TerminalNode withTerminal = context.WITH_();
         final Dart2Parser.TypeNotVoidListContext typeNotVoidListContext = context.typeNotVoidList();
         final StringBuilder text = new StringBuilder();
@@ -621,9 +558,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitTypeNotVoidList(final Dart2Parser.TypeNotVoidListContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitTypeNotVoidList` text: {}", context.getText());
-        }
         final List<Dart2Parser.TypeNotVoidContext> typeNotVoidContexts = context.typeNotVoid();
         final List<TerminalNode> cTerminals = context.C();
         final StringBuilder text = new StringBuilder();
@@ -641,9 +575,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitTypeNotVoid(final Dart2Parser.TypeNotVoidContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitTypeNotVoid` text: {}", context.getText());
-        }
         final Dart2Parser.FunctionTypeContext functionTypeContext = context.functionType();
         // todo: use `quTerminal` with tests.
         final TerminalNode quTerminal = context.QU();
@@ -660,9 +591,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitClassMemberDeclaration(final Dart2Parser.ClassMemberDeclarationContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitClassMemberDeclaration` text: {}", context.getText());
-        }
         final Dart2Parser.DeclarationContext declarationContext = context.declaration();
         final TerminalNode scTerminal = context.SC();
         final Dart2Parser.MethodSignatureContext methodSignatureContext = context.methodSignature();
@@ -685,9 +613,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitMethodSignature(final Dart2Parser.MethodSignatureContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitMethodSignature` text: {}", context.getText());
-        }
         final Dart2Parser.ConstructorSignatureContext constructorSignatureContext = context.constructorSignature();
         final Dart2Parser.InitializersContext initializersContext = context.initializers();
         final Dart2Parser.FactoryConstructorSignatureContext factoryConstructorSignatureContext = context.factoryConstructorSignature();
@@ -729,9 +654,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitSetterSignature(final Dart2Parser.SetterSignatureContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitSetterSignature` text: {}", context.getText());
-        }
         final Dart2Parser.TypeContext typeContext = context.type();
         final TerminalNode setTerminal = context.SET_();
         final Dart2Parser.IdentifierContext identifierContext = context.identifier();
@@ -750,9 +672,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitGetterSignature(final Dart2Parser.GetterSignatureContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitGetterSignature` text: {}", context.getText());
-        }
         final Dart2Parser.TypeContext typeContext = context.type();
         final TerminalNode getTerminal = context.GET_();
         final Dart2Parser.IdentifierContext identifierContext = context.identifier();
@@ -769,9 +688,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitFactoryConstructorSignature(final Dart2Parser.FactoryConstructorSignatureContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitFactoryConstructorSignature` text: {}", context.getText());
-        }
         final TerminalNode constTerminal = context.CONST_();
         final TerminalNode factoryTerminal = context.FACTORY_();
         final Dart2Parser.ConstructorNameContext constructorNameContext = context.constructorName();
@@ -790,9 +706,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitConstructorName(final Dart2Parser.ConstructorNameContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitConstructorName` text: {}", context.getText());
-        }
         final Dart2Parser.TypeIdentifierContext typeIdentifierContext = context.typeIdentifier();
         final TerminalNode dTerminal = context.D();
         final Dart2Parser.IdentifierContext identifierContext = context.identifier();
@@ -807,9 +720,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitFunctionSignature(final Dart2Parser.FunctionSignatureContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitFunctionSignature` text: {}", context.getText());
-        }
         final Dart2Parser.TypeContext typeContext = context.type();
         final Dart2Parser.IdentifierContext identifierContext = context.identifier();
         final Dart2Parser.FormalParameterPartContext formalParameterPartContext = context.formalParameterPart();
@@ -826,9 +736,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitFormalParameterPart(final Dart2Parser.FormalParameterPartContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitFormalParameterPart` text: {}", context.getText());
-        }
         final Dart2Parser.TypeParametersContext typeParametersContext = context.typeParameters();
         final Dart2Parser.FormalParameterListContext formalParameterListContext = context.formalParameterList();
         final StringBuilder text = new StringBuilder();
@@ -842,9 +749,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitFormalParameterList(final Dart2Parser.FormalParameterListContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitFormalParameterList` text: {}", context.getText());
-        }
         final TerminalNode opTerminal = context.OP();
         final TerminalNode cpTerminal = context.CP();
         final Dart2Parser.NormalFormalParametersContext normalFormalParametersContext = context.normalFormalParameters();
@@ -869,9 +773,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitOptionalOrNamedFormalParameters(final Dart2Parser.OptionalOrNamedFormalParametersContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitOptionalOrNamedFormalParameters` text: {}", context.getText());
-        }
         final Dart2Parser.OptionalPositionalFormalParametersContext optionalPositionalFormalParametersContext = context.optionalPositionalFormalParameters();
         final Dart2Parser.NamedFormalParametersContext namedFormalParametersContext = context.namedFormalParameters();
         final StringBuilder text = new StringBuilder();
@@ -886,9 +787,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitOptionalPositionalFormalParameters(final Dart2Parser.OptionalPositionalFormalParametersContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitOptionalPositionalFormalParameters` text: {}", context.getText());
-        }
         final TerminalNode obTerminal = context.OB();
         final List<Dart2Parser.DefaultFormalParameterContext> defaultFormalParameterContexts = context.defaultFormalParameter();
         final List<TerminalNode> cTerminals = context.C();
@@ -916,9 +814,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitDefaultFormalParameter(final Dart2Parser.DefaultFormalParameterContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitDefaultFormalParameter` text: {}", context.getText());
-        }
         final Dart2Parser.NormalFormalParameterContext normalFormalParameterContext = context.normalFormalParameter();
         final TerminalNode eqTerminal = context.EQ();
         final Dart2Parser.ExprContext exprContext = context.expr();
@@ -935,9 +830,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitNamedFormalParameters(final Dart2Parser.NamedFormalParametersContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitNamedFormalParameters` text: {}", context.getText());
-        }
         final TerminalNode obcTerminal = context.OBC();
         final List<Dart2Parser.DefaultNamedParameterContext> defaultNamedParameterContexts = context.defaultNamedParameter();
         final List<TerminalNode> cTerminals = context.C();
@@ -972,9 +864,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitDefaultNamedParameter(final Dart2Parser.DefaultNamedParameterContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitDefaultNamedParameter` text: {}", context.getText());
-        }
         final Dart2Parser.MetadataContext metadataContext = context.metadata();
         final TerminalNode requiredTerminal = context.REQUIRED_();
         final Dart2Parser.NormalFormalParameterNoMetadataContext normalFormalParameterNoMetadataContext = context.normalFormalParameterNoMetadata();
@@ -999,9 +888,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitNormalFormalParameters(final Dart2Parser.NormalFormalParametersContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitNormalFormalParameters` text: {}", context.getText());
-        }
         final List<Dart2Parser.NormalFormalParameterContext> normalFormalParameterContexts = context.normalFormalParameter();
         final StringBuilder text = new StringBuilder();
         final StringJoiner joiner = new StringJoiner(", ");
@@ -1015,9 +901,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitNormalFormalParameter(final Dart2Parser.NormalFormalParameterContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitNormalFormalParameter` text: {}", context.getText());
-        }
         final Dart2Parser.MetadataContext metadataContext = context.metadata();
         final Dart2Parser.NormalFormalParameterNoMetadataContext normalFormalParameterNoMetadataContext = context.normalFormalParameterNoMetadata();
         if (!metadataContext.getText().isEmpty()) {
@@ -1031,9 +914,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitNormalFormalParameterNoMetadata(final Dart2Parser.NormalFormalParameterNoMetadataContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitNormalFormalParameterNoMetadata` text: {}", context.getText());
-        }
         final Dart2Parser.FunctionFormalParameterContext functionFormalParameterContext = context.functionFormalParameter();
         final Dart2Parser.FieldFormalParameterContext fieldFormalParameterContext = context.fieldFormalParameter();
         final Dart2Parser.SimpleFormalParameterContext simpleFormalParameterContext = context.simpleFormalParameter();
@@ -1053,9 +933,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitFieldFormalParameter(final Dart2Parser.FieldFormalParameterContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitFieldFormalParameter` text: {}", context.getText());
-        }
         final Dart2Parser.FinalConstVarOrTypeContext finalConstVarOrTypeContext = context.finalConstVarOrType();
         final TerminalNode thisTerminal = context.THIS_();
         final TerminalNode superTerminal = context.SUPER_();
@@ -1083,9 +960,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitSimpleFormalParameter(final Dart2Parser.SimpleFormalParameterContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitSimpleFormalParameter` text: {}", context.getText());
-        }
         final Dart2Parser.DeclaredIdentifierContext declaredIdentifierContext = context.declaredIdentifier();
         final TerminalNode covariantTerminal = context.COVARIANT_();
         final Dart2Parser.IdentifierContext identifierContext = context.identifier();
@@ -1105,9 +979,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitDeclaredIdentifier(Dart2Parser.DeclaredIdentifierContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitDeclaredIdentifier` text: {}", context.getText());
-        }
         final TerminalNode covariantTerminal = context.COVARIANT_();
         final Dart2Parser.FinalConstVarOrTypeContext finalConstVarOrTypeContext = context.finalConstVarOrType();
         final Dart2Parser.IdentifierContext identifierContext = context.identifier();
@@ -1125,9 +996,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitFinalConstVarOrType(final Dart2Parser.FinalConstVarOrTypeContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitFinalConstVarOrType` text: {}", context.getText());
-        }
         final TerminalNode lateTerminal = context.LATE_();
         final TerminalNode finalTerminal = context.FINAL_();
         final Dart2Parser.TypeContext typeContext = context.type();
@@ -1156,9 +1024,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitFunctionBody(final Dart2Parser.FunctionBodyContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitFunctionBody` text: {}", context.getText());
-        }
         final TerminalNode nativeTerminal = context.NATIVE_();
         final Dart2Parser.StringLiteralContext stringLiteralContext = context.stringLiteral();
         final TerminalNode scTerminal = context.SC();
@@ -1205,9 +1070,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitBlock(final Dart2Parser.BlockContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitBlock` text: {}", context.getText());
-        }
         final TerminalNode obcTerminal = context.OBC();
         final Dart2Parser.StatementsContext statementsContext = context.statements();
         final TerminalNode cbcTerminal = context.CBC();
@@ -1227,9 +1089,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitStatements(final Dart2Parser.StatementsContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitStatements` text: {}", context.getText());
-        }
         final List<Dart2Parser.StatementContext> statementContexts = context.statement();
         final StringBuilder text = new StringBuilder();
         for (int index = 0; index < statementContexts.size(); index++) {
@@ -1245,9 +1104,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitStatement(final Dart2Parser.StatementContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitStatement` text: {}", context.getText());
-        }
         final List<Dart2Parser.LabelContext> labelContexts = context.label();
         final Dart2Parser.NonLabelledStatementContext nonLabelledStatementContext = context.nonLabelledStatement();
         if (!labelContexts.isEmpty()) {
@@ -1261,9 +1117,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitNonLabelledStatement(final Dart2Parser.NonLabelledStatementContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitNonLabelledStatement` text: {}", context.getText());
-        }
         final Dart2Parser.BlockContext blockContext = context.block();
         final Dart2Parser.LocalVariableDeclarationContext localVariableDeclarationContext = context.localVariableDeclaration();
         final Dart2Parser.ForStatementContext forStatementContext = context.forStatement();
@@ -1330,9 +1183,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitTryStatement(final Dart2Parser.TryStatementContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitTryStatement` text: {}", context.getText());
-        }
         final TerminalNode tryTerminal = context.TRY_();
         final Dart2Parser.BlockContext blockContext = context.block();
         final List<Dart2Parser.OnPartContext> onPartContexts = context.onPart();
@@ -1354,9 +1204,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitFinallyPart(final Dart2Parser.FinallyPartContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitFinallyPart` text: {}", context.getText());
-        }
         final TerminalNode finallyTerminal = context.FINALLY_();
         final Dart2Parser.BlockContext blockContext = context.block();
         final StringBuilder text = new StringBuilder();
@@ -1368,9 +1215,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitOnPart(final Dart2Parser.OnPartContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitOnPart` text: {}", context.getText());
-        }
         final Dart2Parser.CatchPartContext catchPartContext = context.catchPart();
         final Dart2Parser.BlockContext blockContext = context.block();
         final TerminalNode onTerminal = context.ON_();
@@ -1398,9 +1242,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitCatchPart(final Dart2Parser.CatchPartContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitCatchPart` text: {}", context.getText());
-        }
         final TerminalNode catchTerminal = context.CATCH_();
         final TerminalNode opTerminal = context.OP();
         final List<Dart2Parser.IdentifierContext> identifierContexts = context.identifier();
@@ -1424,9 +1265,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitSwitchStatement(final Dart2Parser.SwitchStatementContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitSwitchStatement` text: {}", context.getText());
-        }
         final TerminalNode switchTerminal = context.SWITCH_();
         final TerminalNode opTerminal = context.OP();
         final Dart2Parser.ExprContext exprContext = context.expr();
@@ -1463,9 +1301,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitSwitchCase(final Dart2Parser.SwitchCaseContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitSwitchCase` text: {}", context.getText());
-        }
         final List<Dart2Parser.LabelContext> labelContexts = context.label();
         final TerminalNode caseTerminal = context.CASE_();
         final Dart2Parser.ExprContext exprContext = context.expr();
@@ -1494,9 +1329,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitDefaultCase(final Dart2Parser.DefaultCaseContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitDefaultCase` text: {}", context.getText());
-        }
         final List<Dart2Parser.LabelContext> labelContexts = context.label();
         final TerminalNode defaultTerminal = context.DEFAULT_();
         final TerminalNode coTerminal = context.CO();
@@ -1517,9 +1349,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitWhileStatement(final Dart2Parser.WhileStatementContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitWhileStatement` text: {}", context.getText());
-        }
         final TerminalNode whileTerminal = context.WHILE_();
         final TerminalNode opTerminal = context.OP();
         final Dart2Parser.ExprContext exprContext = context.expr();
@@ -1540,9 +1369,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitExpressionStatement(final Dart2Parser.ExpressionStatementContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitExpressionStatement` text: {}", context.getText());
-        }
         final Dart2Parser.ExprContext exprContext = context.expr();
         final TerminalNode scTerminal = context.SC();
         final StringBuilder text = new StringBuilder();
@@ -1556,9 +1382,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitIfStatement(final Dart2Parser.IfStatementContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitIfStatement` text: {}", context.getText());
-        }
         final TerminalNode ifTerminal = context.IF_();
         final TerminalNode opTerminal = context.OP();
         final Dart2Parser.ExprContext exprContext = context.expr();
@@ -1589,9 +1412,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitForStatement(final Dart2Parser.ForStatementContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitForStatement` text: {}", context.getText());
-        }
         final TerminalNode awaitTerminal = context.AWAIT_();
         final TerminalNode forTerminal = context.FOR_();
         final TerminalNode opTerminal = context.OP();
@@ -1616,9 +1436,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitForLoopParts(final Dart2Parser.ForLoopPartsContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitForLoopParts` text: {}", context.getText());
-        }
         final Dart2Parser.ForInitializerStatementContext forInitializerStatementContext = context.forInitializerStatement();
         final Dart2Parser.ExprContext exprContext = context.expr();
         final TerminalNode scTerminal = context.SC();
@@ -1661,9 +1478,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitExpressionList(final Dart2Parser.ExpressionListContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitExpressionList` text: {}", context.getText());
-        }
         final List<Dart2Parser.ExprContext> exprContexts = context.expr();
         final List<TerminalNode> cTerminals = context.C();
         final StringBuilder text = new StringBuilder();
@@ -1693,9 +1507,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitForInitializerStatement(final Dart2Parser.ForInitializerStatementContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitForInitializerStatement` text: {}", context.getText());
-        }
         final Dart2Parser.LocalVariableDeclarationContext localVariableDeclarationContext = context.localVariableDeclaration();
         final Dart2Parser.ExprContext exprContext = context.expr();
         final TerminalNode scTerminal = context.SC();
@@ -1715,9 +1526,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitLocalVariableDeclaration(final Dart2Parser.LocalVariableDeclarationContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitLocalVariableDeclaration` text: {}", context.getText());
-        }
         final Dart2Parser.MetadataContext metadataContext = context.metadata();
         final Dart2Parser.InitializedVariableDeclarationContext initializedVariableDeclarationContext = context.initializedVariableDeclaration();
         final TerminalNode scTerminal = context.SC();
@@ -1733,9 +1541,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitInitializedVariableDeclaration(final Dart2Parser.InitializedVariableDeclarationContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitInitializedVariableDeclaration` text: {}", context.getText());
-        }
         final Dart2Parser.DeclaredIdentifierContext declaredIdentifierContext = context.declaredIdentifier();
         final TerminalNode eqTerminal = context.EQ();
         final Dart2Parser.ExprContext exprContext = context.expr();
@@ -1760,9 +1565,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitReturnStatement(final Dart2Parser.ReturnStatementContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitReturnStatement` text: {}", context.getText());
-        }
         final TerminalNode returnTerminal = context.RETURN_();
         final Dart2Parser.ExprContext exprContext = context.expr();
         final TerminalNode scTerminal = context.SC();
@@ -1779,9 +1581,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitDeclaration(final Dart2Parser.DeclarationContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitDeclaration` text: {}", context.getText());
-        }
         final TerminalNode abstractTerminal = context.ABSTRACT_();
         final TerminalNode externalTerminal = context.EXTERNAL_();
         final Dart2Parser.FactoryConstructorSignatureContext factoryConstructorSignatureContext = context.factoryConstructorSignature();
@@ -1924,9 +1723,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitVarOrType(final Dart2Parser.VarOrTypeContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitVarOrType` text: {}", context.getText());
-        }
         final TerminalNode varTerminal = context.VAR_();
         final Dart2Parser.TypeContext typeContext = context.type();
         final StringBuilder text = new StringBuilder();
@@ -1940,9 +1736,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitStaticFinalDeclarationList(final Dart2Parser.StaticFinalDeclarationListContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitStaticFinalDeclarationList` text: {}", context.getText());
-        }
         final List<Dart2Parser.StaticFinalDeclarationContext> staticFinalDeclarationContexts = context.staticFinalDeclaration();
         final List<TerminalNode> cTerminals = context.C();
         final StringBuilder text = new StringBuilder();
@@ -1960,9 +1753,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitStaticFinalDeclaration(final Dart2Parser.StaticFinalDeclarationContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitStaticFinalDeclaration` text: {}", context.getText());
-        }
         final Dart2Parser.IdentifierContext identifierContext = context.identifier();
         final TerminalNode eqTerminal = context.EQ();
         final Dart2Parser.ExprContext exprContext = context.expr();
@@ -1977,9 +1767,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitConstantConstructorSignature(final Dart2Parser.ConstantConstructorSignatureContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitConstantConstructorSignature` text: {}", context.getText());
-        }
         final TerminalNode constTerminal = context.CONST_();
         final Dart2Parser.ConstructorNameContext constructorNameContext = context.constructorName();
         final Dart2Parser.FormalParameterListContext formalParameterListContext = context.formalParameterList();
@@ -1994,9 +1781,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitType(final Dart2Parser.TypeContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitType` text: {}", context.getText());
-        }
         final Dart2Parser.FunctionTypeContext functionTypeContext = context.functionType();
         final TerminalNode quTerminal =  context.QU();
         final Dart2Parser.TypeNotFunctionContext typeNotFunctionContext = context.typeNotFunction();
@@ -2016,9 +1800,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitFunctionType(final Dart2Parser.FunctionTypeContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitFunctionType` text: {}", context.getText());
-        }
         final Dart2Parser.FunctionTypeTailsContext functionTypeTailsContext = context.functionTypeTails();
         final Dart2Parser.TypeNotFunctionContext typeNotFunctionContext = context.typeNotFunction();
         final StringBuilder text = new StringBuilder();
@@ -2034,9 +1815,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitFunctionTypeTails(final Dart2Parser.FunctionTypeTailsContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitFunctionTypeTails` text: {}", context.getText());
-        }
         final Dart2Parser.FunctionTypeTailContext functionTypeTailContext = context.functionTypeTail();
         final TerminalNode quTerminal =  context.QU();
         final Dart2Parser.FunctionTypeTailsContext functionTypeTailsContext = context.functionTypeTails();
@@ -2054,9 +1832,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitFunctionTypeTail(final Dart2Parser.FunctionTypeTailContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitFunctionTypeTail` text: {}", context.getText());
-        }
         final TerminalNode functionTerminal = context.FUNCTION_();
         final Dart2Parser.TypeParametersContext typeParametersContext = context.typeParameters();
         final Dart2Parser.ParameterTypeListContext parameterTypeListContext = context.parameterTypeList();
@@ -2071,9 +1846,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitParameterTypeList(final Dart2Parser.ParameterTypeListContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitParameterTypeList` text: {}", context.getText());
-        }
         final TerminalNode opTerminal = context.OP();
         final TerminalNode cpTerminal = context.CP();
         final Dart2Parser.NormalParameterTypesContext normalParameterTypesContext = context.normalParameterTypes();
@@ -2096,9 +1868,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitNormalParameterTypes(final Dart2Parser.NormalParameterTypesContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitNormalParameterTypes` text: {}", context.getText());
-        }
         final List<Dart2Parser.NormalParameterTypeContext> normalParameterTypeContexts = context.normalParameterType();
         final List<TerminalNode> cTerminals = context.C();
         final StringBuilder text = new StringBuilder();
@@ -2114,9 +1883,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitNormalParameterType(final Dart2Parser.NormalParameterTypeContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitNormalParameterType` text: {}", context.getText());
-        }
         final Dart2Parser.MetadataContext metadataContext = context.metadata();
         final Dart2Parser.TypedIdentifierContext typedIdentifierContext = context.typedIdentifier();
         final Dart2Parser.TypeContext typeContext = context.type();
@@ -2135,9 +1901,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitTypedIdentifier(final Dart2Parser.TypedIdentifierContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitTypedIdentifier` text: {}", context.getText());
-        }
         final Dart2Parser.TypeContext typeContext = context.type();
         final Dart2Parser.IdentifierContext identifierContext = context.identifier();
         final StringBuilder text = new StringBuilder();
@@ -2149,9 +1912,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitTypeNotFunction(final Dart2Parser.TypeNotFunctionContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitTypeNotFunction` text: {}", context.getText());
-        }
         final TerminalNode voidTerminal = context.VOID_();
         final Dart2Parser.TypeNotVoidNotFunctionContext typeNotVoidNotFunctionContext = context.typeNotVoidNotFunction();
         final StringBuilder text = new StringBuilder();
@@ -2167,9 +1927,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitTypeNotVoidNotFunction(final Dart2Parser.TypeNotVoidNotFunctionContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitTypeNotVoidNotFunction` text: {}", context.getText());
-        }
         final Dart2Parser.TypeNameContext typeNameContext = context.typeName();
         final Dart2Parser.TypeArgumentsContext typeArgumentsContext = context.typeArguments();
         final TerminalNode quTerminal = context.QU();
@@ -2193,9 +1950,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitTypeName(final Dart2Parser.TypeNameContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitTypeName` text: {}", context.getText());
-        }
         final List<Dart2Parser.TypeIdentifierContext> typeIdentifierContexts = context.typeIdentifier();
         final TerminalNode dTerminal = context.D();
         final StringBuilder text = new StringBuilder();
@@ -2211,9 +1965,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitTypeArguments(final Dart2Parser.TypeArgumentsContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitTypeArguments` text: {}", context.getText());
-        }
         final TerminalNode ltTerminal = context.LT();
         final Dart2Parser.TypeListContext typeListContext = context.typeList();
         final TerminalNode gtTerminal = context.GT();
@@ -2229,9 +1980,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitTypeList(final Dart2Parser.TypeListContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitTypeList` text: {}", context.getText());
-        }
         final List<Dart2Parser.TypeContext> typeContexts = context.type();
         final StringBuilder text = new StringBuilder();
         final String firstTypeText = this.visit(typeContexts.get(0));
@@ -2246,9 +1994,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitInitializedIdentifierList(final Dart2Parser.InitializedIdentifierListContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitInitializedIdentifierList` text: {}", context.getText());
-        }
         final List<Dart2Parser.InitializedIdentifierContext> initializedIdentifierContexts = context.initializedIdentifier();
         final List<TerminalNode> cTerminals = context.C();
         if (!cTerminals.isEmpty()) {
@@ -2264,9 +2009,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitInitializedIdentifier(final Dart2Parser.InitializedIdentifierContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitInitializedIdentifier` text: {}", context.getText());
-        }
         // It can be a variable name.
         final Dart2Parser.IdentifierContext identifierContext = context.identifier();
         final TerminalNode eqTerminal = context.EQ();
@@ -2285,9 +2027,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitExpr(final Dart2Parser.ExprContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitExpr` text: {}", context.getText());
-        }
         final Dart2Parser.AssignableExpressionContext assignableExpressionContext = context.assignableExpression();
         final Dart2Parser.AssignmentOperatorContext assignmentOperatorContext = context.assignmentOperator();
         final Dart2Parser.ExprContext exprContext = context.expr();
@@ -2314,9 +2053,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitAssignmentOperator(final Dart2Parser.AssignmentOperatorContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitAssignmentOperator` text: {}", context.getText());
-        }
         final TerminalNode eqTerminal = context.EQ();
         // todo: use `compoundAssignmentOperatorContext` with tests.
         final Dart2Parser.CompoundAssignmentOperatorContext compoundAssignmentOperatorContext = context.compoundAssignmentOperator();
@@ -2331,9 +2067,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitAssignableExpression(final Dart2Parser.AssignableExpressionContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitAssignableExpression` text: {}", context.getText());
-        }
         final Dart2Parser.PrimaryContext primaryContext = context.primary();
         final Dart2Parser.AssignableSelectorPartContext assignableSelectorPartContext = context.assignableSelectorPart();
         final TerminalNode superTerminal = context.SUPER_();
@@ -2354,9 +2087,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitAssignableSelectorPart(final Dart2Parser.AssignableSelectorPartContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitAssignableSelectorPart` text: {}", context.getText());
-        }
         final List<Dart2Parser.SelectorContext> selectorContexts = context.selector();
         final Dart2Parser.AssignableSelectorContext assignableSelectorContext = context.assignableSelector();
         if (!selectorContexts.isEmpty()) {
@@ -2369,9 +2099,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitCascade(final Dart2Parser.CascadeContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitCascade` text: {}", context.getText());
-        }
         final Dart2Parser.CascadeContext cascadeContext = context.cascade();
         final TerminalNode ddTerminal = context.DD();
         final Dart2Parser.CascadeSectionContext cascadeSectionContext = context.cascadeSection();
@@ -2397,9 +2124,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitCascadeSection(final Dart2Parser.CascadeSectionContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitCascadeSection` text: {}", context.getText());
-        }
         final Dart2Parser.CascadeSelectorContext cascadeSelectorContext = context.cascadeSelector();
         final Dart2Parser.CascadeSectionTailContext cascadeSectionTailContext = context.cascadeSectionTail();
         final StringBuilder text = new StringBuilder();
@@ -2410,9 +2134,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitCascadeSelector(final Dart2Parser.CascadeSelectorContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitCascadeSelector` text: {}", context.getText());
-        }
         final TerminalNode obTerminal = context.OB();
         // todo: use `exprContext` and `cbTerminal` with tests.
         final Dart2Parser.ExprContext exprContext = context.expr();
@@ -2429,9 +2150,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitCascadeSectionTail(final Dart2Parser.CascadeSectionTailContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitCascadeSectionTail` text: {}", context.getText());
-        }
         final Dart2Parser.CascadeAssignmentContext cascadeAssignmentContext = context.cascadeAssignment();
         final List<Dart2Parser.SelectorContext> selectorContexts = context.selector();
         final Dart2Parser.AssignableSelectorContext assignableSelectorContext = context.assignableSelector();
@@ -2453,9 +2171,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitThrowExpression(final Dart2Parser.ThrowExpressionContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitThrowExpression` text: {}", context.getText());
-        }
         final TerminalNode throwTerminal = context.THROW_();
         final Dart2Parser.ExprContext exprContext = context.expr();
         final StringBuilder text = new StringBuilder();
@@ -2467,9 +2182,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitConditionalExpression(final Dart2Parser.ConditionalExpressionContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitConditionalExpression` text: {}", context.getText());
-        }
         final Dart2Parser.IfNullExpressionContext ifNullExpressionContext = context.ifNullExpression();
         final TerminalNode quTerminal = context.QU();
         final List<Dart2Parser.ExpressionWithoutCascadeContext> expressionWithoutCascadeContexts = context.expressionWithoutCascade();
@@ -2491,9 +2203,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitIfNullExpression(final Dart2Parser.IfNullExpressionContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitIfNullExpression` text: {}", context.getText());
-        }
         final List<Dart2Parser.LogicalOrExpressionContext> logicalOrExpressionContexts = context.logicalOrExpression();
         final List<TerminalNode> ququTerminals = context.QUQU();
         final StringBuilder text = new StringBuilder();
@@ -2512,9 +2221,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitLogicalOrExpression(final Dart2Parser.LogicalOrExpressionContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitLogicalOrExpression` text: {}", context.getText());
-        }
         final List<Dart2Parser.LogicalAndExpressionContext> logicalAndExpressionContexts = context.logicalAndExpression();
         final List<TerminalNode> ppTerminals = context.PP();
         final Dart2Parser.LogicalAndExpressionContext firstLogicalAndExpressionContext = logicalAndExpressionContexts.get(0);
@@ -2533,9 +2239,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitLogicalAndExpression(final Dart2Parser.LogicalAndExpressionContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitLogicalAndExpression` text: {}", context.getText());
-        }
         final List<Dart2Parser.EqualityExpressionContext> equalityExpressionContexts = context.equalityExpression();
         final List<TerminalNode> aaTerminals = context.AA();
         final StringBuilder text = new StringBuilder();
@@ -2554,9 +2257,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitEqualityExpression(final Dart2Parser.EqualityExpressionContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitEqualityExpression` text: {}", context.getText());
-        }
         final List<Dart2Parser.RelationalExpressionContext> relationalExpressionContexts = context.relationalExpression();
         final Dart2Parser.EqualityOperatorContext equalityOperatorContext = context.equalityOperator();
         final TerminalNode superTerminal = context.SUPER_();
@@ -2581,9 +2281,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitEqualityOperator(final Dart2Parser.EqualityOperatorContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitEqualityOperator` text: {}", context.getText());
-        }
         final TerminalNode eeTerminal = context.EE();
         final TerminalNode neTerminal = context.NE();
         final StringBuilder text = new StringBuilder();
@@ -2597,9 +2294,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitRelationalExpression(final Dart2Parser.RelationalExpressionContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitRelationalExpression` text: {}", context.getText());
-        }
         final List<Dart2Parser.BitwiseOrExpressionContext> bitwiseOrExpressionContexts = context.bitwiseOrExpression();
         final Dart2Parser.TypeTestContext typeTestContext = context.typeTest();
         final Dart2Parser.TypeCastContext typeCastContext = context.typeCast();
@@ -2634,9 +2328,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitRelationalOperator(final Dart2Parser.RelationalOperatorContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitRelationalOperator` text: {}", context.getText());
-        }
         final TerminalNode gtTerminal = context.GT();
         final TerminalNode eqTerminal = context.EQ();
         final TerminalNode lteTerminal = context.LTE();
@@ -2657,9 +2348,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitBitwiseOrExpression(final Dart2Parser.BitwiseOrExpressionContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitBitwiseOrExpression` text: {}", context.getText());
-        }
         final List<Dart2Parser.BitwiseXorExpressionContext> bitwiseXorExpressionContexts = context.bitwiseXorExpression();
         final List<TerminalNode> pTerminals = context.P();
         final TerminalNode superTerminal = context.SUPER_();
@@ -2679,9 +2367,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitBitwiseXorExpression(final Dart2Parser.BitwiseXorExpressionContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitBitwiseXorExpression` text: {}", context.getText());
-        }
         final List<Dart2Parser.BitwiseAndExpressionContext> bitwiseAndExpressionContexts = context.bitwiseAndExpression();
         final List<TerminalNode> cirTerminals = context.CIR();
         final TerminalNode superTerminal = context.SUPER_();
@@ -2701,9 +2386,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitBitwiseAndExpression(final Dart2Parser.BitwiseAndExpressionContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitBitwiseAndExpression` text: {}", context.getText());
-        }
         final List<Dart2Parser.ShiftExpressionContext> shiftExpressionContexts = context.shiftExpression();
         final List<TerminalNode> aTerminals = context.A();
         final TerminalNode superTerminal = context.SUPER_();
@@ -2723,9 +2405,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitShiftExpression(final Dart2Parser.ShiftExpressionContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitShiftExpression` text: {}", context.getText());
-        }
         final List<Dart2Parser.AdditiveExpressionContext> additiveExpressionContexts = context.additiveExpression();
         final List<Dart2Parser.ShiftOperatorContext> shiftOperatorContexts = context.shiftOperator();
         final TerminalNode superTerminal = context.SUPER_();
@@ -2745,9 +2424,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitAdditiveExpression(final Dart2Parser.AdditiveExpressionContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitAdditiveExpression` text: {}", context.getText());
-        }
         final List<Dart2Parser.MultiplicativeExpressionContext> multiplicativeExpressionContexts = context.multiplicativeExpression();
         final List<Dart2Parser.AdditiveOperatorContext> additiveOperatorContexts = context.additiveOperator();
         final TerminalNode superTerminal = context.SUPER_();
@@ -2771,9 +2447,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitAdditiveOperator(final Dart2Parser.AdditiveOperatorContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitAdditiveOperator` text: {}", context.getText());
-        }
         final TerminalNode plTerminal = context.PL();
         final TerminalNode minusTerminal = context.MINUS();
         final StringBuilder text = new StringBuilder();
@@ -2787,9 +2460,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitMultiplicativeExpression(final Dart2Parser.MultiplicativeExpressionContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitMultiplicativeExpression` text: {}", context.getText());
-        }
         final List<Dart2Parser.UnaryExpressionContext> unaryExpressionContexts = context.unaryExpression();
         final List<Dart2Parser.MultiplicativeOperatorContext> multiplicativeOperatorContexts = context.multiplicativeOperator();
         final TerminalNode superTerminal = context.SUPER_();
@@ -2815,9 +2485,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitMultiplicativeOperator(final Dart2Parser.MultiplicativeOperatorContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitMultiplicativeOperator` text: {}", context.getText());
-        }
         final TerminalNode stTerminal = context.ST();
         final TerminalNode slTerminal = context.SL();
         final TerminalNode pcTerminal = context.PC();
@@ -2837,9 +2504,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitUnaryExpression(final Dart2Parser.UnaryExpressionContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitUnaryExpression` text: {}", context.getText());
-        }
         final Dart2Parser.PrefixOperatorContext prefixOperatorContext = context.prefixOperator();
         final Dart2Parser.UnaryExpressionContext unaryExpressionContext = context.unaryExpression();
         final Dart2Parser.AwaitExpressionContext awaitExpressionContext = context.awaitExpression();
@@ -2881,9 +2545,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitPrefixOperator(final Dart2Parser.PrefixOperatorContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitPrefixOperator` text: {}", context.getText());
-        }
         final Dart2Parser.MinusOperatorContext minusOperatorContext = context.minusOperator();
         final Dart2Parser.NegationOperatorContext negationOperatorContext = context.negationOperator();
         final Dart2Parser.TildeOperatorContext tildeOperatorContext = context.tildeOperator();
@@ -2900,9 +2561,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitMinusOperator(final Dart2Parser.MinusOperatorContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitMinusOperator` text: {}", context.getText());
-        }
         final TerminalNode minusTerminal = context.MINUS();
         final StringBuilder text = new StringBuilder();
         text.append(this.visit(minusTerminal));
@@ -2911,9 +2569,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitNegationOperator(final Dart2Parser.NegationOperatorContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitNegationOperator` text: {}", context.getText());
-        }
         final TerminalNode notTerminal = context.NOT();
         final StringBuilder text = new StringBuilder();
         text.append(this.visit(notTerminal));
@@ -2922,9 +2577,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitTildeOperator(final Dart2Parser.TildeOperatorContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitTildeOperator` text: {}", context.getText());
-        }
         final TerminalNode sqigTerminal = context.SQUIG();
         final StringBuilder text = new StringBuilder();
         text.append(this.visit(sqigTerminal));
@@ -2933,9 +2585,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitAwaitExpression(final Dart2Parser.AwaitExpressionContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitAwaitExpression` text: {}", context.getText());
-        }
         final TerminalNode awaitTerminal = context.AWAIT_();
         final Dart2Parser.UnaryExpressionContext unaryExpressionContext = context.unaryExpression();
         final StringBuilder text = new StringBuilder();
@@ -2947,9 +2596,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitPostfixExpression(final Dart2Parser.PostfixExpressionContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitPostfixExpression` text: {}", context.getText());
-        }
         final Dart2Parser.AssignableExpressionContext assignableExpressionContext = context.assignableExpression();
         final Dart2Parser.PostfixOperatorContext postfixOperatorContext = context.postfixOperator();
         final Dart2Parser.PrimaryContext primaryContext = context.primary();
@@ -2972,9 +2618,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitPostfixOperator(final Dart2Parser.PostfixOperatorContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitPostfixOperator` text: {}", context.getText());
-        }
         final Dart2Parser.IncrementOperatorContext incrementOperatorContext = context.incrementOperator();
         final StringBuilder text = new StringBuilder();
         text.append(this.visit(incrementOperatorContext));
@@ -2983,9 +2626,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitIncrementOperator(final Dart2Parser.IncrementOperatorContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitIncrementOperator` text: {}", context.getText());
-        }
         final TerminalNode plplTerminal = context.PLPL();
         final TerminalNode mmTerminal = context.MM();
         final StringBuilder text = new StringBuilder();
@@ -2999,9 +2639,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitSelector(final Dart2Parser.SelectorContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitSelector` text: {}", context.getText());
-        }
         final TerminalNode notTerminal = context.NOT();
         final Dart2Parser.AssignableSelectorContext assignableSelectorContext = context.assignableSelector();
         final Dart2Parser.ArgumentPartContext argumentPartContext = context.argumentPart();
@@ -3019,9 +2656,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitAssignableSelector(final Dart2Parser.AssignableSelectorContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitAssignableSelector` text: {}", context.getText());
-        }
         final Dart2Parser.UnconditionalAssignableSelectorContext unconditionalAssignableSelectorContext = context.unconditionalAssignableSelector();
         final TerminalNode qudTerminal = context.QUD();
         // todo: use `quTerminal`, `obTerminal`, `exprContext`, and `cbTerminal` with tests.
@@ -3044,9 +2678,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitUnconditionalAssignableSelector(final Dart2Parser.UnconditionalAssignableSelectorContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitUnconditionalAssignableSelector` text: {}", context.getText());
-        }
         final TerminalNode obTerminal = context.OB();
         // todo: use `exprContext` and `cbTerminal` with tests.
         final Dart2Parser.ExprContext exprContext = context.expr();
@@ -3065,9 +2696,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitArgumentPart(final Dart2Parser.ArgumentPartContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitArgumentPart` text: {}", context.getText());
-        }
         final Dart2Parser.TypeArgumentsContext typeArgumentsContext = context.typeArguments();
         final Dart2Parser.ArgumentsContext argumentsContext = context.arguments();
         final StringBuilder text = new StringBuilder();
@@ -3083,9 +2711,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitPrimary(final Dart2Parser.PrimaryContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitPrimary` text: {}", context.getText());
-        }
         final Dart2Parser.ThisExpressionContext thisExpressionContext = context.thisExpression();
         final TerminalNode superTerminal = context.SUPER_();
         final Dart2Parser.UnconditionalAssignableSelectorContext unconditionalAssignableSelectorContext = context.unconditionalAssignableSelector();
@@ -3143,9 +2768,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitThisExpression(final Dart2Parser.ThisExpressionContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitThisExpression` text: {}", context.getText());
-        }
         final TerminalNode thisTerminal = context.THIS_();
         final StringBuilder text = new StringBuilder();
         text.append(this.visit(thisTerminal));
@@ -3154,9 +2776,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitConstObjectExpression(final Dart2Parser.ConstObjectExpressionContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitConstObjectExpression` text: {}", context.getText());
-        }
         final TerminalNode constTerminal = context.CONST_();
         final Dart2Parser.ConstructorDesignationContext constructorDesignationContext = context.constructorDesignation();
         final Dart2Parser.ArgumentsContext argumentsContext = context.arguments();
@@ -3170,9 +2789,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitConstructorDesignation(final Dart2Parser.ConstructorDesignationContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitConstructorDesignation` text: {}", context.getText());
-        }
         final Dart2Parser.TypeIdentifierContext typeIdentifierContext = context.typeIdentifier();
         final Dart2Parser.QualifiedNameContext qualifiedNameContext = context.qualifiedName();
         // todo: use `typeNameContext`, `typeArgumentsContext`, `dTerminal`, and `identifierContext` with tests.
@@ -3193,9 +2809,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitFunctionExpression(final Dart2Parser.FunctionExpressionContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitFunctionExpression` text: {}", context.getText());
-        }
         final Dart2Parser.FormalParameterPartContext formalParameterPartContext = context.formalParameterPart();
         final Dart2Parser.FunctionExpressionBodyContext functionExpressionBodyContext = context.functionExpressionBody();
         final StringBuilder text = new StringBuilder();
@@ -3207,9 +2820,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitFunctionExpressionBody(final Dart2Parser.FunctionExpressionBodyContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitFunctionExpressionBody` text: {}", context.getText());
-        }
         final TerminalNode asyncTerminal = context.ASYNC_();
         final TerminalNode egTerminal = context.EG();
         final Dart2Parser.ExprContext exprContext = context.expr();
@@ -3245,9 +2855,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitIdentifier(final Dart2Parser.IdentifierContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitIdentifier` text: {}", context.getText());
-        }
         final TerminalNode identifierTerminal = context.IDENTIFIER();
         final TerminalNode abstractTerminal = context.ABSTRACT_();
         final TerminalNode asTerminal = context.AS_();
@@ -3386,9 +2993,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitLiteral(final Dart2Parser.LiteralContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitLiteral` text: {}", context.getText());
-        }
         final Dart2Parser.NullLiteralContext nullLiteralContext = context.nullLiteral();
         final Dart2Parser.BooleanLiteralContext booleanLiteralContext = context.booleanLiteral();
         final Dart2Parser.NumericLiteralContext numericLiteralContext = context.numericLiteral();
@@ -3425,9 +3029,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitNumericLiteral(final Dart2Parser.NumericLiteralContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitNumericLiteral` text: {}", context.getText());
-        }
         final TerminalNode numberTerminal = context.NUMBER();
         final TerminalNode hexNumberTerminal = context.HEX_NUMBER();
         final StringBuilder text = new StringBuilder();
@@ -3441,9 +3042,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitBooleanLiteral(final Dart2Parser.BooleanLiteralContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitBooleanLiteral` text: {}", context.getText());
-        }
         final TerminalNode trueTerminal = context.TRUE_();
         final TerminalNode falseTerminal = context.FALSE_();
         final StringBuilder text = new StringBuilder();
@@ -3457,9 +3055,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitNullLiteral(final Dart2Parser.NullLiteralContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitNullLiteral` text: {}", context.getText());
-        }
         final TerminalNode nullTerminal = context.NULL_();
         final StringBuilder text = new StringBuilder();
         text.append(this.visit(nullTerminal));
@@ -3468,9 +3063,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitListLiteral(final Dart2Parser.ListLiteralContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `ListLiteralContext` text: {}", context.getText());
-        }
         final TerminalNode constTerminal = context.CONST_();
         final Dart2Parser.TypeArgumentsContext typeArgumentsContext = context.typeArguments();
         final TerminalNode obTerminal = context.OB();
@@ -3500,9 +3092,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitSetOrMapLiteral(final Dart2Parser.SetOrMapLiteralContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitSetOrMapLiteral` text: {}", context.getText());
-        }
         final TerminalNode constTerminal = context.CONST_();
         final Dart2Parser.TypeArgumentsContext typeArgumentsContext = context.typeArguments();
         final TerminalNode obcTerminal = context.OBC();
@@ -3536,9 +3125,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitElements(final Dart2Parser.ElementsContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitElements` text: {}", context.getText());
-        }
         final List<Dart2Parser.ElementContext> elementContexts = context.element();
         final StringBuilder text = new StringBuilder();
         final Dart2Parser.ElementContext firstElementContext = elementContexts.get(0);
@@ -3557,9 +3143,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitElement(final Dart2Parser.ElementContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitElement` text: {}", context.getText());
-        }
         final Dart2Parser.ExpressionElementContext expressionElementContext = context.expressionElement();
         final Dart2Parser.MapElementContext mapElementContext = context.mapElement();
         final Dart2Parser.SpreadElementContext spreadElementContext = context.spreadElement();
@@ -3586,9 +3169,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitExpressionElement(final Dart2Parser.ExpressionElementContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitExpressionElement` text: {}", context.getText());
-        }
         final Dart2Parser.ExprContext exprContext = context.expr();
         final StringBuilder text = new StringBuilder();
         text.append(this.visit(exprContext));
@@ -3597,9 +3177,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitMapElement(final Dart2Parser.MapElementContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitMapElement` text: {}", context.getText());
-        }
         final List<Dart2Parser.ExprContext> exprContexts = context.expr();
         final TerminalNode coTerminal = context.CO();
         final StringBuilder text = new StringBuilder();
@@ -3614,9 +3191,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitNewExpression(final Dart2Parser.NewExpressionContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitNewExpression` text: {}", context.getText());
-        }
         final TerminalNode newTerminal = context.NEW_();
         // It can be a class name.
         final Dart2Parser.ConstructorDesignationContext constructorDesignationContext = context.constructorDesignation();
@@ -3632,9 +3206,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitArguments(final Dart2Parser.ArgumentsContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitArguments` text: {}", context.getText());
-        }
         final TerminalNode opTerminal = context.OP();
         final Dart2Parser.ArgumentListContext argumentListContext = context.argumentList();
         final TerminalNode cTerminal = context.C();
@@ -3683,9 +3254,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitArgumentList(final Dart2Parser.ArgumentListContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitArgumentList` text: {}", context.getText());
-        }
         final List<Dart2Parser.NamedArgumentContext> namedArgumentContexts = context.namedArgument();
         final List<TerminalNode> cTerminals = context.C();
         final Dart2Parser.ExpressionListContext expressionListContext = context.expressionList();
@@ -3716,9 +3284,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitNamedArgument(final Dart2Parser.NamedArgumentContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitNamedArgument` text: {}", context.getText());
-        }
         final Dart2Parser.LabelContext labelContext = context.label();
         final Dart2Parser.ExprContext exprContext = context.expr();
         final StringBuilder text = new StringBuilder();
@@ -3730,9 +3295,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     @Override
     public String visitLabel(final Dart2Parser.LabelContext context) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Enter `visitLabel` text: {}", context.getText());
-        }
         final Dart2Parser.IdentifierContext identifierContext = context.identifier();
         final TerminalNode coTerminal = context.CO();
         final StringBuilder text = new StringBuilder();
@@ -3755,6 +3317,9 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
     @Override
     public String visit(final ParseTree tree) {
         final String ruleName = tree.getClass().getSimpleName();
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Enter `{}` text: {}", ruleName, tree.getText());
+        }
         this.ruleVisitCounts.putIfAbsent(ruleName, 1);
         this.ruleVisitCounts.computeIfPresent(ruleName, (ignored, currentCount) -> currentCount + 1);
         return tree.accept(this);
