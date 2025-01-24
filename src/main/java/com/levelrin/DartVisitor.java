@@ -64,7 +64,7 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
             final String libraryDeclarationText = this.visit(libraryDeclarationContext);
             text.append(libraryDeclarationText);
         }
-        text.append("\n");
+        this.appendNewLinesAndIndent(text, 1);
         return text.toString();
     }
 
@@ -86,9 +86,9 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
             for (final Dart2Parser.ImportOrExportContext importOrExportContext : importOrExportContexts) {
                 final String importOrExportText = this.visit(importOrExportContext);
                 text.append(importOrExportText);
-                text.append("\n");
+                this.appendNewLinesAndIndent(text, 1);
             }
-            text.append("\n");
+            this.appendNewLinesAndIndent(text, 1);
         }
         if (!metadataContexts.isEmpty()) {
             for (final Dart2Parser.MetadataContext metadataContext : metadataContexts) {
@@ -105,7 +105,7 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         if (!topLevelDeclarationContexts.isEmpty()) {
             for (int index = 0; index < topLevelDeclarationContexts.size(); index++) {
                 if (index > 0) {
-                    text.append("\n\n");
+                    this.appendNewLinesAndIndent(text, 2);
                 }
                 final Dart2Parser.TopLevelDeclarationContext topLevelDeclarationContext = topLevelDeclarationContexts.get(index);
                 final String topLevelDeclarationText = this.visit(topLevelDeclarationContext);
@@ -211,14 +211,12 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
             if (!metadataContext.getText().isEmpty()) {
                 throw new UnsupportedOperationException("The following parsing path is not supported yet: visitMixinDeclaration -> metadata");
             }
-            text.append("\n\n");
             this.currentIndentLevel++;
-            text.append(this.indentUnit.repeat(this.currentIndentLevel));
+            this.appendNewLinesAndIndent(text, 2);
             text.append(this.visit(classMemberDeclarationContext));
             this.currentIndentLevel--;
             if (index == classMemberDeclarationContexts.size() - 1) {
-                text.append("\n\n");
-                text.append(this.indentUnit.repeat(this.currentIndentLevel));
+                this.appendNewLinesAndIndent(text, 2);
             }
         }
         text.append(this.visit(cbcTerminal));
@@ -425,8 +423,7 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
             final Dart2Parser.ClassMemberDeclarationContext classMemberDeclarationContext = classMemberDeclarationContexts.get(index);
             if (!metadataContext.getText().isEmpty()) {
                 text.append(this.visit(metadataContext));
-                text.append("\n");
-                text.append(this.indentUnit.repeat(this.currentIndentLevel));
+                this.appendNewLinesAndIndent(text, 1);
             }
             text.append(this.visit(classMemberDeclarationContext));
             text.append("\n\n");
@@ -836,9 +833,8 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final TerminalNode cbcTerminal = context.CBC();
         final StringBuilder text = new StringBuilder();
         text.append(this.visit(obcTerminal));
-        text.append("\n");
         this.currentIndentLevel++;
-        text.append(this.indentUnit.repeat(this.currentIndentLevel));
+        this.appendNewLinesAndIndent(text, 1);
         final Dart2Parser.DefaultNamedParameterContext firstDefaultNamedParameterContext = defaultNamedParameterContexts.get(0);
         text.append(this.visit(firstDefaultNamedParameterContext));
         if (defaultNamedParameterContexts.size() > 1) {
@@ -846,8 +842,7 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
                 final TerminalNode cTerminal = cTerminals.get(index);
                 if (defaultNamedParameterContexts.size() > index + 1) {
                     text.append(this.visit(cTerminal));
-                    text.append("\n");
-                    text.append(this.indentUnit.repeat(this.currentIndentLevel));
+                    this.appendNewLinesAndIndent(text, 1);
                     final Dart2Parser.DefaultNamedParameterContext defaultNamedParameterContext = defaultNamedParameterContexts.get(index + 1);
                     text.append(this.visit(defaultNamedParameterContext));
                 } else {
@@ -855,9 +850,8 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
                 }
             }
         }
-        text.append("\n");
         this.currentIndentLevel--;
-        text.append(this.indentUnit.repeat(this.currentIndentLevel));
+        this.appendNewLinesAndIndent(text, 1);
         text.append(this.visit(cbcTerminal));
         return text.toString();
     }
@@ -1075,14 +1069,12 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final TerminalNode cbcTerminal = context.CBC();
         final StringBuilder text = new StringBuilder();
         text.append(this.visit(obcTerminal));
-        text.append("\n");
         this.currentIndentLevel++;
-        text.append(this.indentUnit.repeat(this.currentIndentLevel));
+        this.appendNewLinesAndIndent(text, 1);
         final String statementsText = this.visit(statementsContext);
         text.append(statementsText);
-        text.append("\n");
         this.currentIndentLevel--;
-        text.append(this.indentUnit.repeat(this.currentIndentLevel));
+        this.appendNewLinesAndIndent(text, 1);
         text.append(this.visit(cbcTerminal));
         return text.toString();
     }
@@ -1095,8 +1087,7 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
             final Dart2Parser.StatementContext statementContext = statementContexts.get(index);
             text.append(this.visit(statementContext));
             if (index < statementContexts.size() - 1) {
-                text.append("\n");
-                text.append(this.indentUnit.repeat(this.currentIndentLevel));
+                this.appendNewLinesAndIndent(text, 1);
             }
         }
         return text.toString();
@@ -1283,18 +1274,15 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         text.append(this.visit(obcTerminal));
         this.currentIndentLevel++;
         for (final Dart2Parser.SwitchCaseContext switchCaseContext : switchCaseContexts) {
-            text.append("\n");
-            text.append(this.indentUnit.repeat(this.currentIndentLevel));
+            this.appendNewLinesAndIndent(text, 1);
             text.append(this.visit(switchCaseContext));
         }
         if (defaultCaseContext != null) {
-            text.append("\n");
-            text.append(this.indentUnit.repeat(this.currentIndentLevel));
+            this.appendNewLinesAndIndent(text, 1);
             text.append(this.visit(defaultCaseContext));
         }
-        text.append("\n");
         this.currentIndentLevel--;
-        text.append(this.indentUnit.repeat(this.currentIndentLevel));
+        this.appendNewLinesAndIndent(text, 1);
         text.append(this.visit(cbcTerminal));
         return text.toString();
     }
@@ -1319,8 +1307,7 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final String statementsText = this.visit(statementsContext);
         final int visitStatementCountAfter = this.ruleVisitCounts.getOrDefault(Dart2Parser.StatementContext.class.getSimpleName(), 0);
         if (visitStatementCountBefore < visitStatementCountAfter) {
-            text.append("\n");
-            text.append(this.indentUnit.repeat(this.currentIndentLevel));
+            this.appendNewLinesAndIndent(text, 1);
             text.append(statementsText);
         }
         this.currentIndentLevel--;
@@ -1339,9 +1326,8 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final StringBuilder text = new StringBuilder();
         text.append(this.visit(defaultTerminal));
         text.append(this.visit(coTerminal));
-        text.append("\n");
         this.currentIndentLevel++;
-        text.append(this.indentUnit.repeat(this.currentIndentLevel));
+        this.appendNewLinesAndIndent(text, 1);
         text.append(this.visit(statementsContext));
         this.currentIndentLevel--;
         return text.toString();
@@ -1493,8 +1479,7 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
             // We assume the following condition means nested object initialization. Ex: User('Rin', User('Ian'));
             if (visitArgumentsCountBefore < visitArgumentsCountAfter) {
                 text.append(this.visit(cTerminal));
-                text.append("\n");
-                text.append(this.indentUnit.repeat(this.currentIndentLevel));
+                this.appendNewLinesAndIndent(text, 1);
                 text.append(exprText);
             } else {
                 text.append(this.visit(cTerminal));
@@ -3077,14 +3062,12 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         }
         text.append(this.visit(obTerminal));
         if (elementsContext != null) {
-            text.append("\n");
             this.currentIndentLevel++;
-            text.append(this.indentUnit.repeat(this.currentIndentLevel));
+            this.appendNewLinesAndIndent(text, 1);
             final String elementsText = this.visit(elementsContext);
             text.append(elementsText);
-            text.append("\n");
             this.currentIndentLevel--;
-            text.append(this.indentUnit.repeat(this.currentIndentLevel));
+            this.appendNewLinesAndIndent(text, 1);
         }
         text.append(this.visit(cbTerminal));
         return text.toString();
@@ -3110,14 +3093,12 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
             text.append(this.visit(cbcTerminal));
         } else {
             text.append(this.visit(obcTerminal));
-            text.append("\n");
             this.currentIndentLevel++;
-            text.append(this.indentUnit.repeat(this.currentIndentLevel));
+            this.appendNewLinesAndIndent(text, 1);
             final String elementsText = this.visit(elementsContext);
             text.append(elementsText);
-            text.append("\n");
             this.currentIndentLevel--;
-            text.append(this.indentUnit.repeat(this.currentIndentLevel));
+            this.appendNewLinesAndIndent(text, 1);
             text.append(this.visit(cbcTerminal));
         }
         return text.toString();
@@ -3132,8 +3113,7 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         text.append(firstElementText);
         for (int index = 1; index < elementContexts.size(); index++) {
             text.append(",");
-            text.append("\n");
-            text.append(this.indentUnit.repeat(this.currentIndentLevel));
+            this.appendNewLinesAndIndent(text, 1);
             final String elementText = this.visit(elementContexts.get(index));
             text.append(elementText);
         }
@@ -3225,15 +3205,13 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
             final boolean objNested = visitArgumentsCountBefore < visitArgumentsCountAfter;
             final boolean namedParamUsed = visitNamedArgumentCountBefore < visitNamedArgumentCountAfter;
             if (objNested || namedParamUsed) {
-                text.append("\n");
-                text.append(this.indentUnit.repeat(this.currentIndentLevel));
+                this.appendNewLinesAndIndent(text, 1);
                 text.append(argumentsText);
                 if (cTerminal != null) {
                     text.append(this.visit(cTerminal));
                 }
-                text.append("\n");
                 this.currentIndentLevel--;
-                text.append(this.indentUnit.repeat(this.currentIndentLevel));
+                this.appendNewLinesAndIndent(text, 1);
             } else {
                 this.currentIndentLevel--;
                 text.append(
@@ -3275,8 +3253,7 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
                 namedArgumentContext = namedArgumentContexts.get(index + 1);
             }
             text.append(this.visit(cTerminal));
-            text.append("\n");
-            text.append(this.indentUnit.repeat(this.currentIndentLevel));
+            this.appendNewLinesAndIndent(text, 1);
             text.append(this.visit(namedArgumentContext));
         }
         return text.toString();
@@ -3334,12 +3311,21 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         if (comments != null) {
             for (final Token comment : comments) {
                 text.append(comment.getText());
-                text.append("\n");
-                text.append(this.indentUnit.repeat(this.currentIndentLevel));
+                this.appendNewLinesAndIndent(text, 1);
             }
         }
         text.append(node.getText());
         return text.toString();
+    }
+
+    /**
+     * We use this to add new lines with appropriate indentations.
+     * @param text We will append the new lines and indentations into this.
+     * @param newLines Number of new lines before appending indentations.
+     */
+    private void appendNewLinesAndIndent(final StringBuilder text, final int newLines) {
+        text.append("\n".repeat(newLines));
+        text.append(this.indentUnit.repeat(this.currentIndentLevel));
     }
 
 }
