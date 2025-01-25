@@ -2171,18 +2171,39 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final TerminalNode quTerminal = context.QU();
         final List<Dart2Parser.ExpressionWithoutCascadeContext> expressionWithoutCascadeContexts = context.expressionWithoutCascade();
         final TerminalNode coTerminal = context.CO();
-        if (quTerminal != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitConditionalExpression -> qu");
-        }
-        if (!expressionWithoutCascadeContexts.isEmpty()) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitConditionalExpression -> expressionWithoutCascade");
-        }
-        if (coTerminal != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitConditionalExpression -> co");
-        }
         final StringBuilder text = new StringBuilder();
-        final String ifNullExpressionText = this.visit(ifNullExpressionContext);
-        text.append(ifNullExpressionText);
+        text.append(this.visit(ifNullExpressionContext));
+        if (quTerminal != null) {
+            text.append(" ");
+            text.append(this.visit(quTerminal));
+            text.append(" ");
+            final Dart2Parser.ExpressionWithoutCascadeContext firstExpressionWithoutCascadeContext = expressionWithoutCascadeContexts.get(0);
+            text.append(this.visit(firstExpressionWithoutCascadeContext));
+            text.append(" ");
+            text.append(this.visit(coTerminal));
+            text.append(" ");
+            final Dart2Parser.ExpressionWithoutCascadeContext secondExpressionWithoutCascadeContext = expressionWithoutCascadeContexts.get(1);
+            text.append(this.visit(secondExpressionWithoutCascadeContext));
+        }
+        return text.toString();
+    }
+
+    @Override
+    public String visitExpressionWithoutCascade(final Dart2Parser.ExpressionWithoutCascadeContext context) {
+        final Dart2Parser.AssignableExpressionContext assignableExpressionContext = context.assignableExpression();
+        // todo: use `assignmentOperatorContext` and `expressionWithoutCascadeContext` with tests.
+        final Dart2Parser.AssignmentOperatorContext assignmentOperatorContext = context.assignmentOperator();
+        final Dart2Parser.ExpressionWithoutCascadeContext expressionWithoutCascadeContext = context.expressionWithoutCascade();
+        final Dart2Parser.ConditionalExpressionContext conditionalExpressionContext = context.conditionalExpression();
+        final Dart2Parser.ThrowExpressionWithoutCascadeContext throwExpressionWithoutCascadeContext = context.throwExpressionWithoutCascade();
+        final StringBuilder text = new StringBuilder();
+        if (assignableExpressionContext != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitExpressionWithoutCascade -> assignableExpression");
+        } else if (conditionalExpressionContext != null) {
+            text.append(this.visit(conditionalExpressionContext));
+        } else if (throwExpressionWithoutCascadeContext != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitExpressionWithoutCascade -> throwExpressionWithoutCascade");
+        }
         return text.toString();
     }
 
@@ -2873,105 +2894,73 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final TerminalNode awaitTerminal = context.AWAIT_();
         final TerminalNode yieldTerminal = context.YIELD_();
         final TerminalNode nativeTerminal = context.NATIVE_();
-        if (abstractTerminal != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitIdentifier -> abstract");
-        }
-        if (asTerminal != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitIdentifier -> as");
-        }
-        if (covariantTerminal != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitIdentifier -> covariant");
-        }
-        if (deferredTerminal != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitIdentifier -> deferred");
-        }
-        if (dynamicTerminal != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitIdentifier -> dynamic");
-        }
-        if (exportTerminal != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitIdentifier -> export");
-        }
-        if (externalTerminal != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitIdentifier -> external");
-        }
-        if (extensionTerminal != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitIdentifier -> extension");
-        }
-        if (factoryTerminal != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitIdentifier -> factory");
-        }
-        if (functionTerminal != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitIdentifier -> function");
-        }
-        if (getTerminal != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitIdentifier -> get");
-        }
-        if (implementsTerminal != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitIdentifier -> implements");
-        }
-        if (importTerminal != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitIdentifier -> import");
-        }
-        if (interfaceTerminal != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitIdentifier -> interface");
-        }
-        if (lateTerminal != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitIdentifier -> late");
-        }
-        if (libraryTerminal != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitIdentifier -> library");
-        }
-        if (mixinTerminal != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitIdentifier -> mixin");
-        }
-        if (operatorTerminal != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitIdentifier -> operator");
-        }
-        if (partTerminal != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitIdentifier -> part");
-        }
-        if (requiredTerminal != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitIdentifier -> required");
-        }
-        if (setTerminal != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitIdentifier -> set");
-        }
-        if (staticTerminal != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitIdentifier -> static");
-        }
-        if (typedefTerminal != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitIdentifier -> typedef");
-        }
-        if (asyncTerminal != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitIdentifier -> async");
-        }
-        if (hideTerminal != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitIdentifier -> hide");
-        }
-        if (ofTerminal != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitIdentifier -> of");
-        }
-        if (onTerminal != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitIdentifier -> on");
-        }
-        if (showTerminal != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitIdentifier -> show");
-        }
-        if (syncTerminal != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitIdentifier -> sync");
-        }
-        if (awaitTerminal != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitIdentifier -> await");
-        }
-        if (yieldTerminal != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitIdentifier -> yield");
-        }
-        if (nativeTerminal != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitIdentifier -> native");
-        }
         final StringBuilder text = new StringBuilder();
         if (identifierTerminal != null) {
             text.append(this.visit(identifierTerminal));
+        } else if (abstractTerminal != null) {
+            text.append(this.visit(abstractTerminal));
+        } else if (asTerminal != null) {
+            text.append(this.visit(asTerminal));
+        } else if (covariantTerminal != null) {
+            text.append(this.visit(covariantTerminal));
+        } else if (deferredTerminal != null) {
+            text.append(this.visit(deferredTerminal));
+        } else if (dynamicTerminal != null) {
+            text.append(this.visit(dynamicTerminal));
+        } else if (exportTerminal != null) {
+            text.append(this.visit(exportTerminal));
+        } else if (externalTerminal != null) {
+            text.append(this.visit(externalTerminal));
+        } else if (extensionTerminal != null) {
+            text.append(this.visit(extensionTerminal));
+        } else if (factoryTerminal != null) {
+            text.append(this.visit(factoryTerminal));
+        } else if (functionTerminal != null) {
+            text.append(this.visit(functionTerminal));
+        } else if (getTerminal != null) {
+            text.append(this.visit(getTerminal));
+        } else if (implementsTerminal != null) {
+            text.append(this.visit(implementsTerminal));
+        } else if (importTerminal != null) {
+            text.append(this.visit(importTerminal));
+        } else if (interfaceTerminal != null) {
+            text.append(this.visit(interfaceTerminal));
+        } else if (lateTerminal != null) {
+            text.append(this.visit(lateTerminal));
+        } else if (libraryTerminal != null) {
+            text.append(this.visit(libraryTerminal));
+        } else if (mixinTerminal != null) {
+            text.append(this.visit(mixinTerminal));
+        } else if (operatorTerminal != null) {
+            text.append(this.visit(operatorTerminal));
+        } else if (partTerminal != null) {
+            text.append(this.visit(partTerminal));
+        } else if (requiredTerminal != null) {
+            text.append(this.visit(requiredTerminal));
+        } else if (setTerminal != null) {
+            text.append(this.visit(setTerminal));
+        } else if (staticTerminal != null) {
+            text.append(this.visit(staticTerminal));
+        } else if (typedefTerminal != null) {
+            text.append(this.visit(typedefTerminal));
+        } else if (asyncTerminal != null) {
+            text.append(this.visit(asyncTerminal));
+        } else if (hideTerminal != null) {
+            text.append(this.visit(hideTerminal));
+        } else if (ofTerminal != null) {
+            text.append(this.visit(ofTerminal));
+        } else if (onTerminal != null) {
+            text.append(this.visit(onTerminal));
+        } else if (showTerminal != null) {
+            text.append(this.visit(showTerminal));
+        } else if (syncTerminal != null) {
+            text.append(this.visit(syncTerminal));
+        } else if (awaitTerminal != null) {
+            text.append(this.visit(awaitTerminal));
+        } else if (yieldTerminal != null) {
+            text.append(this.visit(yieldTerminal));
+        } else if (nativeTerminal != null) {
+            text.append(this.visit(nativeTerminal));
         }
         return text.toString();
     }

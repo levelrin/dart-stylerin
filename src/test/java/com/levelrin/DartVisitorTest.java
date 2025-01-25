@@ -50,6 +50,11 @@ final class DartVisitorTest {
     }
 
     @Test
+    void shouldFormatStatic() {
+        this.compare("static-before.dart", "static-after.dart");
+    }
+
+    @Test
     void shouldFormatMethodChain() {
         this.compare("method-chain-before.dart", "method-chain-after.dart");
     }
