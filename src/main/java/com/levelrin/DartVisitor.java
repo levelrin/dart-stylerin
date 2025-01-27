@@ -1588,49 +1588,28 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final Dart2Parser.RedirectingFactoryConstructorSignatureContext redirectingFactoryConstructorSignatureContext = context.redirectingFactoryConstructorSignature();
         final Dart2Parser.RedirectionContext redirectionContext = context.redirection();
         final Dart2Parser.InitializersContext initializersContext = context.initializers();
-        if (factoryConstructorSignatureContext != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitDeclaration -> factoryConstructorSignature");
-        }
-        if (constructorSignatureContext != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitDeclaration -> constructorSignature");
-        }
-        if (getterSignatureContext != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitDeclaration -> getterSignature");
-        }
-        if (setterSignatureContext != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitDeclaration -> setterSignature");
-        }
-        if (operatorSignatureContext != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitDeclaration -> operatorSignature");
-        }
-        if (constTerminal != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitDeclaration -> const");
-        }
-        if (covariantTerminal != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitDeclaration -> covariant");
-        }
-        if (identifierListContext != null) {
-           throw new UnsupportedOperationException("The following parsing path is not supported yet: visitDeclaration -> identifierList");
-        }
-        if (redirectingFactoryConstructorSignatureContext != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitDeclaration -> redirectingFactoryConstructorSignature");
-        }
-        if (redirectionContext != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitDeclaration -> redirection");
-        }
-        if (initializersContext != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitDeclaration -> initializers");
-        }
         final StringBuilder text = new StringBuilder();
         if (abstractTerminal != null) {
             text.append(this.visit(abstractTerminal));
             text.append(" ");
         }
-        if (externalTerminal != null && constantConstructorSignatureContext != null) {
+        if (externalTerminal != null && factoryConstructorSignatureContext != null) {
+            // EXTERNAL_ factoryConstructorSignature
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitDeclaration -> EXTERNAL_ factoryConstructorSignature");
+        } else if (externalTerminal != null && constantConstructorSignatureContext != null) {
             // EXTERNAL_ constantConstructorSignature
             text.append(this.visit(externalTerminal));
             text.append(" ");
             text.append(this.visit(constantConstructorSignatureContext));
+        } else if (externalTerminal != null && constructorSignatureContext != null) {
+            // EXTERNAL_ constructorSignature
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitDeclaration -> EXTERNAL_ constructorSignature");
+        } else if (getterSignatureContext != null) {
+            // ( EXTERNAL_ STATIC_?)? getterSignature
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitDeclaration -> ( EXTERNAL_ STATIC_?)? getterSignature");
+        } else if (setterSignatureContext != null) {
+            // ( EXTERNAL_ STATIC_?)? setterSignature
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitDeclaration -> ( EXTERNAL_ STATIC_?)? setterSignature");
         } else if (functionSignatureContext != null) {
             // ( EXTERNAL_ STATIC_?)? functionSignature
             if (externalTerminal != null) {
@@ -1642,6 +1621,12 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
                 text.append(" ");
             }
             text.append(this.visit(functionSignatureContext));
+        } else if (operatorSignatureContext != null) {
+            // EXTERNAL_? operatorSignature
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitDeclaration -> EXTERNAL_? operatorSignature");
+        } else if (staticTerminal != null && constTerminal != null && staticFinalDeclarationListContext != null) {
+            // STATIC_ CONST_ type? staticFinalDeclarationList
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitDeclaration -> STATIC_ CONST_ type? staticFinalDeclarationList");
         } else if (staticTerminal != null && finalTerminal != null && staticFinalDeclarationListContext != null) {
             // STATIC_ FINAL_ type? staticFinalDeclarationList
             text.append(this.visit(staticTerminal));
@@ -1677,6 +1662,12 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
             text.append(this.visit(varOrTypeContext));
             text.append(" ");
             text.append(this.visit(initializedIdentifierListContext));
+        } else if (covariantTerminal != null && lateTerminal != null && finalTerminal != null && identifierListContext != null) {
+            // COVARIANT_ LATE_ FINAL_ type? identifierList
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitDeclaration -> COVARIANT_ LATE_ FINAL_ type? identifierList");
+        } else if (covariantTerminal != null && varOrTypeContext != null && initializedIdentifierListContext != null) {
+            // COVARIANT_ LATE_? varOrType initializedIdentifierList
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitDeclaration -> COVARIANT_ LATE_? varOrType initializedIdentifierList");
         } else if (finalTerminal != null && initializedIdentifierListContext != null) {
             // LATE_? FINAL_ type? initializedIdentifierList
             if (lateTerminal != null) {
@@ -1699,9 +1690,102 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
             text.append(this.visit(varOrTypeContext));
             text.append(" ");
             text.append(this.visit(initializedIdentifierListContext));
+        } else if (redirectingFactoryConstructorSignatureContext != null) {
+            // redirectingFactoryConstructorSignature
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitDeclaration -> redirectingFactoryConstructorSignature");
         } else if (constantConstructorSignatureContext != null) {
             // constantConstructorSignature ( redirection | initializers)?
             text.append(this.visit(constantConstructorSignatureContext));
+            if (redirectionContext != null) {
+                throw new UnsupportedOperationException("The following parsing path is not supported yet: visitDeclaration -> constantConstructorSignature redirection");
+            } else if (initializersContext != null) {
+                text.append(" ");
+                text.append(this.visit(initializersContext));
+            }
+        } else {
+            // constructorSignature ( redirection | initializers)?
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitDeclaration -> constructorSignature ( redirection | initializers)?");
+        }
+        return text.toString();
+    }
+
+    @Override
+    public String visitInitializers(final Dart2Parser.InitializersContext context) {
+        final TerminalNode coTerminal = context.CO();
+        final List<Dart2Parser.InitializerListEntryContext> initializerListEntryContexts = context.initializerListEntry();
+        final List<TerminalNode> cTerminals = context.C();
+        final StringBuilder text = new StringBuilder();
+        text.append(this.visit(coTerminal));
+        text.append(" ");
+        final Dart2Parser.InitializerListEntryContext firstInitializerListEntryContext = initializerListEntryContexts.get(0);
+        text.append(this.visit(firstInitializerListEntryContext));
+        for (int index = 0; index < cTerminals.size(); index++) {
+            final TerminalNode cTerminal = cTerminals.get(index);
+            final Dart2Parser.InitializerListEntryContext initializerListEntryContext = initializerListEntryContexts.get(index + 1);
+            text.append(this.visit(cTerminal));
+            text.append(" ");
+            text.append(this.visit(initializerListEntryContext));
+        }
+        return text.toString();
+    }
+
+    @Override
+    public String visitInitializerListEntry(final Dart2Parser.InitializerListEntryContext context) {
+        final TerminalNode superTerminal = context.SUPER_();
+        // todo: use `argumentsContext` with tests.
+        final Dart2Parser.ArgumentsContext argumentsContext = context.arguments();
+        final TerminalNode dTerminal = context.D();
+        // todo: use `identifierContext` with tests.
+        final Dart2Parser.IdentifierContext identifierContext = context.identifier();
+        final Dart2Parser.FieldInitializerContext fieldInitializerContext = context.fieldInitializer();
+        // todo: use `assertionContext` with tests.
+        final Dart2Parser.AssertionContext assertionContext = context.assertion();
+        final StringBuilder text = new StringBuilder();
+        if (dTerminal != null) {
+            // SUPER_ D identifier arguments
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitInitializerListEntry -> SUPER_ D identifier arguments");
+        } else if (superTerminal != null) {
+            // SUPER_ arguments
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitInitializerListEntry -> SUPER_ arguments");
+        } else if (fieldInitializerContext != null) {
+            // fieldInitializer
+            text.append(this.visit(fieldInitializerContext));
+        } else {
+            // assertion
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitInitializerListEntry -> assertion");
+        }
+        return text.toString();
+    }
+
+    @Override
+    public String visitFieldInitializer(final Dart2Parser.FieldInitializerContext context) {
+        final TerminalNode thisTerminal = context.THIS_();
+        final TerminalNode dTerminal = context.D();
+        final Dart2Parser.IdentifierContext identifierContext = context.identifier();
+        final TerminalNode eqTerminal = context.EQ();
+        final Dart2Parser.InitializerExpressionContext initializerExpressionContext = context.initializerExpression();
+        final StringBuilder text = new StringBuilder();
+        if (thisTerminal != null) {
+            text.append(this.visit(thisTerminal));
+            text.append(this.visit(dTerminal));
+        }
+        text.append(this.visit(identifierContext));
+        text.append(" ");
+        text.append(this.visit(eqTerminal));
+        text.append(" ");
+        text.append(this.visit(initializerExpressionContext));
+        return text.toString();
+    }
+
+    @Override
+    public String visitInitializerExpression(final Dart2Parser.InitializerExpressionContext context) {
+        final Dart2Parser.ConditionalExpressionContext conditionalExpressionContext = context.conditionalExpression();
+        final Dart2Parser.CascadeContext cascadeContext = context.cascade();
+        final StringBuilder text = new StringBuilder();
+        if (conditionalExpressionContext != null) {
+            text.append(this.visit(conditionalExpressionContext));
+        } else {
+            text.append(this.visit(cascadeContext));
         }
         return text.toString();
     }
@@ -2806,9 +2890,37 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         if (typeIdentifierContext != null) {
             text.append(this.visit(typeIdentifierContext));
         } else if (qualifiedNameContext != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitConstructorDesignation -> qualifiedName");
+            text.append(this.visit(qualifiedNameContext));
         } else {
             throw new UnsupportedOperationException("The following parsing path is not supported yet: visitConstructorDesignation -> typeName");
+        }
+        return text.toString();
+    }
+
+    @Override
+    public String visitQualifiedName(final Dart2Parser.QualifiedNameContext context) {
+        final List<Dart2Parser.TypeIdentifierContext> typeIdentifierContexts = context.typeIdentifier();
+        final List<TerminalNode> dTerminals = context.D();
+        final Dart2Parser.IdentifierContext identifierContext = context.identifier();
+        final StringBuilder text = new StringBuilder();
+        if (typeIdentifierContexts.size() == 1) {
+            // typeIdentifier D identifier
+            final Dart2Parser.TypeIdentifierContext typeIdentifierContext = typeIdentifierContexts.get(0);
+            final TerminalNode dTerminal = dTerminals.get(0);
+            text.append(this.visit(typeIdentifierContext));
+            text.append(this.visit(dTerminal));
+            text.append(this.visit(identifierContext));
+        } else {
+            // typeIdentifier D typeIdentifier D identifier
+            final Dart2Parser.TypeIdentifierContext firstTypeIdentifierContext = typeIdentifierContexts.get(0);
+            final TerminalNode firstDTerminal = dTerminals.get(0);
+            final Dart2Parser.TypeIdentifierContext secondTypeIdentifierContext = typeIdentifierContexts.get(1);
+            final TerminalNode secondDTerminal = dTerminals.get(1);
+            text.append(this.visit(firstTypeIdentifierContext));
+            text.append(this.visit(firstDTerminal));
+            text.append(this.visit(secondTypeIdentifierContext));
+            text.append(this.visit(secondDTerminal));
+            text.append(this.visit(identifierContext));
         }
         return text.toString();
     }
