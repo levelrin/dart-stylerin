@@ -2389,29 +2389,50 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final Dart2Parser.TypeCastContext typeCastContext = context.typeCast();
         final Dart2Parser.RelationalOperatorContext relationalOperatorContext = context.relationalOperator();
         final TerminalNode superTerminal = context.SUPER_();
-        if (typeTestContext != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitRelationalExpression -> typeTest");
-        }
-        if (typeCastContext != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitRelationalExpression -> typeCast");
-        }
         final StringBuilder text = new StringBuilder();
-        final Dart2Parser.BitwiseOrExpressionContext firstBitwiseOrExpression = bitwiseOrExpressionContexts.get(0);
-        final String firstBitwiseOrExpressionText = this.visit(firstBitwiseOrExpression);
-        if (bitwiseOrExpressionContexts.size() > 1) {
-            text.append(firstBitwiseOrExpressionText);
-            text.append(" ");
-            text.append(this.visit(relationalOperatorContext));
-            text.append(" ");
-            final Dart2Parser.BitwiseOrExpressionContext secondBitwiseOrExpression = bitwiseOrExpressionContexts.get(1);
-            final String secondBitwiseOrExpressionText = this.visit(secondBitwiseOrExpression);
-            text.append(secondBitwiseOrExpressionText);
-        } else {
-            if (superTerminal == null) {
-                text.append(firstBitwiseOrExpressionText);
-            } else {
-                throw new UnsupportedOperationException("The following parsing path is not supported yet: visitRelationalExpression -> super");
+        if (superTerminal == null) {
+            // bitwiseOrExpression (typeTest | typeCast | relationalOperator bitwiseOrExpression)?
+            final Dart2Parser.BitwiseOrExpressionContext firstBitwiseOrExpression = bitwiseOrExpressionContexts.get(0);
+            text.append(this.visit(firstBitwiseOrExpression));
+            if (typeTestContext != null) {
+                text.append(" ");
+                text.append(this.visit(typeTestContext));
+            } else if (typeCastContext != null) {
+                throw new UnsupportedOperationException("The following parsing path is not supported yet: visitRelationalExpression -> typeCast");
+            } else if (relationalOperatorContext != null) {
+                text.append(" ");
+                text.append(this.visit(relationalOperatorContext));
+                text.append(" ");
+                final Dart2Parser.BitwiseOrExpressionContext secondBitwiseOrExpression = bitwiseOrExpressionContexts.get(1);
+                text.append(this.visit(secondBitwiseOrExpression));
             }
+        } else {
+            // SUPER_ relationalOperator bitwiseOrExpression
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitRelationalExpression -> super");
+        }
+        return text.toString();
+    }
+
+    @Override
+    public String visitTypeTest(final Dart2Parser.TypeTestContext context) {
+        final Dart2Parser.IsOperatorContext isOperatorContext = context.isOperator();
+        final Dart2Parser.TypeNotVoidContext typeNotVoidContext = context.typeNotVoid();
+        final StringBuilder text = new StringBuilder();
+        text.append(this.visit(isOperatorContext));
+        text.append(" ");
+        text.append(this.visit(typeNotVoidContext));
+        return text.toString();
+    }
+
+    @Override
+    public String visitIsOperator(final Dart2Parser.IsOperatorContext context) {
+        final TerminalNode isTerminal = context.IS_();
+        final TerminalNode notTerminal = context.NOT();
+        final StringBuilder text = new StringBuilder();
+        text.append(this.visit(isTerminal));
+        if (notTerminal != null) {
+            text.append(" ");
+            text.append(this.visit(notTerminal));
         }
         return text.toString();
     }
