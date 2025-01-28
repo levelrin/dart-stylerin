@@ -19,6 +19,12 @@ Future<String> fetchData() async {
   return 'apple';
 }
 
+Future<void> sendMessage(final String url, {
+  final Map<String, String>? options
+}) async {
+  print('yoi');
+}
+
 void main() async {
   final String fruit = await fetchData();
   print(fruit);
@@ -30,6 +36,12 @@ void main() async {
         )
       );
       return 'banana';
+    }
+  );
+  await sendMessage(
+    'http://www.google.com',
+    options: <String, String>{
+      'abc': 'def',
     }
   );
 }

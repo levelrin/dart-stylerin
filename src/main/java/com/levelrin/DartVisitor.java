@@ -3337,25 +3337,31 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final List<TerminalNode> cTerminals = context.C();
         final Dart2Parser.ExpressionListContext expressionListContext = context.expressionList();
         final StringBuilder text = new StringBuilder();
-        if (!namedArgumentContexts.isEmpty()) {
+        if (expressionListContext != null) {
+            // expressionList ( C namedArgument)*
+            text.append(this.visit(expressionListContext));
+            for (int index = 0; index < cTerminals.size(); index++) {
+                final TerminalNode cTerminal = cTerminals.get(index);
+                final Dart2Parser.NamedArgumentContext namedArgumentContext = namedArgumentContexts.get(index);
+                text.append(this.visit(cTerminal));
+                this.appendNewLinesAndIndent(text, 1);
+                text.append(this.visit(namedArgumentContext));
+            }
+        } else {
             final Dart2Parser.NamedArgumentContext firstNamedArgumentContext = namedArgumentContexts.get(0);
             text.append(this.visit(firstNamedArgumentContext));
-        }
-        if (expressionListContext != null) {
-            final String expressionListText = this.visit(expressionListContext);
-            text.append(expressionListText);
-        }
-        for (int index = 0; index < cTerminals.size(); index++) {
-            final TerminalNode cTerminal = cTerminals.get(index);
-            final Dart2Parser.NamedArgumentContext namedArgumentContext;
-            if (cTerminals.size() == namedArgumentContexts.size()) {
-                namedArgumentContext = namedArgumentContexts.get(index);
-            } else {
-                namedArgumentContext = namedArgumentContexts.get(index + 1);
+            for (int index = 0; index < cTerminals.size(); index++) {
+                final TerminalNode cTerminal = cTerminals.get(index);
+                final Dart2Parser.NamedArgumentContext namedArgumentContext;
+                if (cTerminals.size() == namedArgumentContexts.size()) {
+                    namedArgumentContext = namedArgumentContexts.get(index);
+                } else {
+                    namedArgumentContext = namedArgumentContexts.get(index + 1);
+                }
+                text.append(this.visit(cTerminal));
+                this.appendNewLinesAndIndent(text, 1);
+                text.append(this.visit(namedArgumentContext));
             }
-            text.append(this.visit(cTerminal));
-            this.appendNewLinesAndIndent(text, 1);
-            text.append(this.visit(namedArgumentContext));
         }
         return text.toString();
     }
