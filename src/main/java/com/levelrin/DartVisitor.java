@@ -2769,15 +2769,18 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
     @Override
     public String visitUnconditionalAssignableSelector(final Dart2Parser.UnconditionalAssignableSelectorContext context) {
         final TerminalNode obTerminal = context.OB();
-        // todo: use `exprContext` and `cbTerminal` with tests.
         final Dart2Parser.ExprContext exprContext = context.expr();
         final TerminalNode cbTerminal = context.CB();
         final TerminalNode dTerminal = context.D();
         final Dart2Parser.IdentifierContext identifierContext = context.identifier();
         final StringBuilder text = new StringBuilder();
         if (obTerminal != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitUnconditionalAssignableSelector -> ob");
+            // OB expr CB
+            text.append(this.visit(obTerminal));
+            text.append(this.visit(exprContext));
+            text.append(this.visit(cbTerminal));
         } else {
+            // D identifier
             text.append(this.visit(dTerminal));
             text.append(this.visit(identifierContext));
         }
@@ -3208,17 +3211,22 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
     @Override
     public String visitElements(final Dart2Parser.ElementsContext context) {
         final List<Dart2Parser.ElementContext> elementContexts = context.element();
+        final List<TerminalNode> cTerminals = context.C();
         final StringBuilder text = new StringBuilder();
         final Dart2Parser.ElementContext firstElementContext = elementContexts.get(0);
         final String firstElementText = this.visit(firstElementContext);
         text.append(firstElementText);
         for (int index = 1; index < elementContexts.size(); index++) {
-            text.append(",");
+            final TerminalNode cTerminal = cTerminals.get(index - 1);
+            text.append(this.visit(cTerminal));
             this.appendNewLinesAndIndent(text, 1);
             final String elementText = this.visit(elementContexts.get(index));
             text.append(elementText);
         }
-        text.append(",");
+        if (elementContexts.size() == cTerminals.size()) {
+            final TerminalNode cTerminal = cTerminals.get(cTerminals.size() - 1);
+            text.append(this.visit(cTerminal));
+        }
         return text.toString();
     }
 
