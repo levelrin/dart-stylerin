@@ -50,21 +50,64 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final Dart2Parser.PartDeclarationContext partDeclarationContext =  context.partDeclaration();
         final Dart2Parser.ExprContext exprContext = context.expr();
         final Dart2Parser.StatementContext statementContext = context.statement();
-        if (partDeclarationContext != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitCompilationUnit -> partDeclaration");
-        }
-        if (exprContext != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitCompilationUnit -> expr");
-        }
-        if (statementContext != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitCompilationUnit -> statement");
-        }
         final StringBuilder text = new StringBuilder();
         if (libraryDeclarationContext != null) {
-            final String libraryDeclarationText = this.visit(libraryDeclarationContext);
-            text.append(libraryDeclarationText);
+            text.append(this.visit(libraryDeclarationContext));
+        } else if (partDeclarationContext != null) {
+            text.append(this.visit(partDeclarationContext));
+        } else if (exprContext != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitCompilationUnit -> expr");
+        } else if (statementContext != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitCompilationUnit -> statement");
         }
         this.appendNewLinesAndIndent(text, 1);
+        return text.toString();
+    }
+
+    @Override
+    public String visitPartDeclaration(final Dart2Parser.PartDeclarationContext context) {
+        final Dart2Parser.PartHeaderContext partHeaderContext = context.partHeader();
+        final List<Dart2Parser.MetadataContext> metadataContexts = context.metadata();
+        final List<Dart2Parser.TopLevelDeclarationContext> topLevelDeclarationContexts = context.topLevelDeclaration();
+        final StringBuilder text = new StringBuilder();
+        text.append(this.visit(partHeaderContext));
+        for (final Dart2Parser.MetadataContext metadataContext : metadataContexts) {
+            if (!metadataContext.getText().isEmpty()) {
+                throw new UnsupportedOperationException("The following parsing path is not supported yet: visitPartDeclaration -> metadata");
+            }
+        }
+        if (!topLevelDeclarationContexts.isEmpty()) {
+            this.appendNewLinesAndIndent(text, 2);
+            for (final Dart2Parser.TopLevelDeclarationContext topLevelDeclarationContext : topLevelDeclarationContexts) {
+                text.append(this.visit(topLevelDeclarationContext));
+            }
+        }
+        return text.toString();
+    }
+
+    @Override
+    public String visitPartHeader(final Dart2Parser.PartHeaderContext context) {
+        final Dart2Parser.MetadataContext metadataContext = context.metadata();
+        final TerminalNode partTerminal = context.PART_();
+        final TerminalNode ofTerminal = context.OF_();
+        final Dart2Parser.DottedIdentifierListContext dottedIdentifierListContext = context.dottedIdentifierList();
+        final Dart2Parser.UriContext uriContext = context.uri();
+        final TerminalNode scTerminal = context.SC();
+        final StringBuilder text = new StringBuilder();
+        if (!metadataContext.getText().isEmpty()) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet.: visitPartHeader -> metadata");
+        }
+        text.append(this.visit(partTerminal));
+        text.append(" ");
+        text.append(this.visit(ofTerminal));
+        if (dottedIdentifierListContext != null) {
+            text.append(" ");
+            text.append(this.visit(dottedIdentifierListContext));
+        } else if (uriContext != null) {
+            text.append(" ");
+            text.append(this.visit(uriContext));
+        }
+        text.append(this.visit(scTerminal));
         return text.toString();
     }
 
@@ -75,17 +118,27 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final List<Dart2Parser.PartDirectiveContext> partDirectiveContexts = context.partDirective();
         final List<Dart2Parser.MetadataContext> metadataContexts = context.metadata();
         final List<Dart2Parser.TopLevelDeclarationContext> topLevelDeclarationContexts = context.topLevelDeclaration();
-        if (libraryNameContext != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitLibraryDeclaration -> libraryName");
-        }
-        if (!partDirectiveContexts.isEmpty()) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitLibraryDeclaration -> partDirective");
-        }
         final StringBuilder text = new StringBuilder();
+        if (libraryNameContext != null) {
+            text.append(this.visit(libraryNameContext));
+        }
         if (!importOrExportContexts.isEmpty()) {
+            if (libraryNameContext != null) {
+                this.appendNewLinesAndIndent(text, 2);
+            }
             for (final Dart2Parser.ImportOrExportContext importOrExportContext : importOrExportContexts) {
                 final String importOrExportText = this.visit(importOrExportContext);
                 text.append(importOrExportText);
+                this.appendNewLinesAndIndent(text, 1);
+            }
+            this.appendNewLinesAndIndent(text, 1);
+        }
+        if (!partDirectiveContexts.isEmpty()) {
+            if (libraryNameContext != null && importOrExportContexts.isEmpty()) {
+                this.appendNewLinesAndIndent(text, 2);
+            }
+            for (final Dart2Parser.PartDirectiveContext partDirectiveContext : partDirectiveContexts) {
+                text.append(this.visit(partDirectiveContext));
                 this.appendNewLinesAndIndent(text, 1);
             }
             this.appendNewLinesAndIndent(text, 1);
@@ -111,6 +164,56 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
                 final String topLevelDeclarationText = this.visit(topLevelDeclarationContext);
                 text.append(topLevelDeclarationText);
             }
+        }
+        return text.toString();
+    }
+
+    @Override
+    public String visitPartDirective(final Dart2Parser.PartDirectiveContext context) {
+        final Dart2Parser.MetadataContext metadataContext = context.metadata();
+        final TerminalNode partTerminal = context.PART_();
+        final Dart2Parser.UriContext uriContext = context.uri();
+        final TerminalNode scTerminal = context.SC();
+        final StringBuilder text = new StringBuilder();
+        if (!metadataContext.getText().isEmpty()) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitPartDirective -> metadata");
+        }
+        text.append(this.visit(partTerminal));
+        text.append(" ");
+        text.append(this.visit(uriContext));
+        text.append(this.visit(scTerminal));
+        return text.toString();
+    }
+
+    @Override
+    public String visitLibraryName(final Dart2Parser.LibraryNameContext context) {
+        final Dart2Parser.MetadataContext metadataContext = context.metadata();
+        final TerminalNode libraryTerminal = context.LIBRARY_();
+        final Dart2Parser.DottedIdentifierListContext dottedIdentifierListContext = context.dottedIdentifierList();
+        final TerminalNode scTerminal = context.SC();
+        final StringBuilder text = new StringBuilder();
+        if (!metadataContext.getText().isEmpty()) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitLibraryName -> metadata");
+        }
+        text.append(this.visit(libraryTerminal));
+        text.append(" ");
+        text.append(this.visit(dottedIdentifierListContext));
+        text.append(this.visit(scTerminal));
+        return text.toString();
+    }
+
+    @Override
+    public String visitDottedIdentifierList(final Dart2Parser.DottedIdentifierListContext context) {
+        final List<Dart2Parser.IdentifierContext> identifierContexts = context.identifier();
+        final List<TerminalNode> dTerminals = context.D();
+        final StringBuilder text = new StringBuilder();
+        final Dart2Parser.IdentifierContext firstIdentifierContext = identifierContexts.get(0);
+        text.append(this.visit(firstIdentifierContext));
+        for (int index = 0; index < dTerminals.size(); index++) {
+            final TerminalNode dTerminal = dTerminals.get(index);
+            final Dart2Parser.IdentifierContext identifierContext = identifierContexts.get(index + 1);
+            text.append(this.visit(dTerminal));
+            text.append(this.visit(identifierContext));
         }
         return text.toString();
     }

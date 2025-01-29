@@ -50,6 +50,13 @@ final class DartVisitorTest {
     }
 
     @Test
+    void shouldFormatLibraryAndParts() {
+        this.compare("library-before.dart", "library-after.dart");
+        this.compare("part-1-before.dart", "part-1-after.dart");
+        this.compare("part-2-before.dart", "part-2-after.dart");
+    }
+
+    @Test
     void shouldFormatStatic() {
         this.compare("static-before.dart", "static-after.dart");
     }
