@@ -721,33 +721,34 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final Dart2Parser.GetterSignatureContext getterSignatureContext = context.getterSignature();
         final Dart2Parser.SetterSignatureContext setterSignatureContext = context.setterSignature();
         final Dart2Parser.OperatorSignatureContext operatorSignatureContext = context.operatorSignature();
-        if (constructorSignatureContext != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitMethodSignature -> constructorSignature");
-        }
-        if (initializersContext != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitMethodSignature -> initializers");
-        }
-        if (operatorSignatureContext != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitMethodSignature -> operatorSignature");
-        }
         final StringBuilder text = new StringBuilder();
-        if (factoryConstructorSignatureContext != null) {
+        if (constructorSignatureContext != null) {
+            text.append(this.visit(constructorSignatureContext));
+            text.append(" ");
+            text.append(this.visit(initializersContext));
+        } else if (factoryConstructorSignatureContext != null) {
             final String factoryConstructorSignatureText = this.visit(factoryConstructorSignatureContext);
             text.append(factoryConstructorSignatureText);
-        }
-        if (staticTerminal != null) {
-            text.append(this.visit(staticTerminal));
-            text.append(" ");
-        }
-        if (getterSignatureContext != null) {
+        } else if (functionSignatureContext != null) {
+            if (staticTerminal != null) {
+                text.append(this.visit(staticTerminal));
+                text.append(" ");
+            }
+            text.append(this.visit(functionSignatureContext));
+        } else if (getterSignatureContext != null) {
+            if (staticTerminal != null) {
+                text.append(this.visit(staticTerminal));
+                text.append(" ");
+            }
             text.append(this.visit(getterSignatureContext));
-        }
-        if (setterSignatureContext != null) {
+        } else if (setterSignatureContext != null) {
+            if (staticTerminal != null) {
+                text.append(this.visit(staticTerminal));
+                text.append(" ");
+            }
             text.append(this.visit(setterSignatureContext));
-        }
-        if (functionSignatureContext != null) {
-            final String functionSignatureText = this.visit(functionSignatureContext);
-            text.append(functionSignatureText);
+        } else if (operatorSignatureContext != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitMethodSignature -> operatorSignature");
         }
         return text.toString();
     }
@@ -1859,10 +1860,8 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
     @Override
     public String visitInitializerListEntry(final Dart2Parser.InitializerListEntryContext context) {
         final TerminalNode superTerminal = context.SUPER_();
-        // todo: use `argumentsContext` with tests.
         final Dart2Parser.ArgumentsContext argumentsContext = context.arguments();
         final TerminalNode dTerminal = context.D();
-        // todo: use `identifierContext` with tests.
         final Dart2Parser.IdentifierContext identifierContext = context.identifier();
         final Dart2Parser.FieldInitializerContext fieldInitializerContext = context.fieldInitializer();
         // todo: use `assertionContext` with tests.
@@ -1870,7 +1869,10 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final StringBuilder text = new StringBuilder();
         if (dTerminal != null) {
             // SUPER_ D identifier arguments
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitInitializerListEntry -> SUPER_ D identifier arguments");
+            text.append(this.visit(superTerminal));
+            text.append(this.visit(dTerminal));
+            text.append(this.visit(identifierContext));
+            text.append(this.visit(argumentsContext));
         } else if (superTerminal != null) {
             // SUPER_ arguments
             throw new UnsupportedOperationException("The following parsing path is not supported yet: visitInitializerListEntry -> SUPER_ arguments");

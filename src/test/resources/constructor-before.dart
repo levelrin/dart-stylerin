@@ -9,6 +9,10 @@ class Person{
   final String _name;
   Person.primary( this._name );
 }
+class Child extends Person {
+  Child():super.primary('Rin'){
+    print("Child constructor executed.");}
+}
 void main(){
   const User user=const User('Rin');
   user.introduce();
