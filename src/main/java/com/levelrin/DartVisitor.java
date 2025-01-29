@@ -1702,10 +1702,26 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
                 text.append(" ");
                 text.append(this.visit(initializersContext));
             }
-        } else {
+        } else if (constructorSignatureContext != null) {
             // constructorSignature ( redirection | initializers)?
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitDeclaration -> constructorSignature ( redirection | initializers)?");
+            text.append(this.visit(constructorSignatureContext));
+            if (redirectionContext == null) {
+                text.append(" ");
+                text.append(this.visit(initializersContext));
+            } else {
+                throw new UnsupportedOperationException("The following parsing path is not supported yet: visitDeclaration -> constructorSignature redirection");
+            }
         }
+        return text.toString();
+    }
+
+    @Override
+    public String visitConstructorSignature(final Dart2Parser.ConstructorSignatureContext context) {
+        final Dart2Parser.ConstructorNameContext constructorNameContext = context.constructorName();
+        final Dart2Parser.FormalParameterListContext formalParameterListContext = context.formalParameterList();
+        final StringBuilder text = new StringBuilder();
+        text.append(this.visit(constructorNameContext));
+        text.append(this.visit(formalParameterListContext));
         return text.toString();
     }
 

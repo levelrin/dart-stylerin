@@ -4,6 +4,8 @@ class User {
 
   const User.withDefaultName() : this._name = 'Anonymous';
 
+  User.withNumber(final int number) : this._name = number.toString();
+
   final String _name;
 
   void introduce() {
