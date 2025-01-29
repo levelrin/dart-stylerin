@@ -2982,45 +2982,47 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final TerminalNode opTerminal = context.OP();
         final Dart2Parser.ExprContext exprContext = context.expr();
         final TerminalNode cpTerminal = context.CP();
-        if (argumentPartContext != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitPrimary -> argumentPart");
-        }
-        if (constructorInvocationContext != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitPrimary -> constructorInvocation");
-        }
         final StringBuilder text = new StringBuilder();
         if (thisExpressionContext != null) {
             text.append(this.visit(thisExpressionContext));
-        }
-        if (superTerminal != null) {
+        } else if (unconditionalAssignableSelectorContext != null) {
             text.append(this.visit(superTerminal));
-            if (unconditionalAssignableSelectorContext != null) {
-                text.append(this.visit(unconditionalAssignableSelectorContext));
-            }
-        }
-        if (functionExpressionContext != null) {
+            text.append(this.visit(unconditionalAssignableSelectorContext));
+        } else if (argumentPartContext != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitPrimary -> argumentPart");
+        } else if (functionExpressionContext != null) {
             text.append(this.visit(functionExpressionContext));
-        }
-        if (newExpressionContext != null) {
-            final String newExpressionText = this.visit(newExpressionContext);
-            text.append(newExpressionText);
-        }
-        if (constObjectExpressionContext != null) {
+        } else if (literalContext != null) {
+            text.append(this.visit(literalContext));
+        } else if (identifierContext != null) {
+            text.append(this.visit(identifierContext));
+        } else if (newExpressionContext != null) {
+            text.append(this.visit(newExpressionContext));
+        } else if (constObjectExpressionContext != null) {
             text.append(this.visit(constObjectExpressionContext));
-        }
-        if (literalContext != null) {
-            final String literalText = this.visit(literalContext);
-            text.append(literalText);
-        }
-        if (identifierContext != null) {
-            final String identifierText = this.visit(identifierContext);
-            text.append(identifierText);
-        }
-        if (opTerminal != null) {
+        } else if (constructorInvocationContext != null) {
+            text.append(this.visit(constructorInvocationContext));
+        } else if (opTerminal != null) {
             text.append(this.visit(opTerminal));
             text.append(this.visit(exprContext));
             text.append(this.visit(cpTerminal));
         }
+        return text.toString();
+    }
+
+    @Override
+    public String visitConstructorInvocation(final Dart2Parser.ConstructorInvocationContext context) {
+        final Dart2Parser.TypeNameContext typeNameContext = context.typeName();
+        final Dart2Parser.TypeArgumentsContext typeArgumentsContext = context.typeArguments();
+        final TerminalNode dTerminal = context.D();
+        final Dart2Parser.IdentifierContext identifierContext = context.identifier();
+        final Dart2Parser.ArgumentsContext argumentsContext = context.arguments();
+        final StringBuilder text = new StringBuilder();
+        text.append(this.visit(typeNameContext));
+        text.append(this.visit(typeArgumentsContext));
+        text.append(this.visit(dTerminal));
+        text.append(this.visit(identifierContext));
+        text.append(this.visit(argumentsContext));
         return text.toString();
     }
 

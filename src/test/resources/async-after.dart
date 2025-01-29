@@ -44,4 +44,9 @@ void main() async {
       'abc': 'def',
     }
   );
+  await Future<void>.delayed(
+    const Duration(
+      milliseconds: 200
+    )
+  );
 }
