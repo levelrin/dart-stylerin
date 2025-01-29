@@ -1250,9 +1250,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         if (assertStatementContext != null) {
             throw new UnsupportedOperationException("The following parsing path is not supported yet: visitNonLabelledStatement -> assertStatement");
         }
-        if (localFunctionDeclarationContext != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitNonLabelledStatement -> localFunctionDeclaration");
-        }
         final StringBuilder text = new StringBuilder();
         if (blockContext != null) {
             text.append(this.visit(blockContext));
@@ -1272,7 +1269,24 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
             text.append(this.visit(whileStatementContext));
         } else if (switchStatementContext != null) {
             text.append(this.visit(switchStatementContext));
+        } else if (localFunctionDeclarationContext != null) {
+            text.append(this.visit(localFunctionDeclarationContext));
         }
+        return text.toString();
+    }
+
+    @Override
+    public String visitLocalFunctionDeclaration(final Dart2Parser.LocalFunctionDeclarationContext context) {
+        final Dart2Parser.MetadataContext metadataContext = context.metadata();
+        final Dart2Parser.FunctionSignatureContext functionSignatureContext = context.functionSignature();
+        final Dart2Parser.FunctionBodyContext functionBodyContext = context.functionBody();
+        final StringBuilder text = new StringBuilder();
+        if (!metadataContext.getText().isEmpty()) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitLocalFunctionDeclaration -> metadata");
+        }
+        text.append(this.visit(functionSignatureContext));
+        text.append(" ");
+        text.append(this.visit(functionBodyContext));
         return text.toString();
     }
 

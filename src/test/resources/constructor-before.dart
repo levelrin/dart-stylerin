@@ -18,7 +18,9 @@ class Animal{
   Animal(this._name);
 }
 class Cat extends Animal{
-  Cat()  :  super('Chipi'){print("Cat constructor executed.");
+  Cat():super('Chipi'){
+    String message(){return 'Cat constructor executed.';}
+    print(message());
   }
 }
 void main(){

@@ -41,7 +41,12 @@ class Animal {
 class Cat extends Animal {
 
   Cat() : super('Chipi') {
-    print("Cat constructor executed.");
+    String message() {
+      return 'Cat constructor executed.';
+    }
+    print(
+      message()
+    );
   }
 
 }
