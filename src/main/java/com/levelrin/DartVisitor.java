@@ -1705,11 +1705,11 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         } else if (constructorSignatureContext != null) {
             // constructorSignature ( redirection | initializers)?
             text.append(this.visit(constructorSignatureContext));
-            if (redirectionContext == null) {
+            if (redirectionContext != null) {
+                throw new UnsupportedOperationException("The following parsing path is not supported yet: visitDeclaration -> constructorSignature redirection");
+            } else if (initializersContext != null) {
                 text.append(" ");
                 text.append(this.visit(initializersContext));
-            } else {
-                throw new UnsupportedOperationException("The following parsing path is not supported yet: visitDeclaration -> constructorSignature redirection");
             }
         }
         return text.toString();

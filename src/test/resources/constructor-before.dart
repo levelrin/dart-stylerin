@@ -5,6 +5,10 @@ class User{
   final String _name;
   void introduce(){print('Hi, my name is '+_name+'!');}
 }
+class Person{
+  final String _name;
+  Person.primary( this._name );
+}
 void main(){
   const User user=const User('Rin');
   user.introduce();

@@ -14,6 +14,14 @@ class User {
 
 }
 
+class Person {
+
+  final String _name;
+
+  Person.primary(this._name);
+
+}
+
 void main() {
   const User user = const User('Rin');
   user.introduce();
