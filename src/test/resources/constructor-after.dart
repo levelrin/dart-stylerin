@@ -30,6 +30,22 @@ class Child extends Person {
 
 }
 
+class Animal {
+
+  final String _name;
+
+  Animal(this._name);
+
+}
+
+class Cat extends Animal {
+
+  Cat() : super('Chipi') {
+    print("Cat constructor executed.");
+  }
+
+}
+
 void main() {
   const User user = const User('Rin');
   user.introduce();

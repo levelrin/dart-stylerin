@@ -1875,7 +1875,8 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
             text.append(this.visit(argumentsContext));
         } else if (superTerminal != null) {
             // SUPER_ arguments
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitInitializerListEntry -> SUPER_ arguments");
+            text.append(this.visit(superTerminal));
+            text.append(this.visit(argumentsContext));
         } else if (fieldInitializerContext != null) {
             // fieldInitializer
             text.append(this.visit(fieldInitializerContext));
