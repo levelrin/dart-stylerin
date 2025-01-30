@@ -2540,7 +2540,8 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
                 text.append(" ");
                 text.append(this.visit(typeTestContext));
             } else if (typeCastContext != null) {
-                throw new UnsupportedOperationException("The following parsing path is not supported yet: visitRelationalExpression -> typeCast");
+                text.append(" ");
+                text.append(this.visit(typeCastContext));
             } else if (relationalOperatorContext != null) {
                 text.append(" ");
                 text.append(this.visit(relationalOperatorContext));
@@ -2553,6 +2554,22 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
             throw new UnsupportedOperationException("The following parsing path is not supported yet: visitRelationalExpression -> super");
         }
         return text.toString();
+    }
+
+    @Override
+    public String visitTypeCast(final Dart2Parser.TypeCastContext context) {
+        final Dart2Parser.AsOperatorContext asOperatorContext = context.asOperator();
+        final Dart2Parser.TypeNotVoidContext typeNotVoidContext = context.typeNotVoid();
+        final StringBuilder text = new StringBuilder();
+        text.append(this.visit(asOperatorContext));
+        text.append(" ");
+        text.append(this.visit(typeNotVoidContext));
+        return text.toString();
+    }
+
+    @Override
+    public String visitAsOperator(final Dart2Parser.AsOperatorContext context) {
+        return this.visit(context.AS_());
     }
 
     @Override

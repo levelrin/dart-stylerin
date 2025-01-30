@@ -50,6 +50,11 @@ final class DartVisitorTest {
     }
 
     @Test
+    void shouldFormatTypeCast() {
+        this.compare("type-cast-before.dart", "type-cast-after.dart");
+    }
+
+    @Test
     void shouldFormatLibraryAndParts() {
         this.compare("library-before.dart", "library-after.dart");
         this.compare("part-1-before.dart", "part-1-after.dart");
