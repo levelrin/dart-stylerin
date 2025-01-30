@@ -50,6 +50,11 @@ final class DartVisitorTest {
     }
 
     @Test
+    void shouldFormatAssignableSelectorPart() {
+        this.compare("assignable-selector-part-before.dart", "assignable-selector-part-after.dart");
+    }
+
+    @Test
     void shouldFormatTypeCast() {
         this.compare("type-cast-before.dart", "type-cast-after.dart");
     }

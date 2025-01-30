@@ -2306,10 +2306,10 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
     public String visitAssignableSelectorPart(final Dart2Parser.AssignableSelectorPartContext context) {
         final List<Dart2Parser.SelectorContext> selectorContexts = context.selector();
         final Dart2Parser.AssignableSelectorContext assignableSelectorContext = context.assignableSelector();
-        if (!selectorContexts.isEmpty()) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitAssignableSelectorPart -> selector");
-        }
         final StringBuilder text = new StringBuilder();
+        for (final Dart2Parser.SelectorContext selectorContext : selectorContexts) {
+            text.append(this.visit(selectorContext));
+        }
         text.append(this.visit(assignableSelectorContext));
         return text.toString();
     }
