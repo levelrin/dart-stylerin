@@ -6,10 +6,13 @@ class User {
 
   final String position;
 
+  final String nickName;
+
   const User({
     required this.id,
     required this.name,
     required this.position,
+    this.nickName = 'nick',
   });
 
   void introduce() {

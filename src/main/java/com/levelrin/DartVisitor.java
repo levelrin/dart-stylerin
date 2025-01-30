@@ -963,22 +963,28 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final Dart2Parser.MetadataContext metadataContext = context.metadata();
         final TerminalNode requiredTerminal = context.REQUIRED_();
         final Dart2Parser.NormalFormalParameterNoMetadataContext normalFormalParameterNoMetadataContext = context.normalFormalParameterNoMetadata();
-        // todo: use `eqTerminal` and `coTerminal` with tests.
         final TerminalNode eqTerminal = context.EQ();
         final TerminalNode coTerminal = context.CO();
         final Dart2Parser.ExprContext exprContext = context.expr();
-        if (exprContext != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitDefaultNamedParameter -> expr");
-        }
+        final StringBuilder text = new StringBuilder();
         if (!metadataContext.getText().isEmpty()) {
             throw new UnsupportedOperationException("The following parsing path is not supported yet: visitDefaultNamedParameter -> metadata");
         }
-        final StringBuilder text = new StringBuilder();
         if (requiredTerminal != null) {
             text.append(this.visit(requiredTerminal));
             text.append(" ");
         }
         text.append(this.visit(normalFormalParameterNoMetadataContext));
+        if (exprContext != null) {
+            text.append(" ");
+            if (eqTerminal == null) {
+                text.append(this.visit(coTerminal));
+            } else {
+                text.append(this.visit(eqTerminal));
+            }
+            text.append(" ");
+            text.append(this.visit(exprContext));
+        }
         return text.toString();
     }
 
