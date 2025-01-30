@@ -71,16 +71,14 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final List<Dart2Parser.TopLevelDeclarationContext> topLevelDeclarationContexts = context.topLevelDeclaration();
         final StringBuilder text = new StringBuilder();
         text.append(this.visit(partHeaderContext));
-        for (final Dart2Parser.MetadataContext metadataContext : metadataContexts) {
+        for (int index = 0; index < metadataContexts.size(); index++) {
+            final Dart2Parser.MetadataContext metadataContext = metadataContexts.get(index);
+            final Dart2Parser.TopLevelDeclarationContext topLevelDeclarationContext = topLevelDeclarationContexts.get(index);
             if (!metadataContext.getText().isEmpty()) {
                 throw new UnsupportedOperationException("The following parsing path is not supported yet: visitPartDeclaration -> metadata");
             }
-        }
-        if (!topLevelDeclarationContexts.isEmpty()) {
             this.appendNewLinesAndIndent(text, 2);
-            for (final Dart2Parser.TopLevelDeclarationContext topLevelDeclarationContext : topLevelDeclarationContexts) {
-                text.append(this.visit(topLevelDeclarationContext));
-            }
+            text.append(this.visit(topLevelDeclarationContext));
         }
         return text.toString();
     }
