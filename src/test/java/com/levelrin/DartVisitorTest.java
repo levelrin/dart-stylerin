@@ -50,6 +50,11 @@ final class DartVisitorTest {
     }
 
     @Test
+    void shouldFormatParameterTypeList() {
+        this.compare("parameter-type-list-before.dart", "parameter-type-list-after.dart");
+    }
+
+    @Test
     void shouldFormatAssignableSelectorPart() {
         this.compare("assignable-selector-part-before.dart", "assignable-selector-part-after.dart");
     }
