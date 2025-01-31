@@ -2495,7 +2495,7 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final StringBuilder text = new StringBuilder();
         if (cascadeAssignmentContext != null && assignableSelectorContext == null) {
             // cascadeAssignment
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitCascadeSectionTail -> cascadeAssignment");
+            text.append(this.visit(cascadeAssignmentContext));
         } else {
             // selector* ( assignableSelector cascadeAssignment)?
             for (final Dart2Parser.SelectorContext selectorContext : selectorContexts) {
@@ -2505,6 +2505,18 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
                 throw new UnsupportedOperationException("The following parsing path is not supported yet: visitCascadeSectionTail -> assignableSelector");
             }
         }
+        return text.toString();
+    }
+
+    @Override
+    public String visitCascadeAssignment(final Dart2Parser.CascadeAssignmentContext context) {
+        final Dart2Parser.AssignmentOperatorContext assignmentOperatorContext = context.assignmentOperator();
+        final Dart2Parser.ExpressionWithoutCascadeContext expressionWithoutCascadeContext = context.expressionWithoutCascade();
+        final StringBuilder text = new StringBuilder();
+        text.append(" ");
+        text.append(this.visit(assignmentOperatorContext));
+        text.append(" ");
+        text.append(this.visit(expressionWithoutCascadeContext));
         return text.toString();
     }
 

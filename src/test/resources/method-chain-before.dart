@@ -4,6 +4,8 @@ void main() {
       ..add('apple');
   fruits
     ..add('banana')..add('orange');
+  fruits..add('mango')..first
+  = 'cherry';
   fruits.sublist(0);
   fruits.sublist(0)
       .sublist(1);
