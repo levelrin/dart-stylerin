@@ -926,14 +926,14 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final Dart2Parser.NormalFormalParameterContext normalFormalParameterContext = context.normalFormalParameter();
         final TerminalNode eqTerminal = context.EQ();
         final Dart2Parser.ExprContext exprContext = context.expr();
-        if (eqTerminal != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitDefaultFormalParameter -> eq");
-        }
-        if (exprContext != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitDefaultFormalParameter -> expr");
-        }
         final StringBuilder text = new StringBuilder();
         text.append(this.visit(normalFormalParameterContext));
+        if (eqTerminal != null) {
+            text.append(" ");
+            text.append(this.visit(eqTerminal));
+            text.append(" ");
+            text.append(this.visit(exprContext));
+        }
         return text.toString();
     }
 
@@ -2117,8 +2117,54 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         if (optionalParameterTypesContext != null) {
             text.append(this.visit(optionalParameterTypesContext));
         } else if (namedParameterTypesContext != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitOptionalParameterTypes -> namedParameterTypes");
+            text.append(this.visit(namedParameterTypesContext));
         }
+        return text.toString();
+    }
+
+    @Override
+    public String visitNamedParameterTypes(final Dart2Parser.NamedParameterTypesContext context) {
+        final TerminalNode obcTerminal = context.OBC();
+        final List<Dart2Parser.NamedParameterTypeContext> namedParameterTypeContexts = context.namedParameterType();
+        final List<TerminalNode> cTerminals = context.C();
+        final TerminalNode cbcTerminal = context.CBC();
+        final StringBuilder text = new StringBuilder();
+        text.append(this.visit(obcTerminal));
+        this.currentIndentLevel++;
+        this.appendNewLinesAndIndent(text, 1);
+        final Dart2Parser.NamedParameterTypeContext firstNamedParameterTypeContext = namedParameterTypeContexts.get(0);
+        text.append(this.visit(firstNamedParameterTypeContext));
+        for (int index = 1; index < namedParameterTypeContexts.size(); index++) {
+            final TerminalNode cTerminal = cTerminals.get(index - 1);
+            final Dart2Parser.NamedParameterTypeContext namedParameterTypeContext = namedParameterTypeContexts.get(index);
+            text.append(this.visit(cTerminal));
+            this.appendNewLinesAndIndent(text, 1);
+            text.append(this.visit(namedParameterTypeContext));
+        }
+        if (cTerminals.size() == namedParameterTypeContexts.size()) {
+            final TerminalNode cTerminal = cTerminals.get(cTerminals.size() - 1);
+            text.append(this.visit(cTerminal));
+        }
+        this.currentIndentLevel--;
+        this.appendNewLinesAndIndent(text, 1);
+        text.append(this.visit(cbcTerminal));
+        return text.toString();
+    }
+
+    @Override
+    public String visitNamedParameterType(final Dart2Parser.NamedParameterTypeContext context) {
+        final Dart2Parser.MetadataContext metadataContext = context.metadata();
+        final TerminalNode requiredTerminal = context.REQUIRED_();
+        final Dart2Parser.TypedIdentifierContext typedIdentifierContext = context.typedIdentifier();
+        final StringBuilder text = new StringBuilder();
+        if (!metadataContext.getText().isEmpty()) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitNamedParameterType -> metadata");
+        }
+        if (requiredTerminal != null) {
+            text.append(this.visit(requiredTerminal));
+            text.append(" ");
+        }
+        text.append(this.visit(typedIdentifierContext));
         return text.toString();
     }
 

@@ -50,6 +50,11 @@ final class DartVisitorTest {
     }
 
     @Test
+    void shouldFormatOptionalParameterTypes() {
+        this.compare("optional-parameter-types-before.dart", "optional-parameter-types-after.dart");
+    }
+
+    @Test
     void shouldFormatParameterTypeList() {
         this.compare("parameter-type-list-before.dart", "parameter-type-list-after.dart");
     }
