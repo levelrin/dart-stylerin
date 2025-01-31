@@ -50,6 +50,11 @@ final class DartVisitorTest {
     }
 
     @Test
+    void shouldFormatElements() {
+        this.compare("elements-before.dart", "elements-after.dart");
+    }
+
+    @Test
     void shouldFormatFinalConstVarOrType() {
         this.compare("final-const-var-or-type-before.dart", "final-const-var-or-type-after.dart");
     }

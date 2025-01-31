@@ -3547,22 +3547,83 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final Dart2Parser.SpreadElementContext spreadElementContext = context.spreadElement();
         final Dart2Parser.IfElementContext ifElementContext = context.ifElement();
         final Dart2Parser.ForElementContext forElementContext = context.forElement();
-        if (spreadElementContext != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitElement -> spreadElement");
-        }
-        if (ifElementContext != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitElement -> ifElement");
-        }
-        if (forElementContext != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitElement -> forElement");
-        }
         final StringBuilder text = new StringBuilder();
         if (expressionElementContext != null) {
             text.append(this.visit(expressionElementContext));
         } else if (mapElementContext != null) {
-            final String mapElementText = this.visit(mapElementContext);
-            text.append(mapElementText);
+            text.append(this.visit(mapElementContext));
+        } else if (spreadElementContext != null) {
+            text.append(this.visit(spreadElementContext));
+        } else if (ifElementContext != null) {
+            text.append(this.visit(ifElementContext));
+        } else if (forElementContext != null) {
+            text.append(this.visit(forElementContext));
         }
+        return text.toString();
+    }
+
+    @Override
+    public String visitForElement(final Dart2Parser.ForElementContext context) {
+        final TerminalNode awaitTerminal = context.AWAIT_();
+        final TerminalNode forTerminal = context.FOR_();
+        final TerminalNode opTerminal = context.OP();
+        final Dart2Parser.ForLoopPartsContext forLoopPartsContext = context.forLoopParts();
+        final TerminalNode cpTerminal = context.CP();
+        final Dart2Parser.ElementContext elementContext = context.element();
+        final StringBuilder text = new StringBuilder();
+        if (awaitTerminal != null) {
+            text.append(this.visit(awaitTerminal));
+            text.append(" ");
+        }
+        text.append(this.visit(forTerminal));
+        text.append(" ");
+        text.append(this.visit(opTerminal));
+        text.append(this.visit(forLoopPartsContext));
+        text.append(this.visit(cpTerminal));
+        text.append(" ");
+        text.append(this.visit(elementContext));
+        return text.toString();
+    }
+
+    @Override
+    public String visitIfElement(final Dart2Parser.IfElementContext context) {
+        final TerminalNode ifTerminal = context.IF_();
+        final TerminalNode opTerminal = context.OP();
+        final Dart2Parser.ExprContext exprContext = context.expr();
+        final TerminalNode cpTerminal = context.CP();
+        final List<Dart2Parser.ElementContext> elementContexts = context.element();
+        final TerminalNode elseTerminal = context.ELSE_();
+        final StringBuilder text = new StringBuilder();
+        text.append(this.visit(ifTerminal));
+        text.append(" ");
+        text.append(this.visit(opTerminal));
+        text.append(this.visit(exprContext));
+        text.append(this.visit(cpTerminal));
+        text.append(" ");
+        final Dart2Parser.ElementContext firstElementContext = elementContexts.get(0);
+        text.append(this.visit(firstElementContext));
+        if (elseTerminal != null) {
+            text.append(" ");
+            text.append(this.visit(elseTerminal));
+            text.append(" ");
+            final Dart2Parser.ElementContext secondElementContext = elementContexts.get(1);
+            text.append(this.visit(secondElementContext));
+        }
+        return text.toString();
+    }
+
+    @Override
+    public String visitSpreadElement(final Dart2Parser.SpreadElementContext context) {
+        final TerminalNode dddTerminal = context.DDD();
+        final TerminalNode dddqTerminal = context.DDDQ();
+        final Dart2Parser.ExprContext exprContext = context.expr();
+        final StringBuilder text = new StringBuilder();
+        if (dddTerminal != null) {
+            text.append(this.visit(dddTerminal));
+        } else if (dddqTerminal != null) {
+            text.append(this.visit(dddqTerminal));
+        }
+        text.append(this.visit(exprContext));
         return text.toString();
     }
 
