@@ -1,8 +1,8 @@
 import 'dart:math';
-import 'package:test/test.dart';
-import 'path/to/my_other_file.dart';
-import 'dart:math' as math;
+import 'dart:async' as async_util;
+import 'dart:convert' show json, utf8;
+import 'dart:core' hide print;
 
-class MyClass {
-
+void main() {
+  print('');
 }

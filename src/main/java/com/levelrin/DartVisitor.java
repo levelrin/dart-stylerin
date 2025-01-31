@@ -417,9 +417,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         if (deferredTerminal != null) {
             throw new UnsupportedOperationException("The following parsing path is not supported yet: visitImportSpecification -> deferred");
         }
-        if (!combinatorContexts.isEmpty()) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitImportSpecification -> combinator");
-        }
         final StringBuilder text = new StringBuilder();
         text.append(this.visit(importTerminal));
         text.append(" ");
@@ -430,7 +427,44 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
             text.append(" ");
             text.append(this.visit(identifierContext));
         }
+        for (final Dart2Parser.CombinatorContext combinatorContext : combinatorContexts) {
+            text.append(" ");
+            text.append(this.visit(combinatorContext));
+        }
         text.append(this.visit(scTerminal));
+        return text.toString();
+    }
+
+    @Override
+    public String visitCombinator(final Dart2Parser.CombinatorContext context) {
+        final TerminalNode showTerminal = context.SHOW_();
+        final Dart2Parser.IdentifierListContext identifierListContext = context.identifierList();
+        final TerminalNode hideTerminal = context.HIDE_();
+        final StringBuilder text = new StringBuilder();
+        if (showTerminal != null) {
+            text.append(this.visit(showTerminal));
+        } else if (hideTerminal != null) {
+            text.append(this.visit(hideTerminal));
+        }
+        text.append(" ");
+        text.append(this.visit(identifierListContext));
+        return text.toString();
+    }
+
+    @Override
+    public String visitIdentifierList(final Dart2Parser.IdentifierListContext context) {
+        final List<Dart2Parser.IdentifierContext> identifierContexts = context.identifier();
+        final List<TerminalNode> cTerminals = context.C();
+        final StringBuilder text = new StringBuilder();
+        final Dart2Parser.IdentifierContext firstIdentifierContext = identifierContexts.get(0);
+        text.append(this.visit(firstIdentifierContext));
+        for (int index = 0; index < cTerminals.size(); index++) {
+            final TerminalNode cTerminal = cTerminals.get(index);
+            final Dart2Parser.IdentifierContext identifierContext = identifierContexts.get(index + 1);
+            text.append(this.visit(cTerminal));
+            text.append(" ");
+            text.append(this.visit(identifierContext));
+        }
         return text.toString();
     }
 
