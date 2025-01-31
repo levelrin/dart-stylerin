@@ -50,6 +50,11 @@ final class DartVisitorTest {
     }
 
     @Test
+    void shouldFormatFinalConstVarOrType() {
+        this.compare("final-const-var-or-type-before.dart", "final-const-var-or-type-after.dart");
+    }
+
+    @Test
     void shouldFormatOptionalParameterTypes() {
         this.compare("optional-parameter-types-before.dart", "optional-parameter-types-after.dart");
     }

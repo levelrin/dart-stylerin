@@ -1113,22 +1113,31 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final Dart2Parser.TypeContext typeContext = context.type();
         final TerminalNode constTerminal = context.CONST_();
         final Dart2Parser.VarOrTypeContext varOrTypeContext = context.varOrType();
-        if (lateTerminal != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitFinalConstVarOrType -> late");
-        }
         final StringBuilder text = new StringBuilder();
         if (finalTerminal != null) {
+            // LATE_? FINAL_ type?
+            if (lateTerminal != null) {
+                text.append(this.visit(lateTerminal));
+                text.append(" ");
+            }
             text.append(this.visit(finalTerminal));
-        }
-        if (constTerminal != null) {
+            if (typeContext != null) {
+                text.append(" ");
+                text.append(this.visit(typeContext));
+            }
+        } else if (constTerminal != null) {
+            // CONST_ type?
             text.append(this.visit(constTerminal));
-        }
-        if (typeContext != null) {
-            final String typeText = this.visit(typeContext);
-            text.append(" ");
-            text.append(typeText);
-        }
-        if (varOrTypeContext != null) {
+            if (typeContext != null) {
+                text.append(" ");
+                text.append(this.visit(typeContext));
+            }
+        } else if (varOrTypeContext != null) {
+            // LATE_? varOrType
+            if (lateTerminal != null) {
+                text.append(this.visit(lateTerminal));
+                text.append(" ");
+            }
             text.append(this.visit(varOrTypeContext));
         }
         return text.toString();
