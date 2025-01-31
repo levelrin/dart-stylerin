@@ -50,6 +50,11 @@ final class DartVisitorTest {
     }
 
     @Test
+    void shouldFormatListLiteral() {
+        this.compare("list-literal-before.dart", "list-literal-after.dart");
+    }
+
+    @Test
     void shouldFormatElements() {
         this.compare("elements-before.dart", "elements-after.dart");
     }

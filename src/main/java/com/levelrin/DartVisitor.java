@@ -3467,10 +3467,11 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final TerminalNode obTerminal = context.OB();
         final Dart2Parser.ElementsContext elementsContext = context.elements();
         final TerminalNode cbTerminal = context.CB();
-        if (constTerminal != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitListLiteral -> const");
-        }
         final StringBuilder text = new StringBuilder();
+        if (constTerminal != null) {
+            text.append(this.visit(constTerminal));
+            text.append(" ");
+        }
         if (typeArgumentsContext != null) {
             text.append(this.visit(typeArgumentsContext));
         }
