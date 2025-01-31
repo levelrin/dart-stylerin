@@ -25,6 +25,7 @@ class User {
       case 1:
       case 2:
         result = 'banana';
+        break;
       case 3:
         final Random random = Random();
         if (random.nextBool()) {

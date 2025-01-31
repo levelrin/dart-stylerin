@@ -10,7 +10,7 @@ class User {
     switch (index) {case 0:result='apple';
       case 1:
       case 2:
-        result='banana';
+        result='banana';break;
       case 3:
         final Random random = Random();
         if (random.nextBool()) {

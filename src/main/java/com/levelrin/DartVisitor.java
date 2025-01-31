@@ -1258,9 +1258,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         if (rethrowStatementContext != null) {
             throw new UnsupportedOperationException("The following parsing path is not supported yet: visitNonLabelledStatement -> rethrowStatement");
         }
-        if (breakStatementContext != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitNonLabelledStatement -> breakStatement");
-        }
         if (continueStatementContext != null) {
             throw new UnsupportedOperationException("The following parsing path is not supported yet: visitNonLabelledStatement -> continueStatement");
         }
@@ -1288,6 +1285,8 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
             text.append(this.visit(ifStatementContext));
         } else if (tryStatementContext != null) {
             text.append(this.visit(tryStatementContext));
+        } else if (breakStatementContext != null) {
+            text.append(this.visit(breakStatementContext));
         } else if (whileStatementContext != null) {
             text.append(this.visit(whileStatementContext));
         } else if (switchStatementContext != null) {
@@ -1295,6 +1294,20 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         } else if (localFunctionDeclarationContext != null) {
             text.append(this.visit(localFunctionDeclarationContext));
         }
+        return text.toString();
+    }
+
+    @Override
+    public String visitBreakStatement(final Dart2Parser.BreakStatementContext context) {
+        final TerminalNode breakTerminal = context.BREAK_();
+        final Dart2Parser.IdentifierContext identifierContext = context.identifier();
+        final TerminalNode scTerminal = context.SC();
+        final StringBuilder text = new StringBuilder();
+        text.append(this.visit(breakTerminal));
+        if (identifierContext != null) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitBreakStatement -> identifier");
+        }
+        text.append(this.visit(scTerminal));
         return text.toString();
     }
 
