@@ -50,6 +50,11 @@ final class DartVisitorTest {
     }
 
     @Test
+    void shouldFormatCompoundAssignmentOperator() {
+        this.compare("compound-assignment-operator-before.dart", "compound-assignment-operator-after.dart");
+    }
+
+    @Test
     void shouldFormatMetadata() {
         this.compare("metadata-before.dart", "metadata-after.dart");
     }

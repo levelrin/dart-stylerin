@@ -2528,13 +2528,59 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
     @Override
     public String visitAssignmentOperator(final Dart2Parser.AssignmentOperatorContext context) {
         final TerminalNode eqTerminal = context.EQ();
-        // todo: use `compoundAssignmentOperatorContext` with tests.
         final Dart2Parser.CompoundAssignmentOperatorContext compoundAssignmentOperatorContext = context.compoundAssignmentOperator();
         final StringBuilder text = new StringBuilder();
         if (eqTerminal != null) {
             text.append(this.visit(eqTerminal));
         } else {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitAssignmentOperator -> compoundAssignmentOperator");
+            text.append(this.visit(compoundAssignmentOperatorContext));
+        }
+        return text.toString();
+    }
+
+    @Override
+    public String visitCompoundAssignmentOperator(final Dart2Parser.CompoundAssignmentOperatorContext context) {
+        final TerminalNode steTerminal = context.STE();
+        final TerminalNode seTerminal = context.SE();
+        final TerminalNode sqseTerminal = context.SQSE();
+        final TerminalNode peTerminal = context.PE();
+        final TerminalNode pleTerminal = context.PLE();
+        final TerminalNode meTerminal = context.ME();
+        final TerminalNode ltlteTerminal = context.LTLTE();
+        final List<TerminalNode> gtTerminals = context.GT();
+        final TerminalNode eqTerminal = context.EQ();
+        final TerminalNode aeTerminal = context.AE();
+        final TerminalNode cireTerminal = context.CIRE();
+        final TerminalNode poeTerminal = context.POE();
+        final TerminalNode ququeqTerminal = context.QUQUEQ();
+        final StringBuilder text = new StringBuilder();
+        if (steTerminal != null) {
+           text.append(this.visit(steTerminal));
+        } else if (seTerminal != null) {
+            text.append(this.visit(seTerminal));
+        } else if (sqseTerminal != null) {
+            text.append(this.visit(sqseTerminal));
+        } else if (peTerminal != null) {
+            text.append(this.visit(peTerminal));
+        } else if (pleTerminal != null) {
+            text.append(this.visit(pleTerminal));
+        } else if (meTerminal != null) {
+            text.append(this.visit(meTerminal));
+        } else if (ltlteTerminal != null) {
+            text.append(this.visit(ltlteTerminal));
+        } else if (!gtTerminals.isEmpty()) {
+            for (final TerminalNode gtTerminal: gtTerminals) {
+                text.append(this.visit(gtTerminal));
+            }
+            text.append(this.visit(eqTerminal));
+        } else if (aeTerminal != null) {
+            text.append(this.visit(aeTerminal));
+        } else if (cireTerminal != null) {
+            text.append(this.visit(cireTerminal));
+        } else if (poeTerminal != null) {
+            text.append(this.visit(poeTerminal));
+        } else if (ququeqTerminal != null) {
+            text.append(this.visit(ququeqTerminal));
         }
         return text.toString();
     }
