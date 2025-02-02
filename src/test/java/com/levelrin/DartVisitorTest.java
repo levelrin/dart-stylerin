@@ -50,6 +50,11 @@ final class DartVisitorTest {
     }
 
     @Test
+    void shouldFormatInitializedIdentifierList() {
+        this.compare("initialized-identifier-list-before.dart", "initialized-identifier-list-after.dart");
+    }
+
+    @Test
     void shouldFormatCovariant() {
         this.compare("covariant-before.dart", "covariant-after.dart");
     }

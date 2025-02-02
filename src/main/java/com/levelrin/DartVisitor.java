@@ -2466,13 +2466,15 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
     public String visitInitializedIdentifierList(final Dart2Parser.InitializedIdentifierListContext context) {
         final List<Dart2Parser.InitializedIdentifierContext> initializedIdentifierContexts = context.initializedIdentifier();
         final List<TerminalNode> cTerminals = context.C();
-        if (!cTerminals.isEmpty()) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitInitializedIdentifierList -> c");
-        }
         final StringBuilder text = new StringBuilder();
-        for (final Dart2Parser.InitializedIdentifierContext initializedIdentifierContext : initializedIdentifierContexts) {
-            final String initializedIdentifierText = this.visit(initializedIdentifierContext);
-            text.append(initializedIdentifierText);
+        final Dart2Parser.InitializedIdentifierContext firstInitializedIdentifierContext = initializedIdentifierContexts.get(0);
+        text.append(this.visit(firstInitializedIdentifierContext));
+        for (int index = 0; index < cTerminals.size(); index++) {
+            final TerminalNode cTerminal = cTerminals.get(index);
+            final Dart2Parser.InitializedIdentifierContext initializedIdentifierContext = initializedIdentifierContexts.get(index + 1);
+            text.append(this.visit(cTerminal));
+            text.append(" ");
+            text.append(this.visit(initializedIdentifierContext));
         }
         return text.toString();
     }

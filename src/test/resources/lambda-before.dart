@@ -12,6 +12,6 @@ void main(){
   final Count count=Count();
   count.addEvent((n)=>print(n));
   count.increment();
-  final bool flag=true;
+  bool flag=true;
   run((){flag=false;});
 }

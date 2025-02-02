@@ -27,7 +27,7 @@ void main() {
     (n) => print(n)
   );
   count.increment();
-  final bool flag = true;
+  bool flag = true;
   run(() {
     flag = false;
   });
