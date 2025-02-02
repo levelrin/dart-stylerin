@@ -243,7 +243,7 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         } else if (mixinDeclarationContext != null) {
             text.append(this.visit(mixinDeclarationContext));
         } else if (extensionDeclarationContext != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitTopLevelDeclaration -> extensionDeclaration");
+            text.append(this.visit(extensionDeclarationContext));
         } else if (enumTypeContext != null) {
             text.append(this.visit(enumTypeContext));
         } else if (typeAliasContext != null) {
@@ -285,6 +285,49 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
             text.append(this.visit(initializedIdentifierListContext));
             text.append(this.visit(scTerminal));
         }
+        return text.toString();
+    }
+
+    @Override
+    public String visitExtensionDeclaration(final Dart2Parser.ExtensionDeclarationContext context) {
+        final TerminalNode extensionTerminal = context.EXTENSION_();
+        final Dart2Parser.IdentifierContext identifierContext = context.identifier();
+        final Dart2Parser.TypeParametersContext typeParametersContext = context.typeParameters();
+        final TerminalNode onTerminal = context.ON_();
+        final Dart2Parser.TypeContext typeContext = context.type();
+        final TerminalNode obcTerminal = context.OBC();
+        final List<Dart2Parser.MetadataContext> metadataContexts = context.metadata();
+        final List<Dart2Parser.ClassMemberDeclarationContext> classMemberDeclarationContexts = context.classMemberDeclaration();
+        final TerminalNode cbcTerminal = context.CBC();
+        final StringBuilder text = new StringBuilder();
+        text.append(this.visit(extensionTerminal));
+        if (identifierContext != null) {
+            text.append(" ");
+            text.append(this.visit(identifierContext));
+        }
+        if (typeParametersContext != null) {
+            text.append(this.visit(typeParametersContext));
+        }
+        text.append(" ");
+        text.append(this.visit(onTerminal));
+        text.append(" ");
+        text.append(this.visit(typeContext));
+        text.append(" ");
+        text.append(this.visit(obcTerminal));
+        this.currentIndentLevel++;
+        this.appendNewLinesAndIndent(text, 2);
+        for (int index = 0; index < metadataContexts.size(); index++) {
+            final Dart2Parser.MetadataContext metadataContext = metadataContexts.get(index);
+            final Dart2Parser.ClassMemberDeclarationContext classMemberDeclarationContext = classMemberDeclarationContexts.get(index);
+            if (!metadataContext.getText().isEmpty()) {
+                text.append(this.visit(metadataContext));
+                this.appendNewLinesAndIndent(text, 1);
+            }
+            text.append(this.visit(classMemberDeclarationContext));
+        }
+        this.currentIndentLevel--;
+        this.appendNewLinesAndIndent(text, 2);
+        text.append(this.visit(cbcTerminal));
         return text.toString();
     }
 
