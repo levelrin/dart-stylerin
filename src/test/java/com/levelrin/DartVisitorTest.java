@@ -50,6 +50,11 @@ final class DartVisitorTest {
     }
 
     @Test
+    void shouldFormatCovariant() {
+        this.compare("covariant-before.dart", "covariant-after.dart");
+    }
+
+    @Test
     void shouldFormatExtension() {
         this.compare("extension-before.dart", "extension-after.dart");
     }

@@ -1218,15 +1218,14 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final TerminalNode covariantTerminal = context.COVARIANT_();
         final Dart2Parser.FinalConstVarOrTypeContext finalConstVarOrTypeContext = context.finalConstVarOrType();
         final Dart2Parser.IdentifierContext identifierContext = context.identifier();
-        if (covariantTerminal != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitDeclaredIdentifier -> covariant");
-        }
         final StringBuilder text = new StringBuilder();
-        final String finalConstVarOrTypeText = this.visit(finalConstVarOrTypeContext);
-        text.append(finalConstVarOrTypeText);
+        if (covariantTerminal != null) {
+            text.append(this.visit(covariantTerminal));
+            text.append(" ");
+        }
+        text.append(this.visit(finalConstVarOrTypeContext));
         text.append(" ");
-        final String identifierText = this.visit(identifierContext);
-        text.append(identifierText);
+        text.append(this.visit(identifierContext));
         return text.toString();
     }
 
