@@ -5,4 +5,5 @@ class MyClass{
   static final tag='TAG';
   late     int   statusCode;
   final bool checked=false;
+  static const String a='';
 }

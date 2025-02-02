@@ -1911,7 +1911,15 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
             throw new UnsupportedOperationException("The following parsing path is not supported yet: visitDeclaration -> EXTERNAL_? operatorSignature");
         } else if (staticTerminal != null && constTerminal != null && staticFinalDeclarationListContext != null) {
             // STATIC_ CONST_ type? staticFinalDeclarationList
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitDeclaration -> STATIC_ CONST_ type? staticFinalDeclarationList");
+            text.append(this.visit(staticTerminal));
+            text.append(" ");
+            text.append(this.visit(constTerminal));
+            text.append(" ");
+            if (typeContext != null) {
+                text.append(this.visit(typeContext));
+                text.append(" ");
+            }
+            text.append(this.visit(staticFinalDeclarationListContext));
         } else if (staticTerminal != null && finalTerminal != null && staticFinalDeclarationListContext != null) {
             // STATIC_ FINAL_ type? staticFinalDeclarationList
             text.append(this.visit(staticTerminal));

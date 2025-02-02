@@ -14,4 +14,6 @@ class MyClass {
 
   final bool checked = false;
 
+  static const String a = '';
+
 }
