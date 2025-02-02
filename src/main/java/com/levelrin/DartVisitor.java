@@ -1340,10 +1340,11 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
     public String visitStatement(final Dart2Parser.StatementContext context) {
         final List<Dart2Parser.LabelContext> labelContexts = context.label();
         final Dart2Parser.NonLabelledStatementContext nonLabelledStatementContext = context.nonLabelledStatement();
-        if (!labelContexts.isEmpty()) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitStatement -> label");
-        }
         final StringBuilder text = new StringBuilder();
+        for (final Dart2Parser.LabelContext labelContext : labelContexts) {
+            text.append(this.visit(labelContext));
+            text.append(" ");
+        }
         final String nonLabelledStatementText = this.visit(nonLabelledStatementContext);
         text.append(nonLabelledStatementText);
         return text.toString();

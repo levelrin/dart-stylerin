@@ -50,6 +50,11 @@ final class DartVisitorTest {
     }
 
     @Test
+    void shouldFormatLabel() {
+        this.compare("label-before.dart", "label-after.dart");
+    }
+
+    @Test
     void shouldFormatCompoundAssignmentOperator() {
         this.compare("compound-assignment-operator-before.dart", "compound-assignment-operator-after.dart");
     }
