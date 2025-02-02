@@ -20,8 +20,7 @@ void main(){
   }on FormatException catch(e){
     print('Caught FormatException');
     print('Error message: ${e.message}');}on RangeError catch(e){
-    print('Caught RangeError');
-    print('Error message: ${e.message}');
+    rethrow;
   }on Exception catch(e){
     print('Caught Exception');
     print('Error: ${e.toString()}');

@@ -1371,9 +1371,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         if (doStatementContext != null) {
             throw new UnsupportedOperationException("The following parsing path is not supported yet: visitNonLabelledStatement -> doStatement");
         }
-        if (rethrowStatementContext != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitNonLabelledStatement -> rethrowStatement");
-        }
         if (continueStatementContext != null) {
             throw new UnsupportedOperationException("The following parsing path is not supported yet: visitNonLabelledStatement -> continueStatement");
         }
@@ -1409,7 +1406,19 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
             text.append(this.visit(switchStatementContext));
         } else if (localFunctionDeclarationContext != null) {
             text.append(this.visit(localFunctionDeclarationContext));
+        } else if (rethrowStatementContext != null) {
+            text.append(this.visit(rethrowStatementContext));
         }
+        return text.toString();
+    }
+
+    @Override
+    public String visitRethrowStatement(final Dart2Parser.RethrowStatementContext context) {
+        final TerminalNode rethrowTerminal = context.RETHROW_();
+        final TerminalNode scTerminal = context.SC();
+        final StringBuilder text = new StringBuilder();
+        text.append(this.visit(rethrowTerminal));
+        text.append(this.visit(scTerminal));
         return text.toString();
     }
 
