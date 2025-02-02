@@ -50,6 +50,11 @@ final class DartVisitorTest {
     }
 
     @Test
+    void shouldFormatEnum() {
+        this.compare("enum-before.dart", "enum-after.dart");
+    }
+
+    @Test
     void shouldFormatListLiteral() {
         this.compare("list-literal-before.dart", "list-literal-after.dart");
     }

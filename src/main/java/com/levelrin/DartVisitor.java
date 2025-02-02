@@ -245,7 +245,7 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         } else if (extensionDeclarationContext != null) {
             throw new UnsupportedOperationException("The following parsing path is not supported yet: visitTopLevelDeclaration -> extensionDeclaration");
         } else if (enumTypeContext != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitTopLevelDeclaration -> enumType");
+            text.append(this.visit(enumTypeContext));
         } else if (typeAliasContext != null) {
             throw new UnsupportedOperationException("The following parsing path is not supported yet: visitTopLevelDeclaration -> typeAlias");
         } else if (externalTerminal != null && functionSignatureContext != null && scTerminal != null) {
@@ -285,6 +285,53 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
             text.append(this.visit(initializedIdentifierListContext));
             text.append(this.visit(scTerminal));
         }
+        return text.toString();
+    }
+
+    @Override
+    public String visitEnumType(final Dart2Parser.EnumTypeContext context) {
+        final TerminalNode enumTerminal = context.ENUM_();
+        final Dart2Parser.IdentifierContext identifierContext = context.identifier();
+        final TerminalNode obcTerminal = context.OBC();
+        final List<Dart2Parser.EnumEntryContext> enumEntryContexts = context.enumEntry();
+        final List<TerminalNode> cTerminals = context.C();
+        final TerminalNode cbcTerminal = context.CBC();
+        final StringBuilder text = new StringBuilder();
+        text.append(this.visit(enumTerminal));
+        text.append(" ");
+        text.append(this.visit(identifierContext));
+        text.append(" ");
+        text.append(this.visit(obcTerminal));
+        this.currentIndentLevel++;
+        this.appendNewLinesAndIndent(text, 1);
+        final Dart2Parser.EnumEntryContext firstEnumEntryContext = enumEntryContexts.get(0);
+        text.append(this.visit(firstEnumEntryContext));
+        for (int index = 1; index < enumEntryContexts.size(); index++) {
+            final TerminalNode cTerminal = cTerminals.get(index - 1);
+            final Dart2Parser.EnumEntryContext enumEntryContext = enumEntryContexts.get(index);
+            text.append(this.visit(cTerminal));
+            this.appendNewLinesAndIndent(text, 1);
+            text.append(this.visit(enumEntryContext));
+        }
+        if (enumEntryContexts.size() == cTerminals.size()) {
+            final TerminalNode cTerminal = cTerminals.get(enumEntryContexts.size() - 1);
+            text.append(this.visit(cTerminal));
+        }
+        this.currentIndentLevel--;
+        this.appendNewLinesAndIndent(text, 1);
+        text.append(this.visit(cbcTerminal));
+        return text.toString();
+    }
+
+    @Override
+    public String visitEnumEntry(final Dart2Parser.EnumEntryContext context) {
+        final Dart2Parser.MetadataContext metadataContext = context.metadata();
+        final Dart2Parser.IdentifierContext identifierContext = context.identifier();
+        final StringBuilder text = new StringBuilder();
+        if (!metadataContext.getText().isEmpty()) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitEnumEntry -> metadata");
+        }
+        text.append(this.visit(identifierContext));
         return text.toString();
     }
 
