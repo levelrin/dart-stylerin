@@ -50,6 +50,11 @@ final class DartVisitorTest {
     }
 
     @Test
+    void shouldFormatMetadata() {
+        this.compare("metadata-before.dart", "metadata-after.dart");
+    }
+
+    @Test
     void shouldFormatInitializedIdentifierList() {
         this.compare("initialized-identifier-list-before.dart", "initialized-identifier-list-after.dart");
     }

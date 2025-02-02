@@ -141,24 +141,17 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
             }
             this.appendNewLinesAndIndent(text, 1);
         }
-        if (!metadataContexts.isEmpty()) {
-            for (final Dart2Parser.MetadataContext metadataContext : metadataContexts) {
-                if (!metadataContext.getText().isEmpty()) {
-                    throw new UnsupportedOperationException(
-                        String.format(
-                            "The following metadata is not supported yet: %s",
-                            metadataContext.getText()
-                        )
-                    );
-                }
-            }
-        }
         if (!topLevelDeclarationContexts.isEmpty()) {
             for (int index = 0; index < topLevelDeclarationContexts.size(); index++) {
                 if (index > 0) {
                     this.appendNewLinesAndIndent(text, 2);
                 }
+                final Dart2Parser.MetadataContext metadataContext = metadataContexts.get(index);
                 final Dart2Parser.TopLevelDeclarationContext topLevelDeclarationContext = topLevelDeclarationContexts.get(index);
+                if (!metadataContext.getText().isEmpty()) {
+                    text.append(this.visit(metadataContext));
+                    this.appendNewLinesAndIndent(text, 1);
+                }
                 final String topLevelDeclarationText = this.visit(topLevelDeclarationContext);
                 text.append(topLevelDeclarationText);
             }
