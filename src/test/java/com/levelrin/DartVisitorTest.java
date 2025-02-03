@@ -50,6 +50,11 @@ final class DartVisitorTest {
     }
 
     @Test
+    void shouldFormatAssert() {
+        this.compare("assert-before.dart", "assert-after.dart");
+    }
+
+    @Test
     void shouldFormatLabel() {
         this.compare("label-before.dart", "label-after.dart");
     }

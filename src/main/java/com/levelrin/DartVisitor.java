@@ -1381,9 +1381,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         if (yieldEachStatementContext != null) {
             throw new UnsupportedOperationException("The following parsing path is not supported yet: visitNonLabelledStatement -> yieldEachStatement");
         }
-        if (assertStatementContext != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitNonLabelledStatement -> assertStatement");
-        }
         final StringBuilder text = new StringBuilder();
         if (blockContext != null) {
             text.append(this.visit(blockContext));
@@ -1409,7 +1406,46 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
             text.append(this.visit(localFunctionDeclarationContext));
         } else if (rethrowStatementContext != null) {
             text.append(this.visit(rethrowStatementContext));
+        } else if (assertStatementContext != null) {
+            text.append(this.visit(assertStatementContext));
         }
+        return text.toString();
+    }
+
+    @Override
+    public String visitAssertStatement(final Dart2Parser.AssertStatementContext context) {
+        final Dart2Parser.AssertionContext assertionContext = context.assertion();
+        final TerminalNode scTerminal = context.SC();
+        final StringBuilder text = new StringBuilder();
+        text.append(this.visit(assertionContext));
+        text.append(this.visit(scTerminal));
+        return text.toString();
+    }
+
+    @Override
+    public String visitAssertion(final Dart2Parser.AssertionContext context) {
+        final TerminalNode assertTerminal = context.ASSERT_();
+        final TerminalNode opTerminal = context.OP();
+        final List<Dart2Parser.ExprContext> exprContexts = context.expr();
+        final List<TerminalNode> cTerminals = context.C();
+        final TerminalNode cpTerminal = context.CP();
+        final StringBuilder text = new StringBuilder();
+        text.append(this.visit(assertTerminal));
+        text.append(this.visit(opTerminal));
+        final Dart2Parser.ExprContext firstExprContext = exprContexts.get(0);
+        text.append(this.visit(firstExprContext));
+        for (int index = 1; index < exprContexts.size(); index++) {
+            final TerminalNode cTerminal = cTerminals.get(index - 1);
+            final Dart2Parser.ExprContext exprContext = exprContexts.get(index);
+            text.append(this.visit(cTerminal));
+            text.append(" ");
+            text.append(this.visit(exprContext));
+        }
+        if (cTerminals.size() == exprContexts.size()) {
+            final TerminalNode cTerminal = cTerminals.get(cTerminals.size() - 1);
+            text.append(this.visit(cTerminal));
+        }
+        text.append(this.visit(cpTerminal));
         return text.toString();
     }
 
