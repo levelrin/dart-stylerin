@@ -377,36 +377,42 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final Dart2Parser.TypeIdentifierContext typeIdentifierContext = context.typeIdentifier();
         final Dart2Parser.TypeParametersContext typeParametersContext = context.typeParameters();
         final TerminalNode onTerminal = context.ON_();
-        // todo: use `typeNotVoidListContext` with tests.
         final Dart2Parser.TypeNotVoidListContext typeNotVoidListContext = context.typeNotVoidList();
         final Dart2Parser.InterfacesContext interfacesContext = context.interfaces();
         final TerminalNode obcTerminal = context.OBC();
         final List<Dart2Parser.MetadataContext> metadataContexts = context.metadata();
         final List<Dart2Parser.ClassMemberDeclarationContext> classMemberDeclarationContexts = context.classMemberDeclaration();
         final TerminalNode cbcTerminal = context.CBC();
-        if (typeParametersContext != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitMixinDeclaration -> typeParameters");
-        }
-        if (onTerminal != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitMixinDeclaration -> on");
-        }
-        if (interfacesContext != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitMixinDeclaration -> interfaces");
-        }
         final StringBuilder text = new StringBuilder();
         text.append(this.visit(mixinTerminal));
         text.append(" ");
         text.append(this.visit(typeIdentifierContext));
-        text.append(" ");
+        if (typeParametersContext == null) {
+            text.append(" ");
+        } else {
+            text.append(this.visit(typeParametersContext));
+            text.append(" ");
+        }
+        if (onTerminal != null) {
+            text.append(this.visit(onTerminal));
+            text.append(" ");
+            text.append(this.visit(typeNotVoidListContext));
+            text.append(" ");
+        }
+        if (interfacesContext != null) {
+            text.append(this.visit(interfacesContext));
+            text.append(" ");
+        }
         text.append(this.visit(obcTerminal));
         for (int index = 0; index < classMemberDeclarationContexts.size(); index++) {
             final Dart2Parser.MetadataContext metadataContext = metadataContexts.get(index);
             final Dart2Parser.ClassMemberDeclarationContext classMemberDeclarationContext = classMemberDeclarationContexts.get(index);
-            if (!metadataContext.getText().isEmpty()) {
-                throw new UnsupportedOperationException("The following parsing path is not supported yet: visitMixinDeclaration -> metadata");
-            }
             this.currentIndentLevel++;
             this.appendNewLinesAndIndent(text, 2);
+            if (!metadataContext.getText().isEmpty()) {
+                text.append(this.visit(metadataContext));
+                this.appendNewLinesAndIndent(text, 1);
+            }
             text.append(this.visit(classMemberDeclarationContext));
             this.currentIndentLevel--;
             if (index == classMemberDeclarationContexts.size() - 1) {
