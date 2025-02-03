@@ -50,6 +50,11 @@ final class DartVisitorTest {
     }
 
     @Test
+    void shouldFormatAssignableSelector() {
+        this.compare("assignable-selector-before.dart", "assignable-selector-after.dart");
+    }
+
+    @Test
     void shouldFormatConstructorDesignation() {
         this.compare("constructor-designation-before.dart", "constructor-designation-after.dart");
     }

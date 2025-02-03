@@ -3289,7 +3289,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
     public String visitAssignableSelector(final Dart2Parser.AssignableSelectorContext context) {
         final Dart2Parser.UnconditionalAssignableSelectorContext unconditionalAssignableSelectorContext = context.unconditionalAssignableSelector();
         final TerminalNode qudTerminal = context.QUD();
-        // todo: use `quTerminal`, `obTerminal`, `exprContext`, and `cbTerminal` with tests.
         final Dart2Parser.IdentifierContext identifierContext = context.identifier();
         final TerminalNode quTerminal = context.QU();
         final TerminalNode obTerminal = context.OB();
@@ -3297,12 +3296,18 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final TerminalNode cbTerminal = context.CB();
         final StringBuilder text = new StringBuilder();
         if (unconditionalAssignableSelectorContext != null) {
+            // unconditionalAssignableSelector
             text.append(this.visit(unconditionalAssignableSelectorContext));
         } else if (qudTerminal != null) {
+            // QUD identifier
             text.append(this.visit(qudTerminal));
             text.append(this.visit(identifierContext));
         } else {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitAssignableSelector -> qu");
+            // QU OB expr CB
+            text.append(this.visit(quTerminal));
+            text.append(this.visit(obTerminal));
+            text.append(this.visit(exprContext));
+            text.append(this.visit(cbTerminal));
         }
         return text.toString();
     }
