@@ -3136,37 +3136,28 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final Dart2Parser.UnaryExpressionContext unaryExpressionContext = context.unaryExpression();
         final Dart2Parser.AwaitExpressionContext awaitExpressionContext = context.awaitExpression();
         final Dart2Parser.PostfixExpressionContext postfixExpressionContext = context.postfixExpression();
+        // todo: use `minusOperatorContext` and `tildeOperatorContext` with tests.
         final Dart2Parser.MinusOperatorContext minusOperatorContext = context.minusOperator();
         final Dart2Parser.TildeOperatorContext tildeOperatorContext = context.tildeOperator();
         final TerminalNode superTerminal = context.SUPER_();
         final Dart2Parser.IncrementOperatorContext incrementOperatorContext = context.incrementOperator();
         final Dart2Parser.AssignableExpressionContext assignableExpressionContext = context.assignableExpression();
-        if (minusOperatorContext != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitUnaryExpression -> minusOperator");
-        }
-        if (tildeOperatorContext != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitUnaryExpression -> tildeOperator");
-        }
-        if (superTerminal != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitUnaryExpression -> super");
-        }
-        if (incrementOperatorContext != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitUnaryExpression -> incrementOperator");
-        }
-        if (assignableExpressionContext != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitUnaryExpression -> assignableExpression");
-        }
         final StringBuilder text = new StringBuilder();
         if (prefixOperatorContext != null) {
+            // prefixOperator unaryExpression
             text.append(this.visit(prefixOperatorContext));
             text.append(this.visit(unaryExpressionContext));
-        }
-        if (awaitExpressionContext != null) {
+        } else if (awaitExpressionContext != null) {
             text.append(this.visit(awaitExpressionContext));
-        }
-        if (postfixExpressionContext != null) {
-            final String postfixExpressionText = this.visit(postfixExpressionContext);
-            text.append(postfixExpressionText);
+        } else if (postfixExpressionContext != null) {
+            text.append(this.visit(postfixExpressionContext));
+        } else if (superTerminal != null) {
+            // ( minusOperator | tildeOperator) SUPER_
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitUnaryExpression -> ( minusOperator | tildeOperator) SUPER_");
+        } else if (incrementOperatorContext != null) {
+            // incrementOperator assignableExpression
+            text.append(this.visit(incrementOperatorContext));
+            text.append(this.visit(assignableExpressionContext));
         }
         return text.toString();
     }

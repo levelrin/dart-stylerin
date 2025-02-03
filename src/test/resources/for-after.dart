@@ -7,3 +7,9 @@ class MyClass {
   }
 
 }
+
+void main() {
+  for (int index = 0; index < 3; ++index) {
+    print(index);
+  }
+}
