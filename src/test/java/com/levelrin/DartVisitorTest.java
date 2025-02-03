@@ -50,6 +50,11 @@ final class DartVisitorTest {
     }
 
     @Test
+    void shouldFormatExport() {
+        this.compare("export-before.dart", "export-after.dart");
+    }
+
+    @Test
     void shouldFormatTopLevelDeclaration() {
         this.compare("top-level-declaration-before.dart", "top-level-declaration-after.dart");
     }

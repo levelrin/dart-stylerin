@@ -481,14 +481,34 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
     public String visitImportOrExport(final Dart2Parser.ImportOrExportContext context) {
         final Dart2Parser.LibraryImportContext libraryImportContext = context.libraryImport();
         final Dart2Parser.LibraryExportContext libraryExportContext = context.libraryExport();
-        if (libraryExportContext != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitImportOrExport -> libraryExport");
+        final StringBuilder text = new StringBuilder();
+        if (libraryImportContext == null) {
+            text.append(this.visit(libraryExportContext));
+        } else {
+            text.append(this.visit(libraryImportContext));
+        }
+        return text.toString();
+    }
+
+    @Override
+    public String visitLibraryExport(final Dart2Parser.LibraryExportContext context) {
+        final Dart2Parser.MetadataContext metadataContext = context.metadata();
+        final TerminalNode exportTerminal = context.EXPORT_();
+        final Dart2Parser.ConfigurableUriContext configurableUriContext = context.configurableUri();
+        final List<Dart2Parser.CombinatorContext> combinatorContexts = context.combinator();
+        final TerminalNode scTerminal = context.SC();
+        if (!metadataContext.getText().isEmpty()) {
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitLibraryExport -> metadata");
         }
         final StringBuilder text = new StringBuilder();
-        if (libraryImportContext != null) {
-            final String libraryImportText = this.visit(libraryImportContext);
-            text.append(libraryImportText);
+        text.append(this.visit(exportTerminal));
+        text.append(" ");
+        text.append(this.visit(configurableUriContext));
+        for (final Dart2Parser.CombinatorContext combinatorContext : combinatorContexts) {
+            text.append(" ");
+            text.append(this.visit(combinatorContext));
         }
+        text.append(this.visit(scTerminal));
         return text.toString();
     }
 
@@ -1330,12 +1350,17 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final StringBuilder text = new StringBuilder();
         text.append(this.visit(obcTerminal));
         this.currentIndentLevel++;
-        this.appendNewLinesAndIndent(text, 1);
         final String statementsText = this.visit(statementsContext);
-        text.append(statementsText);
-        this.currentIndentLevel--;
-        this.appendNewLinesAndIndent(text, 1);
-        text.append(this.visit(cbcTerminal));
+        if (statementsText.isEmpty()) {
+            this.currentIndentLevel--;
+            text.append(this.visit(cbcTerminal));
+        } else {
+            this.appendNewLinesAndIndent(text, 1);
+            text.append(statementsText);
+            this.currentIndentLevel--;
+            this.appendNewLinesAndIndent(text, 1);
+            text.append(this.visit(cbcTerminal));
+        }
         return text.toString();
     }
 
