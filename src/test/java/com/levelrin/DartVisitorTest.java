@@ -50,6 +50,11 @@ final class DartVisitorTest {
     }
 
     @Test
+    void shouldFormatBitwiseAndExpression() {
+        this.compare("bitwise-and-expression-before.dart", "bitwise-and-expression-after.dart");
+    }
+
+    @Test
     void shouldFormatAssert() {
         this.compare("assert-before.dart", "assert-after.dart");
     }

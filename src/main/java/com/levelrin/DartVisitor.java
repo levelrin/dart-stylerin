@@ -3017,16 +3017,22 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final List<Dart2Parser.ShiftExpressionContext> shiftExpressionContexts = context.shiftExpression();
         final List<TerminalNode> aTerminals = context.A();
         final TerminalNode superTerminal = context.SUPER_();
-        if (!aTerminals.isEmpty()) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitBitwiseAndExpression -> a");
-        }
-        if (superTerminal != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitBitwiseAndExpression -> super");
-        }
         final StringBuilder text = new StringBuilder();
-        for (final Dart2Parser.ShiftExpressionContext shiftExpression : shiftExpressionContexts) {
-            final String shiftExpressionText = this.visit(shiftExpression);
-            text.append(shiftExpressionText);
+        if (superTerminal == null) {
+            // shiftExpression (A shiftExpression)*
+            final Dart2Parser.ShiftExpressionContext firstShiftExpressionContext = shiftExpressionContexts.get(0);
+            text.append(this.visit(firstShiftExpressionContext));
+            for (int index = 0; index < aTerminals.size(); index++) {
+                final TerminalNode aTerminal = aTerminals.get(index);
+                final Dart2Parser.ShiftExpressionContext shiftExpressionContext = shiftExpressionContexts.get(index + 1);
+                text.append(" ");
+                text.append(this.visit(aTerminal));
+                text.append(" ");
+                text.append(this.visit(shiftExpressionContext));
+            }
+        } else {
+            // SUPER_ ( A shiftExpression)+
+            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitBitwiseAndExpression -> SUPER_ ( A shiftExpression)+");
         }
         return text.toString();
     }
