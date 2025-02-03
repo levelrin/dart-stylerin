@@ -2296,11 +2296,11 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final TerminalNode functionTerminal = context.FUNCTION_();
         final Dart2Parser.TypeParametersContext typeParametersContext = context.typeParameters();
         final Dart2Parser.ParameterTypeListContext parameterTypeListContext = context.parameterTypeList();
-        if (typeParametersContext != null) {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitFunctionTypeTail -> typeParameters");
-        }
         final StringBuilder text = new StringBuilder();
         text.append(this.visit(functionTerminal));
+        if (typeParametersContext != null) {
+            text.append(this.visit(typeParametersContext));
+        }
         text.append(this.visit(parameterTypeListContext));
         return text.toString();
     }

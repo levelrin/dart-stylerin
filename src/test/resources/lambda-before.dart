@@ -14,4 +14,5 @@ void main(){
   count.increment();
   bool flag=true;
   run((){flag=false;});
+  void Function < int > ()t;
 }

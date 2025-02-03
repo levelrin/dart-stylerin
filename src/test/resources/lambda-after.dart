@@ -31,4 +31,5 @@ void main() {
   run(() {
     flag = false;
   });
+  void Function<int>() t;
 }
