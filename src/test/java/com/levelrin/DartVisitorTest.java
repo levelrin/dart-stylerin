@@ -50,6 +50,11 @@ final class DartVisitorTest {
     }
 
     @Test
+    void shouldFormatConstructorDesignation() {
+        this.compare("constructor-designation-before.dart", "constructor-designation-after.dart");
+    }
+
+    @Test
     void shouldFormatBitwiseAndExpression() {
         this.compare("bitwise-and-expression-before.dart", "bitwise-and-expression-after.dart");
     }

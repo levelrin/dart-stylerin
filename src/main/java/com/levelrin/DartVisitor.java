@@ -3421,7 +3421,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
     public String visitConstructorDesignation(final Dart2Parser.ConstructorDesignationContext context) {
         final Dart2Parser.TypeIdentifierContext typeIdentifierContext = context.typeIdentifier();
         final Dart2Parser.QualifiedNameContext qualifiedNameContext = context.qualifiedName();
-        // todo: use `typeNameContext`, `typeArgumentsContext`, `dTerminal`, and `identifierContext` with tests.
         final Dart2Parser.TypeNameContext typeNameContext = context.typeName();
         final Dart2Parser.TypeArgumentsContext typeArgumentsContext = context.typeArguments();
         final TerminalNode dTerminal = context.D();
@@ -3432,7 +3431,13 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         } else if (qualifiedNameContext != null) {
             text.append(this.visit(qualifiedNameContext));
         } else {
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitConstructorDesignation -> typeName");
+            // typeName typeArguments ( D identifier)?
+            text.append(this.visit(typeNameContext));
+            text.append(this.visit(typeArgumentsContext));
+            if (dTerminal != null) {
+                text.append(this.visit(dTerminal));
+                text.append(this.visit(identifierContext));
+            }
         }
         return text.toString();
     }
