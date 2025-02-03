@@ -223,7 +223,6 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final Dart2Parser.SetterSignatureContext setterSignatureContext = context.setterSignature();
         final Dart2Parser.FunctionBodyContext functionBodyContext = context.functionBody();
         final TerminalNode finalTerminal = context.FINAL_();
-        // todo: use `constTerminal` and `typeContext` with tests.
         final TerminalNode constTerminal = context.CONST_();
         final Dart2Parser.TypeContext typeContext = context.type();
         final Dart2Parser.StaticFinalDeclarationListContext staticFinalDeclarationListContext = context.staticFinalDeclarationList();
@@ -263,7 +262,19 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
             throw new UnsupportedOperationException("The following parsing path is not supported yet: visitTopLevelDeclaration -> setterSignature functionBody");
         } else if (staticFinalDeclarationListContext != null) {
             // ( FINAL_ | CONST_) type? staticFinalDeclarationList SC
-            throw new UnsupportedOperationException("The following parsing path is not supported yet: visitTopLevelDeclaration -> ( FINAL_ | CONST_) type? staticFinalDeclarationList SC");
+            if (finalTerminal == null) {
+                text.append(this.visit(constTerminal));
+                text.append(" ");
+            } else {
+                text.append(this.visit(finalTerminal));
+                text.append(" ");
+            }
+            if (typeContext != null) {
+                text.append(this.visit(typeContext));
+                text.append(" ");
+            }
+            text.append(this.visit(staticFinalDeclarationListContext));
+            text.append(this.visit(scTerminal));
         } else if (lateTerminal != null && finalTerminal != null && initializedIdentifierListContext != null && scTerminal != null) {
             // LATE_ FINAL_ type? initializedIdentifierList SC
             throw new UnsupportedOperationException("The following parsing path is not supported yet: visitTopLevelDeclaration -> LATE_ FINAL_ type? initializedIdentifierList SC");

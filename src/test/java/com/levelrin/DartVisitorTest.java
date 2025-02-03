@@ -50,6 +50,11 @@ final class DartVisitorTest {
     }
 
     @Test
+    void shouldFormatTopLevelDeclaration() {
+        this.compare("top-level-declaration-before.dart", "top-level-declaration-after.dart");
+    }
+
+    @Test
     void shouldFormatAssignableSelector() {
         this.compare("assignable-selector-before.dart", "assignable-selector-after.dart");
     }
