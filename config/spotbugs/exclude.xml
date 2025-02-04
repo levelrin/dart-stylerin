@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FindBugsFilter>
+    <Match>
+        <Bug pattern="EI_EXPOSE_REP2" />
+    </Match>
+    <Match>
+        <Bug pattern="VA_FORMAT_STRING_USES_NEWLINE" />
+    </Match>
+
+    <!-- Exclude generated files using regex -->
+    <Match>
+        <!-- The ~ at the beginning means we use regex. -->
+        <Class name="~com\.levelrin\.antlr\.generated\..*" />
+    </Match>
+    <!-- Exclude the copy-pasted file during the setup. -->
+    <Match>
+        <Class name="com.levelrin.Dart2LexerBase" />
+    </Match>
+</FindBugsFilter>

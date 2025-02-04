@@ -22,7 +22,7 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DartVisitor.class);
 
-    private final String indentUnit = "  ";
+    private static final String INDENT_UNIT = "  ";
 
     /**
      * Whenever we visit a rule, we will record its count.
@@ -681,7 +681,7 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         text.append("\n\n");
         this.currentIndentLevel++;
         if (!classMemberDeclarationContexts.isEmpty()) {
-            text.append(this.indentUnit.repeat(this.currentIndentLevel));
+            text.append(INDENT_UNIT.repeat(this.currentIndentLevel));
         }
         for (int index = 0; index < classMemberDeclarationContexts.size(); index++) {
             final Dart2Parser.MetadataContext metadataContext = metadataContexts.get(index);
@@ -693,11 +693,11 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
             text.append(this.visit(classMemberDeclarationContext));
             text.append("\n\n");
             if (index < classMemberDeclarationContexts.size() - 1) {
-                text.append(this.indentUnit.repeat(this.currentIndentLevel));
+                text.append(INDENT_UNIT.repeat(this.currentIndentLevel));
             }
         }
         this.currentIndentLevel--;
-        text.append(this.indentUnit.repeat(this.currentIndentLevel));
+        text.append(INDENT_UNIT.repeat(this.currentIndentLevel));
         text.append(this.visit(cbcTerminal));
         return text.toString();
     }
@@ -774,8 +774,8 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final Dart2Parser.IdentifierContext identifierContext = context.identifier();
         final Dart2Parser.QualifiedNameContext qualifiedNameContext = context.qualifiedName();
         // todo: use `constructorDesignationContext`, `argumentsContext`, and `argumentsContext` with tests.
-        final Dart2Parser.ConstructorDesignationContext constructorDesignationContext = context.constructorDesignation();
-        final Dart2Parser.ArgumentsContext argumentsContext = context.arguments();
+        // final Dart2Parser.ConstructorDesignationContext constructorDesignationContext = context.constructorDesignation();
+        // final Dart2Parser.ArgumentsContext argumentsContext = context.arguments();
         final StringBuilder text = new StringBuilder();
         if (identifierContext != null) {
             text.append(this.visit(identifierContext));
@@ -839,7 +839,7 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
     public String visitTypeNotVoid(final Dart2Parser.TypeNotVoidContext context) {
         final Dart2Parser.FunctionTypeContext functionTypeContext = context.functionType();
         // todo: use `quTerminal` with tests.
-        final TerminalNode quTerminal = context.QU();
+        // final TerminalNode quTerminal = context.QU();
         final Dart2Parser.TypeNotVoidNotFunctionContext typeNotVoidNotFunctionContext = context.typeNotVoidNotFunction();
         if (functionTypeContext != null) {
             throw new UnsupportedOperationException("The following parsing path is not supported yet: visitTypeNotVoid -> functionType");
@@ -1206,7 +1206,7 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final Dart2Parser.IdentifierContext identifierContext = context.identifier();
         final Dart2Parser.FormalParameterPartContext formalParameterPartContext = context.formalParameterPart();
         // todo: use `quTerminal` with tests.
-        final TerminalNode quTerminal = context.QU();
+        // final TerminalNode quTerminal = context.QU();
         final StringBuilder text = new StringBuilder();
         if (finalConstVarOrTypeContext != null) {
             throw new UnsupportedOperationException("The following parsing path is not supported yet: visitFieldFormalParameter -> finalConstVarOrType");
@@ -1889,7 +1889,7 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final Dart2Parser.ExprContext exprContext = context.expr();
         final List<TerminalNode> cTerminals = context.C();
         // todo: use `initializedIdentifierContexts` with tests.
-        final List<Dart2Parser.InitializedIdentifierContext> initializedIdentifierContexts = context.initializedIdentifier();
+        // final List<Dart2Parser.InitializedIdentifierContext> initializedIdentifierContexts = context.initializedIdentifier();
         if (!cTerminals.isEmpty()) {
             throw new UnsupportedOperationException("The following parsing path is not supported yet: visitInitializedVariableDeclaration -> c");
         }
@@ -2127,7 +2127,7 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final Dart2Parser.IdentifierContext identifierContext = context.identifier();
         final Dart2Parser.FieldInitializerContext fieldInitializerContext = context.fieldInitializer();
         // todo: use `assertionContext` with tests.
-        final Dart2Parser.AssertionContext assertionContext = context.assertion();
+        // final Dart2Parser.AssertionContext assertionContext = context.assertion();
         final StringBuilder text = new StringBuilder();
         if (dTerminal != null) {
             // SUPER_ D identifier arguments
@@ -2670,7 +2670,7 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final Dart2Parser.AssignableSelectorPartContext assignableSelectorPartContext = context.assignableSelectorPart();
         final TerminalNode superTerminal = context.SUPER_();
         // todo: use `unconditionalAssignableSelectorContext` with tests.
-        final Dart2Parser.UnconditionalAssignableSelectorContext unconditionalAssignableSelectorContext = context.unconditionalAssignableSelector();
+        // final Dart2Parser.UnconditionalAssignableSelectorContext unconditionalAssignableSelectorContext = context.unconditionalAssignableSelector();
         final Dart2Parser.IdentifierContext identifierContext = context.identifier();
         final StringBuilder text = new StringBuilder();
         if (primaryContext != null) {
@@ -2735,8 +2735,8 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
     public String visitCascadeSelector(final Dart2Parser.CascadeSelectorContext context) {
         final TerminalNode obTerminal = context.OB();
         // todo: use `exprContext` and `cbTerminal` with tests.
-        final Dart2Parser.ExprContext exprContext = context.expr();
-        final TerminalNode cbTerminal = context.CB();
+        // final Dart2Parser.ExprContext exprContext = context.expr();
+        // final TerminalNode cbTerminal = context.CB();
         final Dart2Parser.IdentifierContext identifierContext = context.identifier();
         final StringBuilder text = new StringBuilder();
         if (obTerminal != null) {
@@ -2818,8 +2818,8 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
     public String visitExpressionWithoutCascade(final Dart2Parser.ExpressionWithoutCascadeContext context) {
         final Dart2Parser.AssignableExpressionContext assignableExpressionContext = context.assignableExpression();
         // todo: use `assignmentOperatorContext` and `expressionWithoutCascadeContext` with tests.
-        final Dart2Parser.AssignmentOperatorContext assignmentOperatorContext = context.assignmentOperator();
-        final Dart2Parser.ExpressionWithoutCascadeContext expressionWithoutCascadeContext = context.expressionWithoutCascade();
+        // final Dart2Parser.AssignmentOperatorContext assignmentOperatorContext = context.assignmentOperator();
+        // final Dart2Parser.ExpressionWithoutCascadeContext expressionWithoutCascadeContext = context.expressionWithoutCascade();
         final Dart2Parser.ConditionalExpressionContext conditionalExpressionContext = context.conditionalExpression();
         final Dart2Parser.ThrowExpressionWithoutCascadeContext throwExpressionWithoutCascadeContext = context.throwExpressionWithoutCascade();
         final StringBuilder text = new StringBuilder();
@@ -3185,8 +3185,8 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final Dart2Parser.AwaitExpressionContext awaitExpressionContext = context.awaitExpression();
         final Dart2Parser.PostfixExpressionContext postfixExpressionContext = context.postfixExpression();
         // todo: use `minusOperatorContext` and `tildeOperatorContext` with tests.
-        final Dart2Parser.MinusOperatorContext minusOperatorContext = context.minusOperator();
-        final Dart2Parser.TildeOperatorContext tildeOperatorContext = context.tildeOperator();
+        // final Dart2Parser.MinusOperatorContext minusOperatorContext = context.minusOperator();
+        // final Dart2Parser.TildeOperatorContext tildeOperatorContext = context.tildeOperator();
         final TerminalNode superTerminal = context.SUPER_();
         final Dart2Parser.IncrementOperatorContext incrementOperatorContext = context.incrementOperator();
         final Dart2Parser.AssignableExpressionContext assignableExpressionContext = context.assignableExpression();
@@ -3977,7 +3977,7 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
                 text.append(
                     // Dedent the arguments because it was wrong.
                     argumentsText.replaceAll(
-                        "\n" + this.indentUnit,
+                        "\n" + INDENT_UNIT,
                         "\n"
                     )
                 );
@@ -4091,7 +4091,7 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
      */
     private void appendNewLinesAndIndent(final StringBuilder text, final int newLines) {
         text.append("\n".repeat(newLines));
-        text.append(this.indentUnit.repeat(this.currentIndentLevel));
+        text.append(INDENT_UNIT.repeat(this.currentIndentLevel));
     }
 
 }
