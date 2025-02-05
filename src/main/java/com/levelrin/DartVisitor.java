@@ -18,6 +18,8 @@ import org.slf4j.LoggerFactory;
  * Return type is a JSON.
  * All of it must have $.text attribute.
  */
+// Excluding the following PMD rules via `ruleSet.xml` didn't work, for some reason.
+@SuppressWarnings({"PMD.TooManyMethods", "PMD.LinguisticNaming"})
 public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DartVisitor.class);
@@ -36,11 +38,12 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
      */
     private final Map<String, Integer> ruleVisitCounts = new HashMap<>();
 
-    private int currentIndentLevel = 0;
+    private int currentIndentLevel;
 
     private final CommonTokenStream tokens;
 
     public DartVisitor(final CommonTokenStream tokens) {
+        super();
         this.tokens = tokens;
     }
 
@@ -95,15 +98,15 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         if (!metadataContext.getText().isEmpty()) {
             throw new UnsupportedOperationException("The following parsing path is not supported yet.: visitPartHeader -> metadata");
         }
-        text.append(this.visit(partTerminal));
-        text.append(" ");
-        text.append(this.visit(ofTerminal));
+        text.append(this.visit(partTerminal))
+            .append(' ')
+            .append(this.visit(ofTerminal));
         if (dottedIdentifierListContext != null) {
-            text.append(" ");
-            text.append(this.visit(dottedIdentifierListContext));
+            text.append(' ')
+                .append(this.visit(dottedIdentifierListContext));
         } else if (uriContext != null) {
-            text.append(" ");
-            text.append(this.visit(uriContext));
+            text.append(' ')
+                .append(this.visit(uriContext));
         }
         text.append(this.visit(scTerminal));
         return text.toString();
@@ -169,10 +172,10 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         if (!metadataContext.getText().isEmpty()) {
             throw new UnsupportedOperationException("The following parsing path is not supported yet: visitPartDirective -> metadata");
         }
-        text.append(this.visit(partTerminal));
-        text.append(" ");
-        text.append(this.visit(uriContext));
-        text.append(this.visit(scTerminal));
+        text.append(this.visit(partTerminal))
+            .append(' ')
+            .append(this.visit(uriContext))
+            .append(this.visit(scTerminal));
         return text.toString();
     }
 
@@ -186,10 +189,10 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         if (!metadataContext.getText().isEmpty()) {
             throw new UnsupportedOperationException("The following parsing path is not supported yet: visitLibraryName -> metadata");
         }
-        text.append(this.visit(libraryTerminal));
-        text.append(" ");
-        text.append(this.visit(dottedIdentifierListContext));
-        text.append(this.visit(scTerminal));
+        text.append(this.visit(libraryTerminal))
+            .append(' ')
+            .append(this.visit(dottedIdentifierListContext))
+            .append(this.visit(scTerminal));
         return text.toString();
     }
 
@@ -203,8 +206,8 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         for (int index = 0; index < dTerminals.size(); index++) {
             final TerminalNode dTerminal = dTerminals.get(index);
             final Dart2Parser.IdentifierContext identifierContext = identifierContexts.get(index + 1);
-            text.append(this.visit(dTerminal));
-            text.append(this.visit(identifierContext));
+            text.append(this.visit(dTerminal))
+                .append(this.visit(identifierContext));
         }
         return text.toString();
     }
@@ -251,9 +254,9 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
             throw new UnsupportedOperationException("The following parsing path is not supported yet: visitTopLevelDeclaration -> EXTERNAL_ setterSignature SC");
         } else if (functionSignatureContext != null && functionBodyContext != null) {
             // functionSignature functionBody
-            text.append(this.visit(functionSignatureContext));
-            text.append(" ");
-            text.append(this.visit(functionBodyContext));
+            text.append(this.visit(functionSignatureContext))
+                .append(' ')
+                .append(this.visit(functionBodyContext));
         } else if (getterSignatureContext != null && functionBodyContext != null) {
             // getterSignature functionBody
             throw new UnsupportedOperationException("The following parsing path is not supported yet: visitTopLevelDeclaration -> getterSignature functionBody");
@@ -263,31 +266,31 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         } else if (staticFinalDeclarationListContext != null) {
             // ( FINAL_ | CONST_) type? staticFinalDeclarationList SC
             if (finalTerminal == null) {
-                text.append(this.visit(constTerminal));
-                text.append(" ");
+                text.append(this.visit(constTerminal))
+                    .append(' ');
             } else {
-                text.append(this.visit(finalTerminal));
-                text.append(" ");
+                text.append(this.visit(finalTerminal))
+                    .append(' ');
             }
             if (typeContext != null) {
-                text.append(this.visit(typeContext));
-                text.append(" ");
+                text.append(this.visit(typeContext))
+                    .append(' ');
             }
-            text.append(this.visit(staticFinalDeclarationListContext));
-            text.append(this.visit(scTerminal));
+            text.append(this.visit(staticFinalDeclarationListContext))
+                .append(this.visit(scTerminal));
         } else if (lateTerminal != null && finalTerminal != null && initializedIdentifierListContext != null && scTerminal != null) {
             // LATE_ FINAL_ type? initializedIdentifierList SC
             throw new UnsupportedOperationException("The following parsing path is not supported yet: visitTopLevelDeclaration -> LATE_ FINAL_ type? initializedIdentifierList SC");
         } else if (varOrTypeContext != null && initializedIdentifierListContext != null && scTerminal != null) {
             // LATE_? varOrType initializedIdentifierList SC
             if (lateTerminal != null) {
-                text.append(this.visit(lateTerminal));
-                text.append(" ");
+                text.append(this.visit(lateTerminal))
+                    .append(' ');
             }
-            text.append(this.visit(varOrTypeContext));
-            text.append(" ");
-            text.append(this.visit(initializedIdentifierListContext));
-            text.append(this.visit(scTerminal));
+            text.append(this.visit(varOrTypeContext))
+                .append(' ')
+                .append(this.visit(initializedIdentifierListContext))
+                .append(this.visit(scTerminal));
         }
         return text.toString();
     }
@@ -306,18 +309,18 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final StringBuilder text = new StringBuilder();
         text.append(this.visit(extensionTerminal));
         if (identifierContext != null) {
-            text.append(" ");
-            text.append(this.visit(identifierContext));
+            text.append(' ')
+                .append(this.visit(identifierContext));
         }
         if (typeParametersContext != null) {
             text.append(this.visit(typeParametersContext));
         }
-        text.append(" ");
-        text.append(this.visit(onTerminal));
-        text.append(" ");
-        text.append(this.visit(typeContext));
-        text.append(" ");
-        text.append(this.visit(obcTerminal));
+        text.append(' ')
+            .append(this.visit(onTerminal))
+            .append(' ')
+            .append(this.visit(typeContext))
+            .append(' ')
+            .append(this.visit(obcTerminal));
         this.currentIndentLevel++;
         this.appendNewLinesAndIndent(text, 2);
         for (int index = 0; index < metadataContexts.size(); index++) {
@@ -344,11 +347,11 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final List<TerminalNode> cTerminals = context.C();
         final TerminalNode cbcTerminal = context.CBC();
         final StringBuilder text = new StringBuilder();
-        text.append(this.visit(enumTerminal));
-        text.append(" ");
-        text.append(this.visit(identifierContext));
-        text.append(" ");
-        text.append(this.visit(obcTerminal));
+        text.append(this.visit(enumTerminal))
+            .append(' ')
+            .append(this.visit(identifierContext))
+            .append(' ')
+            .append(this.visit(obcTerminal));
         this.currentIndentLevel++;
         this.appendNewLinesAndIndent(text, 1);
         final Dart2Parser.EnumEntryContext firstEnumEntryContext = enumEntryContexts.get(0);
@@ -395,24 +398,24 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final List<Dart2Parser.ClassMemberDeclarationContext> classMemberDeclarationContexts = context.classMemberDeclaration();
         final TerminalNode cbcTerminal = context.CBC();
         final StringBuilder text = new StringBuilder();
-        text.append(this.visit(mixinTerminal));
-        text.append(" ");
-        text.append(this.visit(typeIdentifierContext));
+        text.append(this.visit(mixinTerminal))
+            .append(' ')
+            .append(this.visit(typeIdentifierContext));
         if (typeParametersContext == null) {
-            text.append(" ");
+            text.append(' ');
         } else {
-            text.append(this.visit(typeParametersContext));
-            text.append(" ");
+            text.append(this.visit(typeParametersContext))
+                .append(' ');
         }
         if (onTerminal != null) {
-            text.append(this.visit(onTerminal));
-            text.append(" ");
-            text.append(this.visit(typeNotVoidListContext));
-            text.append(" ");
+            text.append(this.visit(onTerminal))
+                .append(' ')
+                .append(this.visit(typeNotVoidListContext))
+                .append(' ');
         }
         if (interfacesContext != null) {
-            text.append(this.visit(interfacesContext));
-            text.append(" ");
+            text.append(this.visit(interfacesContext))
+                .append(' ');
         }
         text.append(this.visit(obcTerminal));
         for (int index = 0; index < classMemberDeclarationContexts.size(); index++) {
@@ -501,12 +504,12 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
             throw new UnsupportedOperationException("The following parsing path is not supported yet: visitLibraryExport -> metadata");
         }
         final StringBuilder text = new StringBuilder();
-        text.append(this.visit(exportTerminal));
-        text.append(" ");
-        text.append(this.visit(configurableUriContext));
+        text.append(this.visit(exportTerminal))
+            .append(' ')
+            .append(this.visit(configurableUriContext));
         for (final Dart2Parser.CombinatorContext combinatorContext : combinatorContexts) {
-            text.append(" ");
-            text.append(this.visit(combinatorContext));
+            text.append(' ')
+                .append(this.visit(combinatorContext));
         }
         text.append(this.visit(scTerminal));
         return text.toString();
@@ -538,18 +541,18 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
             throw new UnsupportedOperationException("The following parsing path is not supported yet: visitImportSpecification -> deferred");
         }
         final StringBuilder text = new StringBuilder();
-        text.append(this.visit(importTerminal));
-        text.append(" ");
-        text.append(this.visit(configurableUriContext));
+        text.append(this.visit(importTerminal))
+            .append(' ')
+            .append(this.visit(configurableUriContext));
         if (asTerminal != null) {
-            text.append(" ");
-            text.append(this.visit(asTerminal));
-            text.append(" ");
-            text.append(this.visit(identifierContext));
+            text.append(' ')
+                .append(this.visit(asTerminal))
+                .append(' ')
+                .append(this.visit(identifierContext));
         }
         for (final Dart2Parser.CombinatorContext combinatorContext : combinatorContexts) {
-            text.append(" ");
-            text.append(this.visit(combinatorContext));
+            text.append(' ')
+                .append(this.visit(combinatorContext));
         }
         text.append(this.visit(scTerminal));
         return text.toString();
@@ -566,8 +569,8 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         } else if (hideTerminal != null) {
             text.append(this.visit(hideTerminal));
         }
-        text.append(" ");
-        text.append(this.visit(identifierListContext));
+        text.append(' ')
+            .append(this.visit(identifierListContext));
         return text.toString();
     }
 
@@ -581,9 +584,9 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         for (int index = 0; index < cTerminals.size(); index++) {
             final TerminalNode cTerminal = cTerminals.get(index);
             final Dart2Parser.IdentifierContext identifierContext = identifierContexts.get(index + 1);
-            text.append(this.visit(cTerminal));
-            text.append(" ");
-            text.append(this.visit(identifierContext));
+            text.append(this.visit(cTerminal))
+                .append(' ')
+                .append(this.visit(identifierContext));
         }
         return text.toString();
     }
@@ -657,28 +660,28 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         }
         final StringBuilder text = new StringBuilder();
         if (abstractTerminal != null) {
-            text.append(this.visit(abstractTerminal));
-            text.append(" ");
+            text.append(this.visit(abstractTerminal))
+                .append(' ');
         }
-        text.append(this.visit(classTerminal));
-        text.append(" ");
-        text.append(this.visit(typeIdentifierContext));
+        text.append(this.visit(classTerminal))
+            .append(' ')
+            .append(this.visit(typeIdentifierContext));
         if (typeParametersContext == null) {
-            text.append(" ");
+            text.append(' ');
         } else {
-            text.append(this.visit(typeParametersContext));
-            text.append(" ");
+            text.append(this.visit(typeParametersContext))
+                .append(' ');
         }
         if (superclassContext != null) {
-            text.append(this.visit(superclassContext));
-            text.append(" ");
+            text.append(this.visit(superclassContext))
+                .append(' ');
         }
         if (interfacesContext != null) {
-            text.append(this.visit(interfacesContext));
-            text.append(" ");
+            text.append(this.visit(interfacesContext))
+                .append(' ');
         }
-        text.append(this.visit(obcTerminal));
-        text.append("\n\n");
+        text.append(this.visit(obcTerminal))
+            .append("\n\n");
         this.currentIndentLevel++;
         if (!classMemberDeclarationContexts.isEmpty()) {
             text.append(INDENT_UNIT.repeat(this.currentIndentLevel));
@@ -690,15 +693,15 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
                 text.append(this.visit(metadataContext));
                 this.appendNewLinesAndIndent(text, 1);
             }
-            text.append(this.visit(classMemberDeclarationContext));
-            text.append("\n\n");
+            text.append(this.visit(classMemberDeclarationContext))
+                .append("\n\n");
             if (index < classMemberDeclarationContexts.size() - 1) {
                 text.append(INDENT_UNIT.repeat(this.currentIndentLevel));
             }
         }
         this.currentIndentLevel--;
-        text.append(INDENT_UNIT.repeat(this.currentIndentLevel));
-        text.append(this.visit(cbcTerminal));
+        text.append(INDENT_UNIT.repeat(this.currentIndentLevel))
+            .append(this.visit(cbcTerminal));
         return text.toString();
     }
 
@@ -707,9 +710,9 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final TerminalNode implementsTerminal = context.IMPLEMENTS_();
         final Dart2Parser.TypeNotVoidListContext typeNotVoidListContext = context.typeNotVoidList();
         final StringBuilder text = new StringBuilder();
-        text.append(this.visit(implementsTerminal));
-        text.append(" ");
-        text.append(this.visit(typeNotVoidListContext));
+        text.append(this.visit(implementsTerminal))
+            .append(' ')
+            .append(this.visit(typeNotVoidListContext));
         return text.toString();
     }
 
@@ -726,9 +729,9 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         for (int index = 0; index < cTerminals.size(); index++) {
             final TerminalNode cTerminal = cTerminals.get(index);
             final Dart2Parser.TypeParameterContext typeParameterContext = typeParameterContexts.get(index + 1);
-            text.append(this.visit(cTerminal));
-            text.append(" ");
-            text.append(this.visit(typeParameterContext));
+            text.append(this.visit(cTerminal))
+                .append(' ')
+                .append(this.visit(typeParameterContext));
         }
         text.append(this.visit(gtTerminal));
         return text.toString();
@@ -742,15 +745,15 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final Dart2Parser.TypeNotVoidContext typeNotVoidContext = context.typeNotVoid();
         final StringBuilder text = new StringBuilder();
         if (!metadataContext.getText().isEmpty()) {
-            text.append(this.visit(metadataContext));
-            text.append(" ");
+            text.append(this.visit(metadataContext))
+                .append(' ');
         }
         text.append(this.visit(identifierContext));
         if (extendsTerminal != null) {
-            text.append(" ");
-            text.append(this.visit(extendsTerminal));
-            text.append(" ");
-            text.append(this.visit(typeNotVoidContext));
+            text.append(' ')
+                .append(this.visit(extendsTerminal))
+                .append(' ')
+                .append(this.visit(typeNotVoidContext));
         }
         return text.toString();
     }
@@ -763,8 +766,8 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         for (int index = 0; index < atTerminals.size(); index++) {
             final TerminalNode atTerminal = atTerminals.get(index);
             final Dart2Parser.MetadatumContext metadatumContext = metadatumContexts.get(index);
-            text.append(this.visit(atTerminal));
-            text.append(this.visit(metadatumContext));
+            text.append(this.visit(atTerminal))
+                .append(this.visit(metadatumContext));
         }
         return text.toString();
     }
@@ -794,12 +797,12 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final Dart2Parser.MixinsContext mixinsContext = context.mixins();
         final StringBuilder text = new StringBuilder();
         if (extendsTerminal != null) {
-            text.append(this.visit(extendsTerminal));
-            text.append(" ");
-            text.append(this.visit(typeNotVoidContext));
+            text.append(this.visit(extendsTerminal))
+                .append(' ')
+                .append(this.visit(typeNotVoidContext));
             if (mixinsContext != null) {
-                text.append(" ");
-                text.append(this.visit(mixinsContext));
+                text.append(' ')
+                    .append(this.visit(mixinsContext));
             }
         } else {
             text.append(this.visit(mixinsContext));
@@ -812,9 +815,9 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final TerminalNode withTerminal = context.WITH_();
         final Dart2Parser.TypeNotVoidListContext typeNotVoidListContext = context.typeNotVoidList();
         final StringBuilder text = new StringBuilder();
-        text.append(this.visit(withTerminal));
-        text.append(" ");
-        text.append(this.visit(typeNotVoidListContext));
+        text.append(this.visit(withTerminal))
+            .append(' ')
+            .append(this.visit(typeNotVoidListContext));
         return text.toString();
     }
 
@@ -828,9 +831,9 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         for (int index = 0; index < cTerminals.size(); index++) {
             final TerminalNode cTerminal = cTerminals.get(index);
             final Dart2Parser.TypeNotVoidContext typeNotVoidContext = typeNotVoidContexts.get(index + 1);
-            text.append(this.visit(cTerminal));
-            text.append(" ");
-            text.append(this.visit(typeNotVoidContext));
+            text.append(this.visit(cTerminal))
+                .append(' ')
+                .append(this.visit(typeNotVoidContext));
         }
         return text.toString();
     }
@@ -860,13 +863,13 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final StringBuilder text = new StringBuilder();
         if (declarationContext != null) {
             final String declarationText = this.visit(declarationContext);
-            text.append(declarationText);
-            text.append(this.visit(scTerminal));
+            text.append(declarationText)
+                .append(this.visit(scTerminal));
         }
         if (methodSignatureContext != null) {
             final String methodSignatureText = this.visit(methodSignatureContext);
-            text.append(methodSignatureText);
-            text.append(" ");
+            text.append(methodSignatureText)
+                .append(' ');
             final String functionBodyText = this.visit(functionBodyContext);
             text.append(functionBodyText);
         }
@@ -885,28 +888,28 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final Dart2Parser.OperatorSignatureContext operatorSignatureContext = context.operatorSignature();
         final StringBuilder text = new StringBuilder();
         if (constructorSignatureContext != null) {
-            text.append(this.visit(constructorSignatureContext));
-            text.append(" ");
-            text.append(this.visit(initializersContext));
+            text.append(this.visit(constructorSignatureContext))
+                .append(' ')
+                .append(this.visit(initializersContext));
         } else if (factoryConstructorSignatureContext != null) {
             final String factoryConstructorSignatureText = this.visit(factoryConstructorSignatureContext);
             text.append(factoryConstructorSignatureText);
         } else if (functionSignatureContext != null) {
             if (staticTerminal != null) {
-                text.append(this.visit(staticTerminal));
-                text.append(" ");
+                text.append(this.visit(staticTerminal))
+                    .append(' ');
             }
             text.append(this.visit(functionSignatureContext));
         } else if (getterSignatureContext != null) {
             if (staticTerminal != null) {
-                text.append(this.visit(staticTerminal));
-                text.append(" ");
+                text.append(this.visit(staticTerminal))
+                    .append(' ');
             }
             text.append(this.visit(getterSignatureContext));
         } else if (setterSignatureContext != null) {
             if (staticTerminal != null) {
-                text.append(this.visit(staticTerminal));
-                text.append(" ");
+                text.append(this.visit(staticTerminal))
+                    .append(' ');
             }
             text.append(this.visit(setterSignatureContext));
         } else if (operatorSignatureContext != null) {
@@ -923,13 +926,13 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final Dart2Parser.FormalParameterListContext formalParameterListContext = context.formalParameterList();
         final StringBuilder text = new StringBuilder();
         if (typeContext != null) {
-            text.append(this.visit(typeContext));
-            text.append(" ");
+            text.append(this.visit(typeContext))
+                .append(' ');
         }
-        text.append(this.visit(setTerminal));
-        text.append(" ");
-        text.append(this.visit(identifierContext));
-        text.append(this.visit(formalParameterListContext));
+        text.append(this.visit(setTerminal))
+            .append(' ')
+            .append(this.visit(identifierContext))
+            .append(this.visit(formalParameterListContext));
         return text.toString();
     }
 
@@ -940,12 +943,12 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final Dart2Parser.IdentifierContext identifierContext = context.identifier();
         final StringBuilder text = new StringBuilder();
         if (typeContext != null) {
-            text.append(this.visit(typeContext));
-            text.append(" ");
+            text.append(this.visit(typeContext))
+                .append(' ');
         }
-        text.append(this.visit(getTerminal));
-        text.append(" ");
-        text.append(this.visit(identifierContext));
+        text.append(this.visit(getTerminal))
+            .append(' ')
+            .append(this.visit(identifierContext));
         return text.toString();
     }
 
@@ -959,9 +962,9 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
             throw new UnsupportedOperationException("The following parsing path is not supported yet: visitFactoryConstructorSignature -> const");
         }
         final StringBuilder text = new StringBuilder();
-        text.append(this.visit(factoryTerminal));
-        text.append(" ");
-        text.append(this.visit(constructorNameContext));
+        text.append(this.visit(factoryTerminal))
+            .append(' ')
+            .append(this.visit(constructorNameContext));
         final String formalParameterListText = this.visit(formalParameterListContext);
         text.append(formalParameterListText);
         return text.toString();
@@ -975,8 +978,8 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final StringBuilder text = new StringBuilder();
         text.append(this.visit(typeIdentifierContext));
         if (dTerminal != null) {
-            text.append(this.visit(dTerminal));
-            text.append(this.visit(identifierContext));
+            text.append(this.visit(dTerminal))
+                .append(this.visit(identifierContext));
         }
         return text.toString();
     }
@@ -988,8 +991,8 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final Dart2Parser.FormalParameterPartContext formalParameterPartContext = context.formalParameterPart();
         final StringBuilder text = new StringBuilder();
         if (typeContext != null) {
-            text.append(this.visit(typeContext));
-            text.append(" ");
+            text.append(this.visit(typeContext))
+                .append(' ');
         }
         text.append(this.visit(identifierContext));
         final String formalParameterText = this.visit(formalParameterPartContext);
@@ -1024,8 +1027,8 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
             text.append(normalFormalParametersText);
         }
         if (cTerminal != null) {
-            text.append(this.visit(cTerminal));
-            text.append(" ");
+            text.append(this.visit(cTerminal))
+                .append(' ');
         }
         if (optionalOrNamedFormalParametersContext != null) {
             text.append(this.visit(optionalOrNamedFormalParametersContext));
@@ -1062,8 +1065,8 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
             for (int index = 0; index < cTerminals.size(); index++) {
                 final TerminalNode cTerminal = cTerminals.get(index);
                 if (defaultFormalParameterContexts.size() > index + 1) {
-                    text.append(this.visit(cTerminal));
-                    text.append(" ");
+                    text.append(this.visit(cTerminal))
+                        .append(' ');
                     final Dart2Parser.DefaultFormalParameterContext defaultFormalParameterContext = defaultFormalParameterContexts.get(index + 1);
                     text.append(this.visit(defaultFormalParameterContext));
                 } else {
@@ -1083,10 +1086,10 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final StringBuilder text = new StringBuilder();
         text.append(this.visit(normalFormalParameterContext));
         if (eqTerminal != null) {
-            text.append(" ");
-            text.append(this.visit(eqTerminal));
-            text.append(" ");
-            text.append(this.visit(exprContext));
+            text.append(' ')
+                .append(this.visit(eqTerminal))
+                .append(' ')
+                .append(this.visit(exprContext));
         }
         return text.toString();
     }
@@ -1135,19 +1138,19 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
             throw new UnsupportedOperationException("The following parsing path is not supported yet: visitDefaultNamedParameter -> metadata");
         }
         if (requiredTerminal != null) {
-            text.append(this.visit(requiredTerminal));
-            text.append(" ");
+            text.append(this.visit(requiredTerminal))
+                .append(' ');
         }
         text.append(this.visit(normalFormalParameterNoMetadataContext));
         if (exprContext != null) {
-            text.append(" ");
+            text.append(' ');
             if (eqTerminal == null) {
                 text.append(this.visit(coTerminal));
             } else {
                 text.append(this.visit(eqTerminal));
             }
-            text.append(" ");
-            text.append(this.visit(exprContext));
+            text.append(' ')
+                .append(this.visit(exprContext));
         }
         return text.toString();
     }
@@ -1216,8 +1219,8 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         } else if (superTerminal != null) {
             text.append(this.visit(superTerminal));
         }
-        text.append(this.visit(dTerminal));
-        text.append(this.visit(identifierContext));
+        text.append(this.visit(dTerminal))
+            .append(this.visit(identifierContext));
         if (formalParameterPartContext != null) {
             throw new UnsupportedOperationException("The following parsing path is not supported yet: visitFieldFormalParameter -> formalParameterPart");
         }
@@ -1244,18 +1247,18 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
     }
 
     @Override
-    public String visitDeclaredIdentifier(Dart2Parser.DeclaredIdentifierContext context) {
+    public String visitDeclaredIdentifier(final Dart2Parser.DeclaredIdentifierContext context) {
         final TerminalNode covariantTerminal = context.COVARIANT_();
         final Dart2Parser.FinalConstVarOrTypeContext finalConstVarOrTypeContext = context.finalConstVarOrType();
         final Dart2Parser.IdentifierContext identifierContext = context.identifier();
         final StringBuilder text = new StringBuilder();
         if (covariantTerminal != null) {
-            text.append(this.visit(covariantTerminal));
-            text.append(" ");
+            text.append(this.visit(covariantTerminal))
+                .append(' ');
         }
-        text.append(this.visit(finalConstVarOrTypeContext));
-        text.append(" ");
-        text.append(this.visit(identifierContext));
+        text.append(this.visit(finalConstVarOrTypeContext))
+            .append(' ')
+            .append(this.visit(identifierContext));
         return text.toString();
     }
 
@@ -1270,26 +1273,26 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         if (finalTerminal != null) {
             // LATE_? FINAL_ type?
             if (lateTerminal != null) {
-                text.append(this.visit(lateTerminal));
-                text.append(" ");
+                text.append(this.visit(lateTerminal))
+                    .append(' ');
             }
             text.append(this.visit(finalTerminal));
             if (typeContext != null) {
-                text.append(" ");
-                text.append(this.visit(typeContext));
+                text.append(' ')
+                    .append(this.visit(typeContext));
             }
         } else if (constTerminal != null) {
             // CONST_ type?
             text.append(this.visit(constTerminal));
             if (typeContext != null) {
-                text.append(" ");
-                text.append(this.visit(typeContext));
+                text.append(' ')
+                    .append(this.visit(typeContext));
             }
         } else if (varOrTypeContext != null) {
             // LATE_? varOrType
             if (lateTerminal != null) {
-                text.append(this.visit(lateTerminal));
-                text.append(" ");
+                text.append(this.visit(lateTerminal))
+                    .append(' ');
             }
             text.append(this.visit(varOrTypeContext));
         }
@@ -1319,22 +1322,22 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final StringBuilder text = new StringBuilder();
         if (egTerminal != null) {
             if (asyncTerminal != null) {
-                text.append(this.visit(asyncTerminal));
-                text.append(" ");
+                text.append(this.visit(asyncTerminal))
+                    .append(' ');
             }
-            text.append(this.visit(egTerminal));
-            text.append(" ");
-            text.append(this.visit(exprContext));
-            text.append(this.visit(scTerminal));
+            text.append(this.visit(egTerminal))
+                .append(' ')
+                .append(this.visit(exprContext))
+                .append(this.visit(scTerminal));
         }
         if (blockContext != null) {
             if (asyncTerminal != null) {
-                text.append(this.visit(asyncTerminal));
-                text.append(" ");
+                text.append(this.visit(asyncTerminal))
+                    .append(' ');
             }
             if (syncTerminal != null) {
-                text.append(this.visit(syncTerminal));
-                text.append(" ");
+                text.append(this.visit(syncTerminal))
+                    .append(' ');
             }
             final String blockText = this.visit(blockContext);
             text.append(blockText);
@@ -1384,8 +1387,8 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final Dart2Parser.NonLabelledStatementContext nonLabelledStatementContext = context.nonLabelledStatement();
         final StringBuilder text = new StringBuilder();
         for (final Dart2Parser.LabelContext labelContext : labelContexts) {
-            text.append(this.visit(labelContext));
-            text.append(" ");
+            text.append(this.visit(labelContext))
+                .append(' ');
         }
         final String nonLabelledStatementText = this.visit(nonLabelledStatementContext);
         text.append(nonLabelledStatementText);
@@ -1459,8 +1462,8 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final Dart2Parser.AssertionContext assertionContext = context.assertion();
         final TerminalNode scTerminal = context.SC();
         final StringBuilder text = new StringBuilder();
-        text.append(this.visit(assertionContext));
-        text.append(this.visit(scTerminal));
+        text.append(this.visit(assertionContext))
+            .append(this.visit(scTerminal));
         return text.toString();
     }
 
@@ -1472,16 +1475,16 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final List<TerminalNode> cTerminals = context.C();
         final TerminalNode cpTerminal = context.CP();
         final StringBuilder text = new StringBuilder();
-        text.append(this.visit(assertTerminal));
-        text.append(this.visit(opTerminal));
+        text.append(this.visit(assertTerminal))
+            .append(this.visit(opTerminal));
         final Dart2Parser.ExprContext firstExprContext = exprContexts.get(0);
         text.append(this.visit(firstExprContext));
         for (int index = 1; index < exprContexts.size(); index++) {
             final TerminalNode cTerminal = cTerminals.get(index - 1);
             final Dart2Parser.ExprContext exprContext = exprContexts.get(index);
-            text.append(this.visit(cTerminal));
-            text.append(" ");
-            text.append(this.visit(exprContext));
+            text.append(this.visit(cTerminal))
+                .append(' ')
+                .append(this.visit(exprContext));
         }
         if (cTerminals.size() == exprContexts.size()) {
             final TerminalNode cTerminal = cTerminals.get(cTerminals.size() - 1);
@@ -1496,8 +1499,8 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final TerminalNode rethrowTerminal = context.RETHROW_();
         final TerminalNode scTerminal = context.SC();
         final StringBuilder text = new StringBuilder();
-        text.append(this.visit(rethrowTerminal));
-        text.append(this.visit(scTerminal));
+        text.append(this.visit(rethrowTerminal))
+            .append(this.visit(scTerminal));
         return text.toString();
     }
 
@@ -1524,9 +1527,9 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         if (!metadataContext.getText().isEmpty()) {
             throw new UnsupportedOperationException("The following parsing path is not supported yet: visitLocalFunctionDeclaration -> metadata");
         }
-        text.append(this.visit(functionSignatureContext));
-        text.append(" ");
-        text.append(this.visit(functionBodyContext));
+        text.append(this.visit(functionSignatureContext))
+            .append(' ')
+            .append(this.visit(functionBodyContext));
         return text.toString();
     }
 
@@ -1537,16 +1540,16 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final List<Dart2Parser.OnPartContext> onPartContexts = context.onPart();
         final Dart2Parser.FinallyPartContext finallyPartContext = context.finallyPart();
         final StringBuilder text = new StringBuilder();
-        text.append(this.visit(tryTerminal));
-        text.append(" ");
-        text.append(this.visit(blockContext));
+        text.append(this.visit(tryTerminal))
+            .append(' ')
+            .append(this.visit(blockContext));
         for (final Dart2Parser.OnPartContext onPartContext : onPartContexts) {
-            text.append(" ");
-            text.append(this.visit(onPartContext));
+            text.append(' ')
+                .append(this.visit(onPartContext));
         }
         if (finallyPartContext != null) {
-            text.append(" ");
-            text.append(this.visit(finallyPartContext));
+            text.append(' ')
+                .append(this.visit(finallyPartContext));
         }
         return text.toString();
     }
@@ -1556,9 +1559,9 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final TerminalNode finallyTerminal = context.FINALLY_();
         final Dart2Parser.BlockContext blockContext = context.block();
         final StringBuilder text = new StringBuilder();
-        text.append(this.visit(finallyTerminal));
-        text.append(" ");
-        text.append(this.visit(blockContext));
+        text.append(this.visit(finallyTerminal))
+            .append(' ')
+            .append(this.visit(blockContext));
         return text.toString();
     }
 
@@ -1571,20 +1574,20 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final StringBuilder text = new StringBuilder();
         if (onTerminal == null) {
             // catchPart block
-            text.append(this.visit(catchPartContext));
-            text.append(" ");
-            text.append(this.visit(blockContext));
+            text.append(this.visit(catchPartContext))
+                .append(' ')
+                .append(this.visit(blockContext));
         } else {
             // ON_ typeNotVoid catchPart? block
-            text.append(this.visit(onTerminal));
-            text.append(" ");
-            text.append(this.visit(typeNotVoidContext));
+            text.append(this.visit(onTerminal))
+                .append(' ')
+                .append(this.visit(typeNotVoidContext));
             if (catchPartContext != null) {
-                text.append(" ");
-                text.append(this.visit(catchPartContext));
+                text.append(' ')
+                    .append(this.visit(catchPartContext));
             }
-            text.append(" ");
-            text.append(this.visit(blockContext));
+            text.append(' ')
+                .append(this.visit(blockContext));
         }
         return text.toString();
     }
@@ -1597,14 +1600,14 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final TerminalNode cTerminal = context.C();
         final TerminalNode cpTerminal = context.CP();
         final StringBuilder text = new StringBuilder();
-        text.append(this.visit(catchTerminal));
-        text.append(" ");
-        text.append(this.visit(opTerminal));
+        text.append(this.visit(catchTerminal))
+            .append(' ')
+            .append(this.visit(opTerminal));
         final Dart2Parser.IdentifierContext firstIdentifierContext = identifierContexts.get(0);
         text.append(this.visit(firstIdentifierContext));
         if (cTerminal != null) {
-            text.append(this.visit(cTerminal));
-            text.append(" ");
+            text.append(this.visit(cTerminal))
+                .append(' ');
             final Dart2Parser.IdentifierContext secondIdentifierContext = identifierContexts.get(1);
             text.append(this.visit(secondIdentifierContext));
         }
@@ -1623,13 +1626,13 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final Dart2Parser.DefaultCaseContext defaultCaseContext = context.defaultCase();
         final TerminalNode cbcTerminal = context.CBC();
         final StringBuilder text = new StringBuilder();
-        text.append(this.visit(switchTerminal));
-        text.append(" ");
-        text.append(this.visit(opTerminal));
-        text.append(this.visit(exprContext));
-        text.append(this.visit(cpTerminal));
-        text.append(" ");
-        text.append(this.visit(obcTerminal));
+        text.append(this.visit(switchTerminal))
+            .append(' ')
+            .append(this.visit(opTerminal))
+            .append(this.visit(exprContext))
+            .append(this.visit(cpTerminal))
+            .append(' ')
+            .append(this.visit(obcTerminal));
         this.currentIndentLevel++;
         for (final Dart2Parser.SwitchCaseContext switchCaseContext : switchCaseContexts) {
             this.appendNewLinesAndIndent(text, 1);
@@ -1656,10 +1659,10 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
             throw new UnsupportedOperationException("The following parsing path is not supported yet: visitSwitchCase -> label");
         }
         final StringBuilder text = new StringBuilder();
-        text.append(this.visit(caseTerminal));
-        text.append(" ");
-        text.append(this.visit(exprContext));
-        text.append(this.visit(coTerminal));
+        text.append(this.visit(caseTerminal))
+            .append(' ')
+            .append(this.visit(exprContext))
+            .append(this.visit(coTerminal));
         this.currentIndentLevel++;
         final int visitStatementCountBefore = this.ruleVisitCounts.getOrDefault(Dart2Parser.StatementContext.class.getSimpleName(), 0);
         final String statementsText = this.visit(statementsContext);
@@ -1682,8 +1685,8 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
             throw new UnsupportedOperationException("The following parsing path is not supported yet: visitDefaultCase -> label");
         }
         final StringBuilder text = new StringBuilder();
-        text.append(this.visit(defaultTerminal));
-        text.append(this.visit(coTerminal));
+        text.append(this.visit(defaultTerminal))
+            .append(this.visit(coTerminal));
         this.currentIndentLevel++;
         this.appendNewLinesAndIndent(text, 1);
         text.append(this.visit(statementsContext));
@@ -1699,13 +1702,13 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final TerminalNode cpTerminal = context.CP();
         final Dart2Parser.StatementContext statementContext = context.statement();
         final StringBuilder text = new StringBuilder();
-        text.append(this.visit(whileTerminal));
-        text.append(" ");
-        text.append(this.visit(opTerminal));
+        text.append(this.visit(whileTerminal))
+            .append(' ')
+            .append(this.visit(opTerminal));
         final String exprText = this.visit(exprContext);
-        text.append(exprText);
-        text.append(this.visit(cpTerminal));
-        text.append(" ");
+        text.append(exprText)
+            .append(this.visit(cpTerminal))
+            .append(' ');
         final String statementText = this.visit(statementContext);
         text.append(statementText);
         return text.toString();
@@ -1733,20 +1736,20 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final List<Dart2Parser.StatementContext> statementContexts = context.statement();
         final TerminalNode elseTerminal = context.ELSE_();
         final StringBuilder text = new StringBuilder();
-        text.append(this.visit(ifTerminal));
-        text.append(" ");
-        text.append(this.visit(opTerminal));
+        text.append(this.visit(ifTerminal))
+            .append(' ')
+            .append(this.visit(opTerminal));
         final String exprText = this.visit(exprContext);
-        text.append(exprText);
-        text.append(this.visit(cpTerminal));
-        text.append(" ");
+        text.append(exprText)
+            .append(this.visit(cpTerminal))
+            .append(' ');
         final Dart2Parser.StatementContext firstStatementContext = statementContexts.get(0);
         final String firstStatementText = this.visit(firstStatementContext);
         text.append(firstStatementText);
         if (elseTerminal != null) {
-            text.append(" ");
-            text.append(this.visit(elseTerminal));
-            text.append(" ");
+            text.append(' ')
+                .append(this.visit(elseTerminal))
+                .append(' ');
             final Dart2Parser.StatementContext secondStatementContext = statementContexts.get(1);
             final String secondStatementText = this.visit(secondStatementContext);
             text.append(secondStatementText);
@@ -1766,13 +1769,13 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
             throw new UnsupportedOperationException("The following parsing path is not supported yet: visitForStatement -> await");
         }
         final StringBuilder text = new StringBuilder();
-        text.append(this.visit(forTerminal));
-        text.append(" ");
-        text.append(this.visit(opTerminal));
+        text.append(this.visit(forTerminal))
+            .append(' ')
+            .append(this.visit(opTerminal));
         final String forLoopPartsText = this.visit(forLoopPartsContext);
-        text.append(forLoopPartsText);
-        text.append(this.visit(cpTerminal));
-        text.append(" ");
+        text.append(forLoopPartsText)
+            .append(this.visit(cpTerminal))
+            .append(' ');
         final String statementText = this.visit(statementContext);
         text.append(statementText);
         return text.toString();
@@ -1793,29 +1796,26 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         }
         final StringBuilder text = new StringBuilder();
         if (forInitializerStatementContext != null) {
-            final String forInitializerStatementText = this.visit(forInitializerStatementContext);
-            text.append(forInitializerStatementText);
-            text.append(" ");
+            text.append(this.visit(forInitializerStatementContext))
+                .append(' ');
             if (exprContext != null) {
-                final String exprText = this.visit(exprContext);
-                text.append(exprText);
+                text.append(this.visit(exprContext));
             }
             text.append(this.visit(scTerminal));
             if (expressionListContext != null) {
-                text.append(" ");
-                final String expressionListText = this.visit(expressionListContext);
-                text.append(expressionListText);
+                text.append(' ')
+                    .append(this.visit(expressionListContext));
             }
         }
         if (metadataContext != null) {
             if (!metadataContext.getText().isEmpty()) {
                 throw new UnsupportedOperationException("The following parsing path is not supported yet: visitForLoopParts -> metadata");
             }
-            text.append(this.visit(declaredIdentifierContext));
-            text.append(" ");
-            text.append(this.visit(inTerminal));
-            text.append(" ");
-            text.append(this.visit(exprContext));
+            text.append(this.visit(declaredIdentifierContext))
+                .append(' ')
+                .append(this.visit(inTerminal))
+                .append(' ')
+                .append(this.visit(exprContext));
         }
         return text.toString();
     }
@@ -1840,9 +1840,9 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
                 this.appendNewLinesAndIndent(text, 1);
                 text.append(exprText);
             } else {
-                text.append(this.visit(cTerminal));
-                text.append(" ");
-                text.append(exprText);
+                text.append(this.visit(cTerminal))
+                    .append(' ')
+                    .append(exprText);
             }
         }
         return text.toString();
@@ -1876,9 +1876,8 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
             throw new UnsupportedOperationException("The following parsing path is not supported yet: visitLocalVariableDeclaration -> metadata");
         }
         final StringBuilder text = new StringBuilder();
-        final String initializedVariableDeclarationText = this.visit(initializedVariableDeclarationContext);
-        text.append(initializedVariableDeclarationText);
-        text.append(this.visit(scTerminal));
+        text.append(this.visit(initializedVariableDeclarationContext))
+            .append(this.visit(scTerminal));
         return text.toString();
     }
 
@@ -1894,14 +1893,12 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
             throw new UnsupportedOperationException("The following parsing path is not supported yet: visitInitializedVariableDeclaration -> c");
         }
         final StringBuilder text = new StringBuilder();
-        final String declaredIdentifierText = this.visit(declaredIdentifierContext);
-        text.append(declaredIdentifierText);
+        text.append(this.visit(declaredIdentifierContext));
         if (eqTerminal != null) {
-            text.append(" ");
-            text.append(this.visit(eqTerminal));
-            text.append(" ");
-            final String exprText = this.visit(exprContext);
-            text.append(exprText);
+            text.append(' ')
+                .append(this.visit(eqTerminal))
+                .append(' ')
+                .append(this.visit(exprContext));
         }
         return text.toString();
     }
@@ -1912,8 +1909,8 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final Dart2Parser.ExprContext exprContext = context.expr();
         final TerminalNode scTerminal = context.SC();
         final StringBuilder text = new StringBuilder();
-        text.append(this.visit(returnTerminal));
-        text.append(" ");
+        text.append(this.visit(returnTerminal))
+            .append(' ');
         if (exprContext != null) {
             final String exprText = this.visit(exprContext);
             text.append(exprText);
@@ -1948,28 +1945,28 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final Dart2Parser.InitializersContext initializersContext = context.initializers();
         final StringBuilder text = new StringBuilder();
         if (abstractTerminal != null) {
-            text.append(this.visit(abstractTerminal));
-            text.append(" ");
+            text.append(this.visit(abstractTerminal))
+                .append(' ');
         }
         if (externalTerminal != null && factoryConstructorSignatureContext != null) {
             // EXTERNAL_ factoryConstructorSignature
             throw new UnsupportedOperationException("The following parsing path is not supported yet: visitDeclaration -> EXTERNAL_ factoryConstructorSignature");
         } else if (externalTerminal != null && constantConstructorSignatureContext != null) {
             // EXTERNAL_ constantConstructorSignature
-            text.append(this.visit(externalTerminal));
-            text.append(" ");
-            text.append(this.visit(constantConstructorSignatureContext));
+            text.append(this.visit(externalTerminal))
+                .append(' ')
+                .append(this.visit(constantConstructorSignatureContext));
         } else if (externalTerminal != null && constructorSignatureContext != null) {
             // EXTERNAL_ constructorSignature
             throw new UnsupportedOperationException("The following parsing path is not supported yet: visitDeclaration -> EXTERNAL_ constructorSignature");
         } else if (getterSignatureContext != null) {
             // ( EXTERNAL_ STATIC_?)? getterSignature
             if (externalTerminal != null) {
-                text.append(this.visit(externalTerminal));
-                text.append(" ");
+                text.append(this.visit(externalTerminal))
+                    .append(' ');
                 if (staticTerminal != null) {
-                    text.append(this.visit(staticTerminal));
-                    text.append(" ");
+                    text.append(this.visit(staticTerminal))
+                        .append(' ');
                 }
             }
             text.append(this.visit(getterSignatureContext));
@@ -1979,12 +1976,12 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         } else if (functionSignatureContext != null) {
             // ( EXTERNAL_ STATIC_?)? functionSignature
             if (externalTerminal != null) {
-                text.append(this.visit(externalTerminal));
-                text.append(" ");
+                text.append(this.visit(externalTerminal))
+                    .append(' ');
             }
             if (staticTerminal != null) {
-                text.append(this.visit(staticTerminal));
-                text.append(" ");
+                text.append(this.visit(staticTerminal))
+                    .append(' ');
             }
             text.append(this.visit(functionSignatureContext));
         } else if (operatorSignatureContext != null) {
@@ -1992,50 +1989,50 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
             throw new UnsupportedOperationException("The following parsing path is not supported yet: visitDeclaration -> EXTERNAL_? operatorSignature");
         } else if (staticTerminal != null && constTerminal != null && staticFinalDeclarationListContext != null) {
             // STATIC_ CONST_ type? staticFinalDeclarationList
-            text.append(this.visit(staticTerminal));
-            text.append(" ");
-            text.append(this.visit(constTerminal));
-            text.append(" ");
+            text.append(this.visit(staticTerminal))
+                .append(' ')
+                .append(this.visit(constTerminal))
+                .append(' ');
             if (typeContext != null) {
-                text.append(this.visit(typeContext));
-                text.append(" ");
+                text.append(this.visit(typeContext))
+                    .append(' ');
             }
             text.append(this.visit(staticFinalDeclarationListContext));
         } else if (staticTerminal != null && finalTerminal != null && staticFinalDeclarationListContext != null) {
             // STATIC_ FINAL_ type? staticFinalDeclarationList
-            text.append(this.visit(staticTerminal));
-            text.append(" ");
-            text.append(this.visit(finalTerminal));
-            text.append(" ");
+            text.append(this.visit(staticTerminal))
+                .append(' ')
+                .append(this.visit(finalTerminal))
+                .append(' ');
             if (typeContext != null) {
-                text.append(this.visit(typeContext));
-                text.append(" ");
+                text.append(this.visit(typeContext))
+                    .append(' ');
             }
             text.append(this.visit(staticFinalDeclarationListContext));
         } else if (staticTerminal != null && lateTerminal != null && finalTerminal != null && initializedIdentifierListContext != null) {
             // STATIC_ LATE_ FINAL_ type? initializedIdentifierList
-            text.append(this.visit(staticTerminal));
-            text.append(" ");
-            text.append(this.visit(lateTerminal));
-            text.append(" ");
-            text.append(this.visit(finalTerminal));
-            text.append(" ");
+            text.append(this.visit(staticTerminal))
+                .append(' ')
+                .append(this.visit(lateTerminal))
+                .append(' ')
+                .append(this.visit(finalTerminal))
+                .append(' ');
             if (typeContext != null) {
-                text.append(this.visit(typeContext));
-                text.append(" ");
+                text.append(this.visit(typeContext))
+                    .append(' ');
             }
             text.append(this.visit(initializedIdentifierListContext));
         } else if (staticTerminal != null && varOrTypeContext != null && initializedIdentifierListContext != null) {
             // STATIC_ LATE_? varOrType initializedIdentifierList
-            text.append(this.visit(staticTerminal));
-            text.append(" ");
+            text.append(this.visit(staticTerminal))
+                .append(' ');
             if (lateTerminal != null) {
-                text.append(this.visit(lateTerminal));
-                text.append(" ");
+                text.append(this.visit(lateTerminal))
+                    .append(' ');
             }
-            text.append(this.visit(varOrTypeContext));
-            text.append(" ");
-            text.append(this.visit(initializedIdentifierListContext));
+            text.append(this.visit(varOrTypeContext))
+                .append(' ')
+                .append(this.visit(initializedIdentifierListContext));
         } else if (covariantTerminal != null && lateTerminal != null && finalTerminal != null && identifierListContext != null) {
             // COVARIANT_ LATE_ FINAL_ type? identifierList
             throw new UnsupportedOperationException("The following parsing path is not supported yet: visitDeclaration -> COVARIANT_ LATE_ FINAL_ type? identifierList");
@@ -2045,25 +2042,25 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         } else if (finalTerminal != null && initializedIdentifierListContext != null) {
             // LATE_? FINAL_ type? initializedIdentifierList
             if (lateTerminal != null) {
-                text.append(this.visit(lateTerminal));
-                text.append(" ");
+                text.append(this.visit(lateTerminal))
+                    .append(' ');
             }
-            text.append(this.visit(finalTerminal));
-            text.append(" ");
+            text.append(this.visit(finalTerminal))
+                .append(' ');
             if (typeContext != null) {
-                text.append(this.visit(typeContext));
-                text.append(" ");
+                text.append(this.visit(typeContext))
+                    .append(' ');
             }
             text.append(this.visit(initializedIdentifierListContext));
         } else if (varOrTypeContext != null && initializedIdentifierListContext != null) {
             // LATE_? varOrType initializedIdentifierList
             if (lateTerminal != null) {
-                text.append(this.visit(lateTerminal));
-                text.append(" ");
+                text.append(this.visit(lateTerminal))
+                    .append(' ');
             }
-            text.append(this.visit(varOrTypeContext));
-            text.append(" ");
-            text.append(this.visit(initializedIdentifierListContext));
+            text.append(this.visit(varOrTypeContext))
+                .append(' ')
+                .append(this.visit(initializedIdentifierListContext));
         } else if (redirectingFactoryConstructorSignatureContext != null) {
             // redirectingFactoryConstructorSignature
             throw new UnsupportedOperationException("The following parsing path is not supported yet: visitDeclaration -> redirectingFactoryConstructorSignature");
@@ -2073,8 +2070,8 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
             if (redirectionContext != null) {
                 throw new UnsupportedOperationException("The following parsing path is not supported yet: visitDeclaration -> constantConstructorSignature redirection");
             } else if (initializersContext != null) {
-                text.append(" ");
-                text.append(this.visit(initializersContext));
+                text.append(' ')
+                    .append(this.visit(initializersContext));
             }
         } else if (constructorSignatureContext != null) {
             // constructorSignature ( redirection | initializers)?
@@ -2082,8 +2079,8 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
             if (redirectionContext != null) {
                 throw new UnsupportedOperationException("The following parsing path is not supported yet: visitDeclaration -> constructorSignature redirection");
             } else if (initializersContext != null) {
-                text.append(" ");
-                text.append(this.visit(initializersContext));
+                text.append(' ')
+                    .append(this.visit(initializersContext));
             }
         }
         return text.toString();
@@ -2094,8 +2091,8 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final Dart2Parser.ConstructorNameContext constructorNameContext = context.constructorName();
         final Dart2Parser.FormalParameterListContext formalParameterListContext = context.formalParameterList();
         final StringBuilder text = new StringBuilder();
-        text.append(this.visit(constructorNameContext));
-        text.append(this.visit(formalParameterListContext));
+        text.append(this.visit(constructorNameContext))
+            .append(this.visit(formalParameterListContext));
         return text.toString();
     }
 
@@ -2105,16 +2102,16 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final List<Dart2Parser.InitializerListEntryContext> initializerListEntryContexts = context.initializerListEntry();
         final List<TerminalNode> cTerminals = context.C();
         final StringBuilder text = new StringBuilder();
-        text.append(this.visit(coTerminal));
-        text.append(" ");
+        text.append(this.visit(coTerminal))
+            .append(' ');
         final Dart2Parser.InitializerListEntryContext firstInitializerListEntryContext = initializerListEntryContexts.get(0);
         text.append(this.visit(firstInitializerListEntryContext));
         for (int index = 0; index < cTerminals.size(); index++) {
             final TerminalNode cTerminal = cTerminals.get(index);
             final Dart2Parser.InitializerListEntryContext initializerListEntryContext = initializerListEntryContexts.get(index + 1);
-            text.append(this.visit(cTerminal));
-            text.append(" ");
-            text.append(this.visit(initializerListEntryContext));
+            text.append(this.visit(cTerminal))
+                .append(' ')
+                .append(this.visit(initializerListEntryContext));
         }
         return text.toString();
     }
@@ -2131,14 +2128,14 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final StringBuilder text = new StringBuilder();
         if (dTerminal != null) {
             // SUPER_ D identifier arguments
-            text.append(this.visit(superTerminal));
-            text.append(this.visit(dTerminal));
-            text.append(this.visit(identifierContext));
-            text.append(this.visit(argumentsContext));
+            text.append(this.visit(superTerminal))
+                .append(this.visit(dTerminal))
+                .append(this.visit(identifierContext))
+                .append(this.visit(argumentsContext));
         } else if (superTerminal != null) {
             // SUPER_ arguments
-            text.append(this.visit(superTerminal));
-            text.append(this.visit(argumentsContext));
+            text.append(this.visit(superTerminal))
+                .append(this.visit(argumentsContext));
         } else if (fieldInitializerContext != null) {
             // fieldInitializer
             text.append(this.visit(fieldInitializerContext));
@@ -2158,14 +2155,14 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final Dart2Parser.InitializerExpressionContext initializerExpressionContext = context.initializerExpression();
         final StringBuilder text = new StringBuilder();
         if (thisTerminal != null) {
-            text.append(this.visit(thisTerminal));
-            text.append(this.visit(dTerminal));
+            text.append(this.visit(thisTerminal))
+                .append(this.visit(dTerminal));
         }
-        text.append(this.visit(identifierContext));
-        text.append(" ");
-        text.append(this.visit(eqTerminal));
-        text.append(" ");
-        text.append(this.visit(initializerExpressionContext));
+        text.append(this.visit(identifierContext))
+            .append(' ')
+            .append(this.visit(eqTerminal))
+            .append(' ')
+            .append(this.visit(initializerExpressionContext));
         return text.toString();
     }
 
@@ -2205,9 +2202,9 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         for (int index = 0; index < cTerminals.size(); index++) {
             final TerminalNode cTerminal = cTerminals.get(index);
             final Dart2Parser.StaticFinalDeclarationContext staticFinalDeclarationContext = staticFinalDeclarationContexts.get(index + 1);
-            text.append(this.visit(cTerminal));
-            text.append(" ");
-            text.append(this.visit(staticFinalDeclarationContext));
+            text.append(this.visit(cTerminal))
+                .append(' ')
+                .append(this.visit(staticFinalDeclarationContext));
         }
         return text.toString();
     }
@@ -2218,11 +2215,11 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final TerminalNode eqTerminal = context.EQ();
         final Dart2Parser.ExprContext exprContext = context.expr();
         final StringBuilder text = new StringBuilder();
-        text.append(this.visit(identifierContext));
-        text.append(" ");
-        text.append(this.visit(eqTerminal));
-        text.append(" ");
-        text.append(this.visit(exprContext));
+        text.append(this.visit(identifierContext))
+            .append(' ')
+            .append(this.visit(eqTerminal))
+            .append(' ')
+            .append(this.visit(exprContext));
         return text.toString();
     }
 
@@ -2232,9 +2229,9 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final Dart2Parser.ConstructorNameContext constructorNameContext = context.constructorName();
         final Dart2Parser.FormalParameterListContext formalParameterListContext = context.formalParameterList();
         final StringBuilder text = new StringBuilder();
-        text.append(this.visit(constTerminal));
-        text.append(" ");
-        text.append(this.visit(constructorNameContext));
+        text.append(this.visit(constTerminal))
+            .append(' ')
+            .append(this.visit(constructorNameContext));
         final String formalParameterListText = this.visit(formalParameterListContext);
         text.append(formalParameterListText);
         return text.toString();
@@ -2266,8 +2263,8 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final StringBuilder text = new StringBuilder();
         if (typeNotFunctionContext != null) {
             final String typeNotFunctionText = this.visit(typeNotFunctionContext);
-            text.append(typeNotFunctionText);
-            text.append(" ");
+            text.append(typeNotFunctionText)
+                .append(' ');
         }
         final String functionTypeText = this.visit(functionTypeTailsContext);
         text.append(functionTypeText);
@@ -2315,30 +2312,30 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final StringBuilder text = new StringBuilder();
         if (opTerminal != null && normalParameterTypesContext != null && cTerminal != null && optionalParameterTypesContext != null && cpTerminal != null) {
             // OP normalParameterTypes C optionalParameterTypes CP
-            text.append(this.visit(opTerminal));
-            text.append(this.visit(normalParameterTypesContext));
-            text.append(this.visit(cTerminal));
-            text.append(" ");
-            text.append(this.visit(optionalParameterTypesContext));
-            text.append(this.visit(cpTerminal));
+            text.append(this.visit(opTerminal))
+                .append(this.visit(normalParameterTypesContext))
+                .append(this.visit(cTerminal))
+                .append(' ')
+                .append(this.visit(optionalParameterTypesContext))
+                .append(this.visit(cpTerminal));
         } else if (opTerminal != null && normalParameterTypesContext != null && cpTerminal != null) {
             // OP normalParameterTypes C? CP
-            text.append(this.visit(opTerminal));
-            text.append(this.visit(normalParameterTypesContext));
+            text.append(this.visit(opTerminal))
+                .append(this.visit(normalParameterTypesContext));
             if (cTerminal != null) {
-                text.append(this.visit(cTerminal));
-                text.append(" ");
+                text.append(this.visit(cTerminal))
+                    .append(' ');
             }
             text.append(this.visit(cpTerminal));
         } else if (opTerminal != null && optionalParameterTypesContext != null && cpTerminal != null) {
             // OP optionalParameterTypes CP
-            text.append(this.visit(opTerminal));
-            text.append(this.visit(optionalParameterTypesContext));
-            text.append(this.visit(cpTerminal));
+            text.append(this.visit(opTerminal))
+                .append(this.visit(optionalParameterTypesContext))
+                .append(this.visit(cpTerminal));
         } else if (opTerminal != null && cpTerminal != null) {
             // OP CP
-            text.append(this.visit(opTerminal));
-            text.append(this.visit(cpTerminal));
+            text.append(this.visit(opTerminal))
+                .append(this.visit(cpTerminal));
         }
         return text.toString();
     }
@@ -2395,8 +2392,8 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
             throw new UnsupportedOperationException("The following parsing path is not supported yet: visitNamedParameterType -> metadata");
         }
         if (requiredTerminal != null) {
-            text.append(this.visit(requiredTerminal));
-            text.append(" ");
+            text.append(this.visit(requiredTerminal))
+                .append(' ');
         }
         text.append(this.visit(typedIdentifierContext));
         return text.toString();
@@ -2409,8 +2406,8 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final TerminalNode cTerminal = context.C();
         final TerminalNode cbTerminal = context.CB();
         final StringBuilder text = new StringBuilder();
-        text.append(this.visit(obTerminal));
-        text.append(this.visit(normalParameterTypesContext));
+        text.append(this.visit(obTerminal))
+            .append(this.visit(normalParameterTypesContext));
         if (cTerminal != null) {
             text.append(this.visit(cTerminal));
         }
@@ -2426,9 +2423,9 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final Dart2Parser.NormalParameterTypeContext firstNormalParameterTypeContext = normalParameterTypeContexts.get(0);
         text.append(this.visit(firstNormalParameterTypeContext));
         for (int index = 0; index < cTerminals.size(); index++) {
-            text.append(this.visit(cTerminals.get(index)));
-            text.append(" ");
-            text.append(this.visit(normalParameterTypeContexts.get(index + 1)));
+            text.append(this.visit(cTerminals.get(index)))
+                .append(' ')
+                .append(this.visit(normalParameterTypeContexts.get(index + 1)));
         }
         return text.toString();
     }
@@ -2455,9 +2452,9 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final Dart2Parser.TypeContext typeContext = context.type();
         final Dart2Parser.IdentifierContext identifierContext = context.identifier();
         final StringBuilder text = new StringBuilder();
-        text.append(this.visit(typeContext));
-        text.append(" ");
-        text.append(this.visit(identifierContext));
+        text.append(this.visit(typeContext))
+            .append(' ')
+            .append(this.visit(identifierContext));
         return text.toString();
     }
 
@@ -2520,12 +2517,9 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final Dart2Parser.TypeListContext typeListContext = context.typeList();
         final TerminalNode gtTerminal = context.GT();
         final StringBuilder text = new StringBuilder();
-        final String ltTerminalText = this.visit(ltTerminal);
-        text.append(ltTerminalText);
-        final String typeListText = this.visit(typeListContext);
-        text.append(typeListText);
-        final String gtTerminalText = this.visit(gtTerminal);
-        text.append(gtTerminalText);
+        text.append(this.visit(ltTerminal))
+            .append(this.visit(typeListContext))
+            .append(this.visit(gtTerminal));
         return text.toString();
     }
 
@@ -2536,9 +2530,9 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final String firstTypeText = this.visit(typeContexts.get(0));
         text.append(firstTypeText);
         for (int index = 1; index < typeContexts.size(); index++) {
-            text.append(", ");
-            final String typeText = this.visit(typeContexts.get(index));
-            text.append(typeText);
+            final Dart2Parser.TypeContext typeContext = typeContexts.get(index);
+            text.append(", ")
+                .append(this.visit(typeContext));
         }
         return text.toString();
     }
@@ -2553,9 +2547,9 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         for (int index = 0; index < cTerminals.size(); index++) {
             final TerminalNode cTerminal = cTerminals.get(index);
             final Dart2Parser.InitializedIdentifierContext initializedIdentifierContext = initializedIdentifierContexts.get(index + 1);
-            text.append(this.visit(cTerminal));
-            text.append(" ");
-            text.append(this.visit(initializedIdentifierContext));
+            text.append(this.visit(cTerminal))
+                .append(' ')
+                .append(this.visit(initializedIdentifierContext));
         }
         return text.toString();
     }
@@ -2569,11 +2563,10 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final StringBuilder text = new StringBuilder();
         text.append(this.visit(identifierContext));
         if (eqTerminal != null) {
-            text.append(" ");
-            text.append(this.visit(eqTerminal));
-            text.append(" ");
-            final String exprText = this.visit(exprContext);
-            text.append(exprText);
+            text.append(' ')
+                .append(this.visit(eqTerminal))
+                .append(' ')
+                .append(this.visit(exprContext));
         }
         return text.toString();
     }
@@ -2588,12 +2581,11 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final Dart2Parser.ThrowExpressionContext throwExpressionContext = context.throwExpression();
         final StringBuilder text = new StringBuilder();
         if (assignableExpressionContext != null) {
-            text.append(this.visit(assignableExpressionContext));
-            text.append(" ");
-            text.append(this.visit(assignmentOperatorContext));
-            text.append(" ");
-            final String exprText = this.visit(exprContext);
-            text.append(exprText);
+            text.append(this.visit(assignableExpressionContext))
+                .append(' ')
+                .append(this.visit(assignmentOperatorContext))
+                .append(' ')
+                .append(this.visit(exprContext));
         } else if (conditionalExpressionContext != null) {
             text.append(this.visit(conditionalExpressionContext));
         } else if (cascadeContext != null) {
@@ -2618,6 +2610,8 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
     }
 
     @Override
+    // False-positive: PMD.ConfusingTernary
+    @SuppressWarnings("PMD.ConfusingTernary")
     public String visitCompoundAssignmentOperator(final Dart2Parser.CompoundAssignmentOperatorContext context) {
         final TerminalNode steTerminal = context.STE();
         final TerminalNode seTerminal = context.SE();
@@ -2674,8 +2668,8 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final Dart2Parser.IdentifierContext identifierContext = context.identifier();
         final StringBuilder text = new StringBuilder();
         if (primaryContext != null) {
-            text.append(this.visit(primaryContext));
-            text.append(this.visit(assignableSelectorPartContext));
+            text.append(this.visit(primaryContext))
+                .append(this.visit(assignableSelectorPartContext));
         } else if (superTerminal != null) {
             throw new UnsupportedOperationException("The following parsing path is not supported yet: visitAssignableExpression -> super");
         } else {
@@ -2708,9 +2702,9 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         }
         final StringBuilder text = new StringBuilder();
         if (cascadeContext != null) {
-            text.append(this.visit(cascadeContext));
-            text.append(this.visit(ddTerminal));
-            text.append(this.visit(cascadeSectionContext));
+            text.append(this.visit(cascadeContext))
+                .append(this.visit(ddTerminal))
+                .append(this.visit(cascadeSectionContext));
         } else if (conditionalExpressionContext != null) {
             text.append(this.visit(conditionalExpressionContext));
             if (ddTerminal != null) {
@@ -2726,8 +2720,8 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final Dart2Parser.CascadeSelectorContext cascadeSelectorContext = context.cascadeSelector();
         final Dart2Parser.CascadeSectionTailContext cascadeSectionTailContext = context.cascadeSectionTail();
         final StringBuilder text = new StringBuilder();
-        text.append(this.visit(cascadeSelectorContext));
-        text.append(this.visit(cascadeSectionTailContext));
+        text.append(this.visit(cascadeSelectorContext))
+            .append(this.visit(cascadeSectionTailContext));
         return text.toString();
     }
 
@@ -2773,10 +2767,10 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final Dart2Parser.AssignmentOperatorContext assignmentOperatorContext = context.assignmentOperator();
         final Dart2Parser.ExpressionWithoutCascadeContext expressionWithoutCascadeContext = context.expressionWithoutCascade();
         final StringBuilder text = new StringBuilder();
-        text.append(" ");
-        text.append(this.visit(assignmentOperatorContext));
-        text.append(" ");
-        text.append(this.visit(expressionWithoutCascadeContext));
+        text.append(' ')
+            .append(this.visit(assignmentOperatorContext))
+            .append(' ')
+            .append(this.visit(expressionWithoutCascadeContext));
         return text.toString();
     }
 
@@ -2785,9 +2779,9 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final TerminalNode throwTerminal = context.THROW_();
         final Dart2Parser.ExprContext exprContext = context.expr();
         final StringBuilder text = new StringBuilder();
-        text.append(this.visit(throwTerminal));
-        text.append(" ");
-        text.append(this.visit(exprContext));
+        text.append(this.visit(throwTerminal))
+            .append(' ')
+            .append(this.visit(exprContext));
         return text.toString();
     }
 
@@ -2800,14 +2794,14 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final StringBuilder text = new StringBuilder();
         text.append(this.visit(ifNullExpressionContext));
         if (quTerminal != null) {
-            text.append(" ");
-            text.append(this.visit(quTerminal));
-            text.append(" ");
+            text.append(' ')
+                .append(this.visit(quTerminal))
+                .append(' ');
             final Dart2Parser.ExpressionWithoutCascadeContext firstExpressionWithoutCascadeContext = expressionWithoutCascadeContexts.get(0);
-            text.append(this.visit(firstExpressionWithoutCascadeContext));
-            text.append(" ");
-            text.append(this.visit(coTerminal));
-            text.append(" ");
+            text.append(this.visit(firstExpressionWithoutCascadeContext))
+                .append(' ')
+                .append(this.visit(coTerminal))
+                .append(' ');
             final Dart2Parser.ExpressionWithoutCascadeContext secondExpressionWithoutCascadeContext = expressionWithoutCascadeContexts.get(1);
             text.append(this.visit(secondExpressionWithoutCascadeContext));
         }
@@ -2843,10 +2837,10 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         for (int index = 0; index < ququTerminals.size(); index++) {
             final TerminalNode ququTerminal = ququTerminals.get(index);
             final Dart2Parser.LogicalOrExpressionContext logicalOrExpressionContext = logicalOrExpressionContexts.get(index + 1);
-            text.append(" ");
-            text.append(this.visit(ququTerminal));
-            text.append(" ");
-            text.append(this.visit(logicalOrExpressionContext));
+            text.append(' ')
+                .append(this.visit(ququTerminal))
+                .append(' ')
+                .append(this.visit(logicalOrExpressionContext));
         }
         return text.toString();
     }
@@ -2861,10 +2855,10 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         for (int index = 0; index < ppTerminals.size(); index++) {
             final TerminalNode ppTerminal = ppTerminals.get(index);
             final Dart2Parser.LogicalAndExpressionContext logicalAndExpressionContext = logicalAndExpressionContexts.get(index + 1);
-            text.append(" ");
-            text.append(this.visit(ppTerminal));
-            text.append(" ");
-            text.append(this.visit(logicalAndExpressionContext));
+            text.append(' ')
+                .append(this.visit(ppTerminal))
+                .append(' ')
+                .append(this.visit(logicalAndExpressionContext));
         }
         return text.toString();
     }
@@ -2879,10 +2873,10 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         for (int index = 0; index < aaTerminals.size(); index++) {
             final TerminalNode aaTerminal = aaTerminals.get(index);
             final Dart2Parser.EqualityExpressionContext equalityExpressionContext = equalityExpressionContexts.get(index + 1);
-            text.append(" ");
-            text.append(this.visit(aaTerminal));
-            text.append(" ");
-            text.append(this.visit(equalityExpressionContext));
+            text.append(' ')
+                .append(this.visit(aaTerminal))
+                .append(' ')
+                .append(this.visit(equalityExpressionContext));
         }
         return text.toString();
     }
@@ -2898,12 +2892,11 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         if (superTerminal == null) {
             text.append(firstRelationalExpressionText);
             if (equalityOperatorContext != null) {
-                text.append(" ");
-                text.append(this.visit(equalityOperatorContext));
-                text.append(" ");
+                text.append(' ')
+                    .append(this.visit(equalityOperatorContext))
+                    .append(' ');
                 final Dart2Parser.RelationalExpressionContext secondRelationalExpressionContext = relationalExpressionContexts.get(1);
-                final String secondRelationalExpressionText = this.visit(secondRelationalExpressionContext);
-                text.append(secondRelationalExpressionText);
+                text.append(this.visit(secondRelationalExpressionContext));
             }
         } else {
             throw new UnsupportedOperationException("The following parsing path is not supported yet: visitEqualityExpression -> super");
@@ -2937,15 +2930,15 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
             final Dart2Parser.BitwiseOrExpressionContext firstBitwiseOrExpression = bitwiseOrExpressionContexts.get(0);
             text.append(this.visit(firstBitwiseOrExpression));
             if (typeTestContext != null) {
-                text.append(" ");
-                text.append(this.visit(typeTestContext));
+                text.append(' ')
+                    .append(this.visit(typeTestContext));
             } else if (typeCastContext != null) {
-                text.append(" ");
-                text.append(this.visit(typeCastContext));
+                text.append(' ')
+                    .append(this.visit(typeCastContext));
             } else if (relationalOperatorContext != null) {
-                text.append(" ");
-                text.append(this.visit(relationalOperatorContext));
-                text.append(" ");
+                text.append(' ')
+                    .append(this.visit(relationalOperatorContext))
+                    .append(' ');
                 final Dart2Parser.BitwiseOrExpressionContext secondBitwiseOrExpression = bitwiseOrExpressionContexts.get(1);
                 text.append(this.visit(secondBitwiseOrExpression));
             }
@@ -2961,9 +2954,9 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final Dart2Parser.AsOperatorContext asOperatorContext = context.asOperator();
         final Dart2Parser.TypeNotVoidContext typeNotVoidContext = context.typeNotVoid();
         final StringBuilder text = new StringBuilder();
-        text.append(this.visit(asOperatorContext));
-        text.append(" ");
-        text.append(this.visit(typeNotVoidContext));
+        text.append(this.visit(asOperatorContext))
+            .append(' ')
+            .append(this.visit(typeNotVoidContext));
         return text.toString();
     }
 
@@ -2977,9 +2970,9 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final Dart2Parser.IsOperatorContext isOperatorContext = context.isOperator();
         final Dart2Parser.TypeNotVoidContext typeNotVoidContext = context.typeNotVoid();
         final StringBuilder text = new StringBuilder();
-        text.append(this.visit(isOperatorContext));
-        text.append(" ");
-        text.append(this.visit(typeNotVoidContext));
+        text.append(this.visit(isOperatorContext))
+            .append(' ')
+            .append(this.visit(typeNotVoidContext));
         return text.toString();
     }
 
@@ -2990,8 +2983,8 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final StringBuilder text = new StringBuilder();
         text.append(this.visit(isTerminal));
         if (notTerminal != null) {
-            text.append(" ");
-            text.append(this.visit(notTerminal));
+            text.append(' ')
+                .append(this.visit(notTerminal));
         }
         return text.toString();
     }
@@ -3004,8 +2997,8 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final TerminalNode ltTerminal = context.LT();
         final StringBuilder text = new StringBuilder();
         if (eqTerminal != null) {
-            text.append(this.visit(gtTerminal));
-            text.append(this.visit(eqTerminal));
+            text.append(this.visit(gtTerminal))
+                .append(this.visit(eqTerminal));
         } else if (gtTerminal != null) {
             text.append(this.visit(gtTerminal));
         } else if (lteTerminal != null) {
@@ -3067,10 +3060,10 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
             for (int index = 0; index < aTerminals.size(); index++) {
                 final TerminalNode aTerminal = aTerminals.get(index);
                 final Dart2Parser.ShiftExpressionContext shiftExpressionContext = shiftExpressionContexts.get(index + 1);
-                text.append(" ");
-                text.append(this.visit(aTerminal));
-                text.append(" ");
-                text.append(this.visit(shiftExpressionContext));
+                text.append(' ')
+                    .append(this.visit(aTerminal))
+                    .append(' ')
+                    .append(this.visit(shiftExpressionContext));
             }
         } else {
             // SUPER_ ( A shiftExpression)+
@@ -3113,9 +3106,9 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
             text.append(multiplicativeExpressionText);
             if (index < additiveOperatorContexts.size()) {
                 final Dart2Parser.AdditiveOperatorContext additiveOperatorContext = additiveOperatorContexts.get(index);
-                text.append(" ");
-                text.append(this.visit(additiveOperatorContext));
-                text.append(" ");
+                text.append(' ')
+                    .append(this.visit(additiveOperatorContext))
+                    .append(' ');
             }
         }
         return text.toString();
@@ -3145,13 +3138,12 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
             final String firstUnaryExpressionText = this.visit(firstUnaryExpression);
             text.append(firstUnaryExpressionText);
             for (int index = 0; index < multiplicativeOperatorContexts.size(); index++) {
-                text.append(" ");
+                text.append(' ');
                 final Dart2Parser.MultiplicativeOperatorContext multiplicativeOperatorContext = multiplicativeOperatorContexts.get(index);
-                text.append(this.visit(multiplicativeOperatorContext));
-                text.append(" ");
+                text.append(this.visit(multiplicativeOperatorContext))
+                    .append(' ');
                 final Dart2Parser.UnaryExpressionContext unaryExpressionContext = unaryExpressionContexts.get(index + 1);
-                final String unaryExpressionText = this.visit(unaryExpressionContext);
-                text.append(unaryExpressionText);
+                text.append(this.visit(unaryExpressionContext));
             }
         } else {
             throw new UnsupportedOperationException("The following parsing path is not supported yet: visitMultiplicativeExpression -> super");
@@ -3193,8 +3185,8 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final StringBuilder text = new StringBuilder();
         if (prefixOperatorContext != null) {
             // prefixOperator unaryExpression
-            text.append(this.visit(prefixOperatorContext));
-            text.append(this.visit(unaryExpressionContext));
+            text.append(this.visit(prefixOperatorContext))
+                .append(this.visit(unaryExpressionContext));
         } else if (awaitExpressionContext != null) {
             text.append(this.visit(awaitExpressionContext));
         } else if (postfixExpressionContext != null) {
@@ -3204,8 +3196,8 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
             throw new UnsupportedOperationException("The following parsing path is not supported yet: visitUnaryExpression -> ( minusOperator | tildeOperator) SUPER_");
         } else if (incrementOperatorContext != null) {
             // incrementOperator assignableExpression
-            text.append(this.visit(incrementOperatorContext));
-            text.append(this.visit(assignableExpressionContext));
+            text.append(this.visit(incrementOperatorContext))
+                .append(this.visit(assignableExpressionContext));
         }
         return text.toString();
     }
@@ -3255,9 +3247,9 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final TerminalNode awaitTerminal = context.AWAIT_();
         final Dart2Parser.UnaryExpressionContext unaryExpressionContext = context.unaryExpression();
         final StringBuilder text = new StringBuilder();
-        text.append(this.visit(awaitTerminal));
-        text.append(" ");
-        text.append(this.visit(unaryExpressionContext));
+        text.append(this.visit(awaitTerminal))
+            .append(' ')
+            .append(this.visit(unaryExpressionContext));
         return text.toString();
     }
 
@@ -3269,16 +3261,14 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final List<Dart2Parser.SelectorContext> selectorContexts = context.selector();
         final StringBuilder text = new StringBuilder();
         if (assignableExpressionContext != null) {
-            text.append(this.visit(assignableExpressionContext));
-            text.append(this.visit(postfixOperatorContext));
+            text.append(this.visit(assignableExpressionContext))
+                .append(this.visit(postfixOperatorContext));
         }
         if (primaryContext != null) {
-            final String primaryText = this.visit(primaryContext);
-            text.append(primaryText);
+            text.append(this.visit(primaryContext));
         }
         for (final Dart2Parser.SelectorContext selectorContext : selectorContexts) {
-            final String selectorText = this.visit(selectorContext);
-            text.append(selectorText);
+            text.append(this.visit(selectorContext));
         }
         return text.toString();
     }
@@ -3336,14 +3326,14 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
             text.append(this.visit(unconditionalAssignableSelectorContext));
         } else if (qudTerminal != null) {
             // QUD identifier
-            text.append(this.visit(qudTerminal));
-            text.append(this.visit(identifierContext));
+            text.append(this.visit(qudTerminal))
+                .append(this.visit(identifierContext));
         } else {
             // QU OB expr CB
-            text.append(this.visit(quTerminal));
-            text.append(this.visit(obTerminal));
-            text.append(this.visit(exprContext));
-            text.append(this.visit(cbTerminal));
+            text.append(this.visit(quTerminal))
+                .append(this.visit(obTerminal))
+                .append(this.visit(exprContext))
+                .append(this.visit(cbTerminal));
         }
         return text.toString();
     }
@@ -3358,13 +3348,13 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final StringBuilder text = new StringBuilder();
         if (obTerminal != null) {
             // OB expr CB
-            text.append(this.visit(obTerminal));
-            text.append(this.visit(exprContext));
-            text.append(this.visit(cbTerminal));
+            text.append(this.visit(obTerminal))
+                .append(this.visit(exprContext))
+                .append(this.visit(cbTerminal));
         } else {
             // D identifier
-            text.append(this.visit(dTerminal));
-            text.append(this.visit(identifierContext));
+            text.append(this.visit(dTerminal))
+                .append(this.visit(identifierContext));
         }
         return text.toString();
     }
@@ -3403,8 +3393,8 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         if (thisExpressionContext != null) {
             text.append(this.visit(thisExpressionContext));
         } else if (unconditionalAssignableSelectorContext != null) {
-            text.append(this.visit(superTerminal));
-            text.append(this.visit(unconditionalAssignableSelectorContext));
+            text.append(this.visit(superTerminal))
+                .append(this.visit(unconditionalAssignableSelectorContext));
         } else if (argumentPartContext != null) {
             throw new UnsupportedOperationException("The following parsing path is not supported yet: visitPrimary -> argumentPart");
         } else if (functionExpressionContext != null) {
@@ -3420,9 +3410,9 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         } else if (constructorInvocationContext != null) {
             text.append(this.visit(constructorInvocationContext));
         } else if (opTerminal != null) {
-            text.append(this.visit(opTerminal));
-            text.append(this.visit(exprContext));
-            text.append(this.visit(cpTerminal));
+            text.append(this.visit(opTerminal))
+                .append(this.visit(exprContext))
+                .append(this.visit(cpTerminal));
         }
         return text.toString();
     }
@@ -3435,11 +3425,11 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final Dart2Parser.IdentifierContext identifierContext = context.identifier();
         final Dart2Parser.ArgumentsContext argumentsContext = context.arguments();
         final StringBuilder text = new StringBuilder();
-        text.append(this.visit(typeNameContext));
-        text.append(this.visit(typeArgumentsContext));
-        text.append(this.visit(dTerminal));
-        text.append(this.visit(identifierContext));
-        text.append(this.visit(argumentsContext));
+        text.append(this.visit(typeNameContext))
+            .append(this.visit(typeArgumentsContext))
+            .append(this.visit(dTerminal))
+            .append(this.visit(identifierContext))
+            .append(this.visit(argumentsContext));
         return text.toString();
     }
 
@@ -3457,10 +3447,10 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final Dart2Parser.ConstructorDesignationContext constructorDesignationContext = context.constructorDesignation();
         final Dart2Parser.ArgumentsContext argumentsContext = context.arguments();
         final StringBuilder text = new StringBuilder();
-        text.append(this.visit(constTerminal));
-        text.append(" ");
-        text.append(this.visit(constructorDesignationContext));
-        text.append(this.visit(argumentsContext));
+        text.append(this.visit(constTerminal))
+            .append(' ')
+            .append(this.visit(constructorDesignationContext))
+            .append(this.visit(argumentsContext));
         return text.toString();
     }
 
@@ -3479,11 +3469,11 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
             text.append(this.visit(qualifiedNameContext));
         } else {
             // typeName typeArguments ( D identifier)?
-            text.append(this.visit(typeNameContext));
-            text.append(this.visit(typeArgumentsContext));
+            text.append(this.visit(typeNameContext))
+                .append(this.visit(typeArgumentsContext));
             if (dTerminal != null) {
-                text.append(this.visit(dTerminal));
-                text.append(this.visit(identifierContext));
+                text.append(this.visit(dTerminal))
+                    .append(this.visit(identifierContext));
             }
         }
         return text.toString();
@@ -3499,20 +3489,20 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
             // typeIdentifier D identifier
             final Dart2Parser.TypeIdentifierContext typeIdentifierContext = typeIdentifierContexts.get(0);
             final TerminalNode dTerminal = dTerminals.get(0);
-            text.append(this.visit(typeIdentifierContext));
-            text.append(this.visit(dTerminal));
-            text.append(this.visit(identifierContext));
+            text.append(this.visit(typeIdentifierContext))
+                .append(this.visit(dTerminal))
+                .append(this.visit(identifierContext));
         } else {
             // typeIdentifier D typeIdentifier D identifier
             final Dart2Parser.TypeIdentifierContext firstTypeIdentifierContext = typeIdentifierContexts.get(0);
             final TerminalNode firstDTerminal = dTerminals.get(0);
             final Dart2Parser.TypeIdentifierContext secondTypeIdentifierContext = typeIdentifierContexts.get(1);
             final TerminalNode secondDTerminal = dTerminals.get(1);
-            text.append(this.visit(firstTypeIdentifierContext));
-            text.append(this.visit(firstDTerminal));
-            text.append(this.visit(secondTypeIdentifierContext));
-            text.append(this.visit(secondDTerminal));
-            text.append(this.visit(identifierContext));
+            text.append(this.visit(firstTypeIdentifierContext))
+                .append(this.visit(firstDTerminal))
+                .append(this.visit(secondTypeIdentifierContext))
+                .append(this.visit(secondDTerminal))
+                .append(this.visit(identifierContext));
         }
         return text.toString();
     }
@@ -3522,9 +3512,9 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final Dart2Parser.FormalParameterPartContext formalParameterPartContext = context.formalParameterPart();
         final Dart2Parser.FunctionExpressionBodyContext functionExpressionBodyContext = context.functionExpressionBody();
         final StringBuilder text = new StringBuilder();
-        text.append(this.visit(formalParameterPartContext));
-        text.append(" ");
-        text.append(this.visit(functionExpressionBodyContext));
+        text.append(this.visit(formalParameterPartContext))
+            .append(' ')
+            .append(this.visit(functionExpressionBodyContext));
         return text.toString();
     }
 
@@ -3543,20 +3533,20 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         if (egTerminal != null) {
             // ASYNC_? EG expr
             if (asyncTerminal != null) {
-                text.append(this.visit(asyncTerminal));
-                text.append(" ");
+                text.append(this.visit(asyncTerminal))
+                    .append(' ');
             }
-            text.append(this.visit(egTerminal));
-            text.append(" ");
-            text.append(this.visit(exprContext));
+            text.append(this.visit(egTerminal))
+                .append(' ')
+                .append(this.visit(exprContext));
         } else if (blockContext != null) {
             // ( ASYNC_ ST? | SYNC_ ST)? block
             if (asyncTerminal != null) {
-                text.append(this.visit(asyncTerminal));
-                text.append(" ");
+                text.append(this.visit(asyncTerminal))
+                    .append(' ');
             } else if (syncTerminal != null) {
-                text.append(this.visit(syncTerminal));
-                text.append(" ");
+                text.append(this.visit(syncTerminal))
+                    .append(' ');
             }
             text.append(this.visit(blockContext));
         }
@@ -3692,12 +3682,10 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
             text.append(this.visit(stringLiteralContext));
         }
         if (setOrMapLiteralContext != null) {
-            final String setOrMapLiteralText = this.visit(setOrMapLiteralContext);
-            text.append(setOrMapLiteralText);
+            text.append(this.visit(setOrMapLiteralContext));
         }
         if (listLiteralContext != null) {
-            final String listLiteralText = this.visit(listLiteralContext);
-            text.append(listLiteralText);
+            text.append(this.visit(listLiteralContext));
         }
         if (numericLiteralContext != null) {
             text.append(this.visit(numericLiteralContext));
@@ -3748,8 +3736,8 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final TerminalNode cbTerminal = context.CB();
         final StringBuilder text = new StringBuilder();
         if (constTerminal != null) {
-            text.append(this.visit(constTerminal));
-            text.append(" ");
+            text.append(this.visit(constTerminal))
+                .append(' ');
         }
         if (typeArgumentsContext != null) {
             text.append(this.visit(typeArgumentsContext));
@@ -3758,8 +3746,7 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         if (elementsContext != null) {
             this.currentIndentLevel++;
             this.appendNewLinesAndIndent(text, 1);
-            final String elementsText = this.visit(elementsContext);
-            text.append(elementsText);
+            text.append(this.visit(elementsContext));
             this.currentIndentLevel--;
             this.appendNewLinesAndIndent(text, 1);
         }
@@ -3776,21 +3763,20 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final TerminalNode cbcTerminal = context.CBC();
         final StringBuilder text = new StringBuilder();
         if (constTerminal != null) {
-            text.append(this.visit(constTerminal));
-            text.append(" ");
+            text.append(this.visit(constTerminal))
+                .append(' ');
         }
         if (typeArgumentsContext != null) {
             text.append(this.visit(typeArgumentsContext));
         }
         if (elementsContext == null) {
-            text.append(this.visit(obcTerminal));
-            text.append(this.visit(cbcTerminal));
+            text.append(this.visit(obcTerminal))
+                .append(this.visit(cbcTerminal));
         } else {
             text.append(this.visit(obcTerminal));
             this.currentIndentLevel++;
             this.appendNewLinesAndIndent(text, 1);
-            final String elementsText = this.visit(elementsContext);
-            text.append(elementsText);
+            text.append(this.visit(elementsContext));
             this.currentIndentLevel--;
             this.appendNewLinesAndIndent(text, 1);
             text.append(this.visit(cbcTerminal));
@@ -3807,11 +3793,11 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final String firstElementText = this.visit(firstElementContext);
         text.append(firstElementText);
         for (int index = 1; index < elementContexts.size(); index++) {
+            final Dart2Parser.ElementContext elementContext = elementContexts.get(index);
             final TerminalNode cTerminal = cTerminals.get(index - 1);
             text.append(this.visit(cTerminal));
             this.appendNewLinesAndIndent(text, 1);
-            final String elementText = this.visit(elementContexts.get(index));
-            text.append(elementText);
+            text.append(this.visit(elementContext));
         }
         if (elementContexts.size() == cTerminals.size()) {
             final TerminalNode cTerminal = cTerminals.get(cTerminals.size() - 1);
@@ -3852,16 +3838,16 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final Dart2Parser.ElementContext elementContext = context.element();
         final StringBuilder text = new StringBuilder();
         if (awaitTerminal != null) {
-            text.append(this.visit(awaitTerminal));
-            text.append(" ");
+            text.append(this.visit(awaitTerminal))
+                .append(' ');
         }
-        text.append(this.visit(forTerminal));
-        text.append(" ");
-        text.append(this.visit(opTerminal));
-        text.append(this.visit(forLoopPartsContext));
-        text.append(this.visit(cpTerminal));
-        text.append(" ");
-        text.append(this.visit(elementContext));
+        text.append(this.visit(forTerminal))
+            .append(' ')
+            .append(this.visit(opTerminal))
+            .append(this.visit(forLoopPartsContext))
+            .append(this.visit(cpTerminal))
+            .append(' ')
+            .append(this.visit(elementContext));
         return text.toString();
     }
 
@@ -3874,18 +3860,18 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final List<Dart2Parser.ElementContext> elementContexts = context.element();
         final TerminalNode elseTerminal = context.ELSE_();
         final StringBuilder text = new StringBuilder();
-        text.append(this.visit(ifTerminal));
-        text.append(" ");
-        text.append(this.visit(opTerminal));
-        text.append(this.visit(exprContext));
-        text.append(this.visit(cpTerminal));
-        text.append(" ");
+        text.append(this.visit(ifTerminal))
+            .append(' ')
+            .append(this.visit(opTerminal))
+            .append(this.visit(exprContext))
+            .append(this.visit(cpTerminal))
+            .append(' ');
         final Dart2Parser.ElementContext firstElementContext = elementContexts.get(0);
         text.append(this.visit(firstElementContext));
         if (elseTerminal != null) {
-            text.append(" ");
-            text.append(this.visit(elseTerminal));
-            text.append(" ");
+            text.append(' ')
+                .append(this.visit(elseTerminal))
+                .append(' ');
             final Dart2Parser.ElementContext secondElementContext = elementContexts.get(1);
             text.append(this.visit(secondElementContext));
         }
@@ -3920,12 +3906,12 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final List<Dart2Parser.ExprContext> exprContexts = context.expr();
         final TerminalNode coTerminal = context.CO();
         final StringBuilder text = new StringBuilder();
-        final String firstExprText = this.visit(exprContexts.get(0));
-        text.append(firstExprText);
-        text.append(this.visit(coTerminal));
-        text.append(" ");
-        final String secondExprText = this.visit(exprContexts.get(1));
-        text.append(secondExprText);
+        final Dart2Parser.ExprContext firstExprContext = exprContexts.get(0);
+        text.append(this.visit(firstExprContext))
+            .append(this.visit(coTerminal))
+            .append(' ');
+        final Dart2Parser.ExprContext secondExprContext = exprContexts.get(1);
+        text.append(this.visit(secondExprContext));
         return text.toString();
     }
 
@@ -3936,11 +3922,10 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final Dart2Parser.ConstructorDesignationContext constructorDesignationContext = context.constructorDesignation();
         final Dart2Parser.ArgumentsContext argumentsContext = context.arguments();
         final StringBuilder text = new StringBuilder();
-        text.append(this.visit(newTerminal));
-        text.append(" ");
-        text.append(this.visit(constructorDesignationContext));
-        final String argumentsText = this.visit(argumentsContext);
-        text.append(argumentsText);
+        text.append(this.visit(newTerminal))
+            .append(' ')
+            .append(this.visit(constructorDesignationContext))
+            .append(this.visit(argumentsContext));
         return text.toString();
     }
 
@@ -4030,9 +4015,9 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final Dart2Parser.LabelContext labelContext = context.label();
         final Dart2Parser.ExprContext exprContext = context.expr();
         final StringBuilder text = new StringBuilder();
-        text.append(this.visit(labelContext));
-        text.append(" ");
-        text.append(this.visit(exprContext));
+        text.append(this.visit(labelContext))
+            .append(' ')
+            .append(this.visit(exprContext));
         return text.toString();
     }
 
@@ -4041,8 +4026,8 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final Dart2Parser.IdentifierContext identifierContext = context.identifier();
         final TerminalNode coTerminal = context.CO();
         final StringBuilder text = new StringBuilder();
-        text.append(this.visit(identifierContext));
-        text.append(this.visit(coTerminal));
+        text.append(this.visit(identifierContext))
+            .append(this.visit(coTerminal));
         return text.toString();
     }
 
@@ -4090,8 +4075,8 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
      * @param newLines Number of new lines before appending indentations.
      */
     private void appendNewLinesAndIndent(final StringBuilder text, final int newLines) {
-        text.append("\n".repeat(newLines));
-        text.append(INDENT_UNIT.repeat(this.currentIndentLevel));
+        text.append("\n".repeat(newLines))
+            .append(INDENT_UNIT.repeat(this.currentIndentLevel));
     }
 
 }

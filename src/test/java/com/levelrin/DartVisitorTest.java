@@ -16,6 +16,8 @@ import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 
+// Excluding the following PMD rules via `ruleSet.xml` didn't work, for some reason.
+@SuppressWarnings({"PMD.TooManyMethods", "PMD.LinguisticNaming"})
 final class DartVisitorTest {
 
     /**
@@ -36,7 +38,11 @@ final class DartVisitorTest {
             final String result = visitor.visit(tree);
             final Path afterPath = Paths.get(ClassLoader.getSystemResource(after).toURI());
             final String expectedText = Files.readString(afterPath, StandardCharsets.UTF_8);
-            MatcherAssert.assertThat(result, Matchers.equalTo(expectedText));
+            MatcherAssert.assertThat(
+                String.format("Result:%n%s", result),
+                result,
+                Matchers.equalTo(expectedText)
+            );
         } catch (final URISyntaxException | IOException ex) {
             throw new IllegalStateException(
                 String.format(
