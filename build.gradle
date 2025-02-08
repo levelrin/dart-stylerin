@@ -3,6 +3,7 @@ import com.github.spotbugs.snom.Effort
 
 plugins {
     id 'java'
+    id 'jacoco'
     id 'antlr'
     id 'com.github.spotbugs' version '6.1.3'
     id 'pmd'
@@ -36,7 +37,87 @@ dependencies {
 
 test {
     useJUnitPlatform()
+    dependsOn 'cleanTest'
+    testLogging {
+        events 'skipped', 'failed'
+        exceptionFormat = 'full'
+    }
 }
+
+jacoco {
+    toolVersion = '0.8.12'
+}
+
+jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            limit {
+                enabled = true
+                counter = 'INSTRUCTION'
+                value = 'COVEREDRATIO'
+                minimum = 0.80000
+            }
+            limit {
+                enabled = true
+                counter = 'BRANCH'
+                value = 'COVEREDRATIO'
+                minimum = 0.60000
+            }
+            limit {
+                enabled = true
+                counter = 'COMPLEXITY'
+                value = 'COVEREDRATIO'
+                minimum = 0.60000
+            }
+            limit {
+                enabled = true
+                counter = 'LINE'
+                value = 'COVEREDRATIO'
+                minimum = 0.90000
+            }
+            limit {
+                enabled = true
+                counter = 'METHOD'
+                value = 'COVEREDRATIO'
+                minimum = 0.90000
+            }
+            limit {
+                enabled = true
+                counter = 'CLASS'
+                value = 'COVEREDRATIO'
+                minimum = 0.90000
+            }
+        }
+    }
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: [
+                'com/levelrin/antlr/generated/**',
+                'com/levelrin/Dart2LexerBase.class',
+                'com/levelrin/Main.class'
+            ])
+        }))
+    }
+}
+
+jacocoTestReport {
+    reports {
+        xml.required = true
+        html.required = true
+    }
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: [
+                'com/levelrin/antlr/generated/**',
+                'com/levelrin/Dart2LexerBase.class',
+                'com/levelrin/Main.class'
+            ])
+        }))
+    }
+}
+
+check.dependsOn jacocoTestCoverageVerification
+check.dependsOn jacocoTestReport
 
 spotbugs {
     toolVersion = '4.9.1'
