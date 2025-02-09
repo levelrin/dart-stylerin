@@ -22,8 +22,14 @@ import org.slf4j.LoggerFactory;
 @SuppressWarnings({"PMD.TooManyMethods", "PMD.LinguisticNaming"})
 public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
+    /**
+     * For logging.
+     */
     private static final Logger LOGGER = LoggerFactory.getLogger(DartVisitor.class);
 
+    /**
+     * Number of spaces for an indentation.
+     */
     private static final String INDENT_UNIT = "  ";
 
     /**
@@ -38,19 +44,29 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
      */
     private final Map<String, Integer> ruleVisitCounts = new HashMap<>();
 
+    /**
+     * As is.
+     */
     private int currentIndentLevel;
 
+    /**
+     * For getting comments from the hidden channel.
+     */
     private final CommonTokenStream tokens;
 
+    /**
+     * Constructor.
+     *
+     * @param tokens See {@link DartVisitor#tokens}.
+     */
     public DartVisitor(final CommonTokenStream tokens) {
-        super();
         this.tokens = tokens;
     }
 
     @Override
     public String visitCompilationUnit(final Dart2Parser.CompilationUnitContext context) {
         final Dart2Parser.LibraryDeclarationContext libraryDeclarationContext = context.libraryDeclaration();
-        final Dart2Parser.PartDeclarationContext partDeclarationContext =  context.partDeclaration();
+        final Dart2Parser.PartDeclarationContext partDeclarationContext = context.partDeclaration();
         final Dart2Parser.ExprContext exprContext = context.expr();
         final Dart2Parser.StatementContext statementContext = context.statement();
         final StringBuilder text = new StringBuilder();
@@ -2240,7 +2256,7 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
     @Override
     public String visitType(final Dart2Parser.TypeContext context) {
         final Dart2Parser.FunctionTypeContext functionTypeContext = context.functionType();
-        final TerminalNode quTerminal =  context.QU();
+        final TerminalNode quTerminal = context.QU();
         final Dart2Parser.TypeNotFunctionContext typeNotFunctionContext = context.typeNotFunction();
         final StringBuilder text = new StringBuilder();
         if (functionTypeContext != null) {
@@ -2274,7 +2290,7 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
     @Override
     public String visitFunctionTypeTails(final Dart2Parser.FunctionTypeTailsContext context) {
         final Dart2Parser.FunctionTypeTailContext functionTypeTailContext = context.functionTypeTail();
-        final TerminalNode quTerminal =  context.QU();
+        final TerminalNode quTerminal = context.QU();
         final Dart2Parser.FunctionTypeTailsContext functionTypeTailsContext = context.functionTypeTails();
         if (quTerminal != null) {
             throw new UnsupportedOperationException("The following parsing path is not supported yet: visitFunctionTypeTails -> qu");
@@ -2628,7 +2644,7 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final TerminalNode ququeqTerminal = context.QUQUEQ();
         final StringBuilder text = new StringBuilder();
         if (steTerminal != null) {
-           text.append(this.visit(steTerminal));
+            text.append(this.visit(steTerminal));
         } else if (seTerminal != null) {
             text.append(this.visit(seTerminal));
         } else if (sqseTerminal != null) {
@@ -4071,6 +4087,7 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     /**
      * We use this to add new lines with appropriate indentations.
+     *
      * @param text We will append the new lines and indentations into this.
      * @param newLines Number of new lines before appending indentations.
      */

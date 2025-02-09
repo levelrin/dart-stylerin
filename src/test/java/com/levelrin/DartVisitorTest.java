@@ -22,6 +22,7 @@ final class DartVisitorTest {
 
     /**
      * Assert that the formatter formats the code written in the `before` file that matches with the code written in the `after` file.
+     *
      * @param before The file name that has code before formatting.
      * @param after The file name that has code after formatting.
      */

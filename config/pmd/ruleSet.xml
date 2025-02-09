@@ -11,6 +11,7 @@
         <exclude name="OnlyOneReturn" />
         <exclude name="ClassNamingConventions" />
         <exclude name="LongVariable" />
+        <exclude name="CallSuperInConstructor" />
 
         <!-- Suppressions for Antlr4 projects -->
         <exclude name="PrematureDeclaration" />

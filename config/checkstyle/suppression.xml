@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE suppressions PUBLIC
+        "-//Puppy Crawl//DTD Suppressions 1.1//EN"
+        "http://www.puppycrawl.com/dtds/suppressions_1_1.dtd">
+
+<suppressions>
+    <!-- Suppress rules for test files. -->
+    <suppress files=".*[\\/]src[\\/](test)[\\/]" checks="MethodName"/>
+    <suppress files=".*[\\/]src[\\/](test)[\\/]" checks="MissingCtor"/>
+
+    <!-- Suppressions for Main -->
+    <suppress files="Main\.java" checks="MissingCtor"/>
+    <suppress files="Main\.java" checks="HideUtilityClassConstructor"/>
+    <suppress files="Main\.java" checks="UncommentedMain"/>
+
+    <!-- Suppressions for Antlr projects -->
+    <suppress files="DartVisitor\.java" checks="FileLength"/>
+    <suppress files="DartVisitor\.java" checks="JavaNCSS"/>
+    <suppress files="DartVisitor\.java" checks="ClassFanOutComplexity"/>
+    <suppress files="DartVisitor\.java" checks="JavaNCSS"/>
+    <suppress files="DartVisitor\.java" checks="MethodCount"/>
+    <suppress files="DartVisitor\.java" checks="CyclomaticComplexity"/>
+    <suppress files="DartVisitor\.java" checks="NPathComplexity"/>
+    <suppress files="DartVisitor\.java" checks="ExecutableStatementCount"/>
+    <suppress files="DartVisitor\.java" checks="MultipleStringLiterals"/>
+    <suppress files="DartVisitor\.java" checks="MethodLength"/>
+    <suppress files="DartVisitor\.java" checks="NestedIfDepth"/>
+    <suppress files="DartVisitor\.java" checks="BooleanExpressionComplexity"/>
+</suppressions>

@@ -7,6 +7,7 @@ plugins {
     id 'antlr'
     id 'com.github.spotbugs' version '6.1.3'
     id 'pmd'
+    id 'checkstyle'
 }
 
 group = 'com.levelrin'
@@ -161,6 +162,24 @@ tasks.withType(Pmd) {
         xml.required = false
         html.required = true
     }
+}
+
+checkstyle {
+    toolVersion '10.21.2'
+    ignoreFailures = false
+    configFile = file('config/checkstyle/checkstyle.xml')
+    configProperties = [
+        'checkstyle.header.file': file('config/checkstyle/java.header'),
+        'checkstyle.suppression.file': file('config/checkstyle/suppression.xml')
+    ]
+}
+tasks.withType(Checkstyle) {
+    reports {
+        xml.required = false
+        html.required = true
+    }
+    exclude '**/generated/**'
+    exclude '**/Dart2LexerBase.java'
 }
 
 generateGrammarSource {
