@@ -54,9 +54,9 @@ Our format shows the composition better.
 
 ## Quick Start
 
-Please install Java if you haven't already.
+Please install Java 17+ if you haven't already.
 
-1. Download the jar file.
+1. [Download](https://github.com/levelrin/dart-stylerin/releases) the zip file and unzip it to get the jar file.
 2. Run the command `java -jar dart-stylerin-0.0.1.jar path/to/target.dart`
 
 ## Command Options
