@@ -11,7 +11,7 @@ plugins {
 }
 
 group = 'com.levelrin'
-version = '0.1.0'
+version = '0.0.1'
 
 sourceSets {
     main {
@@ -31,6 +31,7 @@ dependencies {
     antlr 'org.antlr:antlr4:4.13.1'
     spotbugs('com.github.spotbugs:spotbugs:4.8.6')
     implementation 'org.slf4j:slf4j-simple:2.0.13'
+    implementation 'commons-cli:commons-cli:1.9.0'
     testImplementation platform('org.junit:junit-bom:5.10.3')
     testImplementation 'org.junit.jupiter:junit-jupiter'
     testImplementation 'org.hamcrest:hamcrest:3.0'
@@ -190,4 +191,15 @@ generateGrammarSource {
     ]
     // Since we will add the package declaration, we must put generated classes in the package folder.
     outputDirectory = file("$buildDir/generated-src/antlr/main/com/levelrin/antlr/generated")
+}
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'com.levelrin.Main'
+    }
+    // Fat jar configuration.
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
