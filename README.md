@@ -1,3 +1,8 @@
+[![Build](https://github.com/levelrin/dart-stylerin/actions/workflows/build.yml/badge.svg?branch=main)](https://github.com/levelrin/dart-stylerin/actions/workflows/build.yml?query=branch%3Amain)
+[![codecov](https://codecov.io/gh/levelrin/dart-stylerin/graph/badge.svg?token=noW3yHdtQq)](https://codecov.io/gh/levelrin/dart-stylerin)
+[![](https://tokei.rs/b1/github/levelrin/dart-stylerin?category=code)](https://github.com/levelrin/dart-stylerin)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/levelrin/dart-stylerin/blob/main/LICENSE)
+
 ## About
 
 It's a code formatter for [Dart](https://dart.dev/).
