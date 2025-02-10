@@ -1,0 +1,27 @@
+name: build
+on:
+  - push
+  - pull_request
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout the source code
+        uses: actions/checkout@v4
+      - name: Run the Docker container using the OpenJDK image. The build folder is shared so we can upload the coverage report.
+        run: docker run --name ci -v $(pwd)/build:/usr/local/repo/build -it -d openjdk:17-slim-bullseye /bin/bash
+      - name: Copy the source code into the container.
+        run: docker cp . ci:/usr/local/repo
+      - name: Make gradlew executable
+        run: docker exec -w /usr/local/repo ci chmod +x gradlew
+      - name: Run the build command.
+        run: docker exec -w /usr/local/repo ci ./gradlew build
+      - name: Stop the container.
+        run: docker stop ci
+      - name: Remove the container.
+        run: docker rm ci
+      - name: Upload the coverage report to codecov.io.
+        uses: codecov/codecov-action@v5
+        with:
+          fail_ci_if_error: true
+          token: ${{ secrets.CODECOV_TOKEN }}
