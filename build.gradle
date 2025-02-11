@@ -170,7 +170,6 @@ checkstyle {
     ignoreFailures = false
     configFile = file('config/checkstyle/checkstyle.xml')
     configProperties = [
-        'checkstyle.header.file': file('config/checkstyle/java.header'),
         'checkstyle.suppression.file': file('config/checkstyle/suppression.xml')
     ]
 }
