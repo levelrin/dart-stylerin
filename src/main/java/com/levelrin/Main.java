@@ -18,6 +18,8 @@ import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Entrypoint of the formatter via command line.
@@ -32,6 +34,7 @@ public final class Main {
     public static void main(final String... args) throws ParseException, IOException {
         final Options options = new Options();
         options.addOption("h", "help", false, "Show help messages.")
+            .addOption("v", "version", false, "Print the version.")
             .addOption("q", "quiet", false, "Do not print debug logs.")
             .addOption("r", "recursive", true, "Format files in the directory recursively.");
         final CommandLineParser parser = new DefaultParser();
@@ -39,16 +42,21 @@ public final class Main {
         if (cmd.hasOption('h')) {
             final HelpFormatter formatter = new HelpFormatter();
             formatter.printHelp("java -jar dart-stylerin-{version}.jar [options]", options);
-            return;
-        }
-        if (cmd.hasOption('q')) {
-            System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "INFO");
-        }
-        if (cmd.hasOption('r')) {
-            formatDirectory(cmd.getOptionValue('r'));
-        }
-        for (final String arg : cmd.getArgs()) {
-            formatDirectory(arg);
+        } else if (cmd.hasOption('v')) {
+            final Logger logger = LoggerFactory.getLogger(Main.class);
+            if (logger.isInfoEnabled()) {
+                logger.info("dart-stylerin 0.0.1");
+            }
+        } else {
+            if (cmd.hasOption('q')) {
+                System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "INFO");
+            }
+            if (cmd.hasOption('r')) {
+                formatDirectory(cmd.getOptionValue('r'));
+            }
+            for (final String arg : cmd.getArgs()) {
+                formatDirectory(arg);
+            }
         }
     }
 

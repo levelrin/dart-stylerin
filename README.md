@@ -66,6 +66,7 @@ usage: java -jar dart-stylerin-{version}.jar [options]
  -h,--help              Show help messages.
  -q,--quiet             Do not print debug logs.
  -r,--recursive <arg>   Format files in the directory recursively.
+ -v,--version           Print the version.
 ```
 
 ## Disclaimer
