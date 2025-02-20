@@ -54,15 +54,15 @@ Our format shows the composition better.
 
 ## Quick Start
 
-Please install Java 17+ if you haven't already.
+Please install Java 11+ if you haven't already.
 
-1. [Download](https://github.com/levelrin/dart-stylerin/releases) the zip file and unzip it to get the jar file.
-2. Run the command `java -jar dart-stylerin-0.0.1.jar path/to/target.dart`
+1. [Download](https://github.com/levelrin/dart-stylerin/releases) the zip file that matches with your Java version and unzip it to get the jar file.
+2. Run the command `java -jar dart-stylerin-{app-version}-{java-version}.jar path/to/target.dart`
 
 ## Command Options
 
 ```
-usage: java -jar dart-stylerin-{version}.jar [options]
+usage: java -jar dart-stylerin-{app-version}-{java-version}.jar [options]
  -h,--help              Show help messages.
  -q,--quiet             Do not print debug logs.
  -r,--recursive <arg>   Format files in the directory recursively.

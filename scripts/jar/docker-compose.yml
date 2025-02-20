@@ -1,0 +1,19 @@
+# This script is for generating jar files.
+# Run the following command from the project root directory:
+# `cd scripts/jar && docker-compose run --rm jdk11 && docker-compose run --rm jdk17 && cd ../..`
+
+services:
+  jdk11:
+    image: openjdk:11-slim-bullseye
+    container_name: jar-jdk-11
+    volumes:
+      - "../..:/usr/share/repo"
+    working_dir: /usr/share/repo
+    command: ./gradlew jar
+  jdk17:
+    image: openjdk:17-slim-bullseye
+    container_name: jar-jdk-17
+    volumes:
+      - "../..:/usr/share/repo"
+    working_dir: /usr/share/repo
+    command: ./gradlew jar

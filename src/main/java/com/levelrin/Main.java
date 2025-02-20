@@ -41,7 +41,7 @@ public final class Main {
         final CommandLine cmd = parser.parse(options, args);
         if (cmd.hasOption('h')) {
             final HelpFormatter formatter = new HelpFormatter();
-            formatter.printHelp("java -jar dart-stylerin-{version}.jar [options]", options);
+            formatter.printHelp("java -jar dart-stylerin-{app-version}-{java-version}.jar [options]", options);
         } else if (cmd.hasOption('v')) {
             final Logger logger = LoggerFactory.getLogger(Main.class);
             if (logger.isInfoEnabled()) {
