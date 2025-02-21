@@ -15,8 +15,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Return type is a JSON.
- * All of it must have $.text attribute.
+ * This is the class that has the formatting logic.
+ * Welcome to the project :)
  */
 // Excluding the following PMD rules via `ruleSet.xml` didn't work, for some reason.
 @SuppressWarnings({"PMD.TooManyMethods", "PMD.LinguisticNaming"})
