@@ -3956,32 +3956,26 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         if (argumentListContext != null) {
             final int visitArgumentsCountBefore = this.ruleVisitCounts.getOrDefault(Dart2Parser.ArgumentsContext.class.getSimpleName(), 0);
             final int visitNamedArgumentCountBefore = this.ruleVisitCounts.getOrDefault(Dart2Parser.NamedArgumentContext.class.getSimpleName(), 0);
-            // We need to increment the indentation up front so that the child will have the correct indentation level.
-            // If the incrementation turns out to be wrong, we can remove it later.
-            this.currentIndentLevel++;
-            final String argumentsText = this.visit(argumentListContext);
+            final String unindentedArgumentsText = this.visit(argumentListContext);
             final int visitArgumentsCountAfter = this.ruleVisitCounts.getOrDefault(Dart2Parser.ArgumentsContext.class.getSimpleName(), 0);
             final int visitNamedArgumentCountAfter = this.ruleVisitCounts.getOrDefault(Dart2Parser.NamedArgumentContext.class.getSimpleName(), 0);
             // We assume the following condition means nested object initialization. Ex: User(User('Rin'));
             final boolean objNested = visitArgumentsCountBefore < visitArgumentsCountAfter;
             final boolean namedParamUsed = visitNamedArgumentCountBefore < visitNamedArgumentCountAfter;
             if (objNested || namedParamUsed) {
+                // Indentation needed.
+                // We need to visit children again with indentation.
+                this.currentIndentLevel++;
                 this.appendNewLinesAndIndent(text, 1);
-                text.append(argumentsText);
+                text.append(this.visit(argumentListContext));
                 if (cTerminal != null) {
                     text.append(this.visit(cTerminal));
                 }
                 this.currentIndentLevel--;
                 this.appendNewLinesAndIndent(text, 1);
             } else {
-                this.currentIndentLevel--;
-                text.append(
-                    // Dedent the arguments because it was wrong.
-                    argumentsText.replaceAll(
-                        "\n" + INDENT_UNIT,
-                        "\n"
-                    )
-                );
+                // No indentation needed.
+                text.append(unindentedArgumentsText);
                 if (cTerminal != null) {
                     text.append(this.visit(cTerminal));
                 }
