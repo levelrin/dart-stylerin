@@ -19,7 +19,8 @@ import org.slf4j.LoggerFactory;
  * Welcome to the project :)
  */
 // Excluding the following PMD rules via `ruleSet.xml` didn't work, for some reason.
-@SuppressWarnings({"PMD.TooManyMethods", "PMD.LinguisticNaming"})
+// Except PMD.UnusedAssignment was added due to a false-positive.
+@SuppressWarnings({"PMD.TooManyMethods", "PMD.LinguisticNaming", "PMD.UnusedAssignment"})
 public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
 
     /**
@@ -42,12 +43,17 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
      * Key - Simple class name of the context. Ex: CompilationUnitContext.
      * Value - Number of visits.
      */
-    private final Map<String, Integer> ruleVisitCounts = new HashMap<>();
+    private Map<String, Integer> ruleVisitCounts = new HashMap<>();
 
     /**
      * As is.
      */
     private int currentIndentLevel;
+
+    /**
+     * A flag to see if chaining the method currently.
+     */
+    private boolean methodChaining;
 
     /**
      * For getting comments from the hidden channel.
@@ -1736,8 +1742,28 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final TerminalNode scTerminal = context.SC();
         final StringBuilder text = new StringBuilder();
         if (exprContext != null) {
+            final int visitUnconditionalAssignableSelectorCountBefore = this.ruleVisitCounts.getOrDefault(Dart2Parser.UnconditionalAssignableSelectorContext.class.getSimpleName(), 0);
+            final int visitIdentifierCountBefore = this.ruleVisitCounts.getOrDefault(Dart2Parser.IdentifierContext.class.getSimpleName(), 0);
+            final int visitArgumentsCountBefore = this.ruleVisitCounts.getOrDefault(Dart2Parser.ArgumentsContext.class.getSimpleName(), 0);
+            final int visitCascadeCountBefore = this.ruleVisitCounts.getOrDefault(Dart2Parser.CascadeContext.class.getSimpleName(), 0);
             final String exprText = this.visit(exprContext);
-            text.append(exprText);
+            final int visitUnconditionalAssignableSelectorCountAfter = this.ruleVisitCounts.getOrDefault(Dart2Parser.UnconditionalAssignableSelectorContext.class.getSimpleName(), 0);
+            final int visitIdentifierCountAfter = this.ruleVisitCounts.getOrDefault(Dart2Parser.IdentifierContext.class.getSimpleName(), 0);
+            final int visitArgumentsCountAfter = this.ruleVisitCounts.getOrDefault(Dart2Parser.ArgumentsContext.class.getSimpleName(), 0);
+            final int visitCascadeCountAfter = this.ruleVisitCounts.getOrDefault(Dart2Parser.CascadeContext.class.getSimpleName(), 0);
+            final int visitUnconditionalAssignableSelectorCountDiff = visitUnconditionalAssignableSelectorCountAfter - visitUnconditionalAssignableSelectorCountBefore;
+            final int visitIdentifierCountDiff = visitIdentifierCountAfter - visitIdentifierCountBefore;
+            final int visitArgumentsCountDiff = visitArgumentsCountAfter - visitArgumentsCountBefore;
+            final int visitCascadeCountDiff = visitCascadeCountAfter - visitCascadeCountBefore;
+            final boolean methodChained = visitUnconditionalAssignableSelectorCountDiff > 1 && visitIdentifierCountDiff > 1 && visitArgumentsCountDiff > 1;
+            final boolean bothChained = visitUnconditionalAssignableSelectorCountDiff > 0 && visitIdentifierCountDiff > 0 && visitCascadeCountDiff > 0;
+            if (methodChained || visitCascadeCountDiff > 1 || bothChained) {
+                this.methodChaining = true;
+                text.append(this.visit(exprContext));
+                this.methodChaining = false;
+            } else {
+                text.append(exprText);
+            }
         }
         text.append(this.visit(scTerminal));
         return text.toString();
@@ -2718,15 +2744,35 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         }
         final StringBuilder text = new StringBuilder();
         if (cascadeContext != null) {
-            text.append(this.visit(cascadeContext))
-                .append(this.visit(ddTerminal))
-                .append(this.visit(cascadeSectionContext));
-        } else if (conditionalExpressionContext != null) {
-            text.append(this.visit(conditionalExpressionContext));
-            if (ddTerminal != null) {
-                text.append(this.visit(ddTerminal));
+            if (this.methodChaining) {
+                text.append(this.visit(cascadeContext));
+                this.currentIndentLevel++;
+                this.appendNewLinesAndIndent(text, 1);
+                text.append(this.visit(ddTerminal))
+                    .append(this.visit(cascadeSectionContext));
+                this.currentIndentLevel--;
+            } else {
+                text.append(this.visit(cascadeContext))
+                    .append(this.visit(ddTerminal))
+                    .append(this.visit(cascadeSectionContext));
             }
-            text.append(this.visit(cascadeSectionContext));
+        } else if (conditionalExpressionContext != null) {
+            if (this.methodChaining) {
+                text.append(this.visit(conditionalExpressionContext));
+                this.currentIndentLevel++;
+                this.appendNewLinesAndIndent(text, 1);
+                if (ddTerminal != null) {
+                    text.append(this.visit(ddTerminal));
+                }
+                text.append(this.visit(cascadeSectionContext));
+                this.currentIndentLevel--;
+            } else {
+                text.append(this.visit(conditionalExpressionContext));
+                if (ddTerminal != null) {
+                    text.append(this.visit(ddTerminal));
+                }
+                text.append(this.visit(cascadeSectionContext));
+            }
         }
         return text.toString();
     }
@@ -3369,8 +3415,16 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
                 .append(this.visit(cbTerminal));
         } else {
             // D identifier
-            text.append(this.visit(dTerminal))
-                .append(this.visit(identifierContext));
+            if (this.methodChaining) {
+                this.currentIndentLevel++;
+                this.appendNewLinesAndIndent(text, 1);
+                text.append(this.visit(dTerminal))
+                    .append(this.visit(identifierContext));
+                this.currentIndentLevel--;
+            } else {
+                text.append(this.visit(dTerminal))
+                    .append(this.visit(identifierContext));
+            }
         }
         return text.toString();
     }
@@ -3954,6 +4008,12 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         final StringBuilder text = new StringBuilder();
         text.append(this.visit(opTerminal));
         if (argumentListContext != null) {
+            // We will visit children assuming that we are not supposed to indent them.
+            // After the visit, we can determine if the children actually needed indentation.
+            // If indentation was needed, we will visit the children again with indentation.
+            // That means we may visit the same children twice, which may mess up the visit counts.
+            // For that reason, we create a backup for the visit counts to reset them.
+            final Map<String, Integer> ruleVisitCountsBackup = new HashMap<>(this.ruleVisitCounts);
             final int visitArgumentsCountBefore = this.ruleVisitCounts.getOrDefault(Dart2Parser.ArgumentsContext.class.getSimpleName(), 0);
             final int visitNamedArgumentCountBefore = this.ruleVisitCounts.getOrDefault(Dart2Parser.NamedArgumentContext.class.getSimpleName(), 0);
             final String unindentedArgumentsText = this.visit(argumentListContext);
@@ -3965,6 +4025,8 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
             if (objNested || namedParamUsed) {
                 // Indentation needed.
                 // We need to visit children again with indentation.
+                // Reset the visit counts.
+                this.ruleVisitCounts = ruleVisitCountsBackup;
                 this.currentIndentLevel++;
                 this.appendNewLinesAndIndent(text, 1);
                 text.append(this.visit(argumentListContext));
@@ -4058,7 +4120,7 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("Enter `{}` text: {}", ruleName, tree.getText());
         }
-        this.ruleVisitCounts.putIfAbsent(ruleName, 1);
+        this.ruleVisitCounts.putIfAbsent(ruleName, 0);
         this.ruleVisitCounts.computeIfPresent(ruleName, (ignored, currentCount) -> currentCount + 1);
         return tree.accept(this);
     }
