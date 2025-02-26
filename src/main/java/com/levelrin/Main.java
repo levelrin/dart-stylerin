@@ -45,7 +45,7 @@ public final class Main {
         } else if (cmd.hasOption('v')) {
             final Logger logger = LoggerFactory.getLogger(Main.class);
             if (logger.isInfoEnabled()) {
-                logger.info("dart-stylerin 0.0.1");
+                logger.info("dart-stylerin 0.0.2");
             }
         } else {
             if (cmd.hasOption('q')) {
