@@ -61,6 +61,7 @@
         <module name="MissingOverride"/>
         <module name="PackageAnnotation"/>
         <module name="SuppressWarnings"/>
+        <module name="SuppressWarningsHolder"/>
 
         <!-- Blocks Checks -->
         <module name="AvoidNestedBlocks"/>

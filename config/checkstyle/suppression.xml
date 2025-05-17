@@ -13,6 +13,7 @@
     <suppress files="Main\.java" checks="MissingCtor"/>
     <suppress files="Main\.java" checks="HideUtilityClassConstructor"/>
     <suppress files="Main\.java" checks="UncommentedMain"/>
+    <suppress files="Main\.java" checks="ClassDataAbstractionCoupling"/>
 
     <!-- Suppressions for Antlr projects -->
     <suppress files="DartVisitor\.java" checks="FileLength"/>

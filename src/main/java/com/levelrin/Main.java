@@ -73,6 +73,9 @@ public final class Main {
         final Dart2Lexer lexer = new Dart2Lexer(charStream);
         final CommonTokenStream tokens = new CommonTokenStream(lexer);
         final Dart2Parser parser = new Dart2Parser(tokens);
+        final ThrowableErrorListener errorListener = new ThrowableErrorListener();
+        parser.removeErrorListeners();
+        parser.addErrorListener(errorListener);
         final ParseTree tree = parser.compilationUnit();
         final DartVisitor visitor = new DartVisitor(tokens);
         final String result = visitor.visit(tree);
