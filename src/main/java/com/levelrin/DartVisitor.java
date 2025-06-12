@@ -3,10 +3,13 @@ package com.levelrin;
 import com.levelrin.antlr.generated.Dart2Parser;
 import com.levelrin.antlr.generated.Dart2ParserBaseVisitor;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 import java.util.StringJoiner;
 import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.RuleNode;
@@ -42,7 +45,10 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
      *     after visiting the child context.
      * Key - Simple class name of the context. Ex: CompilationUnitContext.
      * Value - Number of visits.
+     *
+     * @deprecated We no longer need this because we can use {@link DartVisitor#hasDescendant(ParserRuleContext, Class)} instead.
      */
+    @Deprecated
     private Map<String, Integer> ruleVisitCounts = new HashMap<>();
 
     /**
@@ -3480,9 +3486,20 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         } else if (constructorInvocationContext != null) {
             text.append(this.visit(constructorInvocationContext));
         } else if (opTerminal != null) {
-            text.append(this.visit(opTerminal))
-                .append(this.visit(exprContext))
-                .append(this.visit(cpTerminal));
+            final boolean shouldIndent = this.hasDescendant(exprContext, Dart2Parser.ArgumentsContext.class);
+            if (shouldIndent) {
+                text.append(this.visit(opTerminal));
+                this.currentIndentLevel++;
+                this.appendNewLinesAndIndent(text, 1);
+                text.append(this.visit(exprContext));
+                this.currentIndentLevel--;
+                this.appendNewLinesAndIndent(text, 1);
+                text.append(this.visit(cpTerminal));
+            } else {
+                text.append(this.visit(opTerminal))
+                    .append(this.visit(exprContext))
+                    .append(this.visit(cpTerminal));
+            }
         }
         return text.toString();
     }
@@ -4139,6 +4156,31 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         }
         text.append(node.getText());
         return text.toString();
+    }
+
+    /**
+     * Inspect the descendants to see if the specified type is found in the parse tree.
+     *
+     * @param subject The search begins from this.
+     * @param descendantType The type we are looking for.
+     * @return True if a descendant with the specified type is found.
+     */
+    private boolean hasDescendant(final ParserRuleContext subject, final Class<? extends ParserRuleContext> descendantType) {
+        boolean result = false;
+        // Note that the `children` attribute only gives us direct children.
+        // In other words, it doesn't recursively include all descendants.
+        final Queue<ParseTree> queue = new LinkedList<>(subject.children);
+        while (!queue.isEmpty()) {
+            final ParseTree child = queue.remove();
+            if (descendantType.isInstance(child)) {
+                result = true;
+                break;
+            }
+            for (int index = 0; index < child.getChildCount(); index++) {
+                queue.add(child.getChild(index));
+            }
+        }
+        return result;
     }
 
     /**

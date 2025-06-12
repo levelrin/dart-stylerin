@@ -60,6 +60,11 @@ final class DartVisitorTest {
     }
 
     @Test
+    void shouldFormatTypeCast2() {
+        this.compare("type-cast-2-before.dart", "type-cast-2-after.dart");
+    }
+
+    @Test
     void shouldFormatExport() {
         this.compare("export-before.dart", "export-after.dart");
     }
