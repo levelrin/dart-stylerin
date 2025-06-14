@@ -1692,12 +1692,9 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
             .append(this.visit(exprContext))
             .append(this.visit(coTerminal));
         this.currentIndentLevel++;
-        final int visitStatementCountBefore = this.ruleVisitCounts.getOrDefault(Dart2Parser.StatementContext.class.getSimpleName(), 0);
-        final String statementsText = this.visit(statementsContext);
-        final int visitStatementCountAfter = this.ruleVisitCounts.getOrDefault(Dart2Parser.StatementContext.class.getSimpleName(), 0);
-        if (visitStatementCountBefore < visitStatementCountAfter) {
+        if (this.hasDescendant(statementsContext, Dart2Parser.StatementContext.class)) {
             this.appendNewLinesAndIndent(text, 1);
-            text.append(statementsText);
+            text.append(this.visit(statementsContext));
         }
         this.currentIndentLevel--;
         return text.toString();
@@ -4166,6 +4163,9 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
      * @return True if a descendant with the specified type is found.
      */
     private boolean hasDescendant(final ParserRuleContext subject, final Class<? extends ParserRuleContext> descendantType) {
+        if (subject.children == null) {
+            return false;
+        }
         boolean result = false;
         // Note that the `children` attribute only gives us direct children.
         // In other words, it doesn't recursively include all descendants.
