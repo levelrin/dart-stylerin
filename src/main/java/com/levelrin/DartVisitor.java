@@ -1876,18 +1876,15 @@ public final class DartVisitor extends Dart2ParserBaseVisitor<String> {
         for (int index = 0; index < cTerminals.size(); index++) {
             final TerminalNode cTerminal = cTerminals.get(index);
             final Dart2Parser.ExprContext exprContext = exprContexts.get(index + 1);
-            final int visitArgumentsCountBefore = this.ruleVisitCounts.getOrDefault(Dart2Parser.ArgumentsContext.class.getSimpleName(), 0);
-            final String exprText = this.visit(exprContext);
-            final int visitArgumentsCountAfter = this.ruleVisitCounts.getOrDefault(Dart2Parser.ArgumentsContext.class.getSimpleName(), 0);
             // We assume the following condition means nested object initialization. Ex: User('Rin', User('Ian'));
-            if (visitArgumentsCountBefore < visitArgumentsCountAfter) {
+            if (this.hasDescendant(exprContext, Dart2Parser.ArgumentsContext.class)) {
                 text.append(this.visit(cTerminal));
                 this.appendNewLinesAndIndent(text, 1);
-                text.append(exprText);
+                text.append(this.visit(exprContext));
             } else {
                 text.append(this.visit(cTerminal))
                     .append(' ')
-                    .append(exprText);
+                    .append(this.visit(exprContext));
             }
         }
         return text.toString();
